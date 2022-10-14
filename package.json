@@ -9,7 +9,7 @@
     "test": "cross-env NODE_ENV=test DEBUG=false jest --testTimeout=10000 --forceExit --detectOpenHandles --watchAll --maxWorkers=1",
     "start": "node app.js",
     "dev-node": "nodemon app.js",
-    "dev-vite": "vite --port 3002",
+    "dev": "vite --port 3002",
     "build": "vite build",
     "preview": "vite preview --port 4173",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"

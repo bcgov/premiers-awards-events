@@ -1,4 +1,5 @@
-# table-registration
+# Premier's Awards Table Registration web app
+[![Lifecycle:Maturing](https://img.shields.io/badge/Lifecycle-Maturing-007EC6)](<http://gov.bc.ca>)
 
 This template should help get you started developing with Vue 3 in Vite.
 

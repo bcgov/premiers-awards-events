@@ -8,7 +8,7 @@ export default {
     const user = userStore.getUser || null;
     const username = user.username;
     const menu = ref();
-    const baseURL = process.env.VUE_APP_BASE_URL;
+    const baseURL = import.meta.env.VITE_BASE_URL;
 
     const siteNav = ref([
       {
