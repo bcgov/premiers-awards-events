@@ -12,7 +12,7 @@ require('dotenv').config();
 
 // initialization settings
 const nodeEnv = process.env.NODE_ENV;
-const apiURL = process.env.VITE_API_URL;
+const apiURL = process.env.API_URL;
 const superadminGUID = process.env.SUPER_ADMIN_GUID;
 const superadminUser = process.env.SUPER_ADMIN_USER;
 

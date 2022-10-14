@@ -1,5 +1,5 @@
 /*!
- * API error handlers
+ * Error handlers
  * File: error.js
  * Copyright(c) 2022 BC Gov
  * MIT Licensed
@@ -7,6 +7,10 @@
 
 'use strict';
 
+// global logger
+const {logger} = require('./logger');
+
+// error codes/messages
 const errors = {
   default: {
     hint: 'Generic error for server failure.',
@@ -17,6 +21,12 @@ const errors = {
   dbError: {
     hint: 'Database failed to complete transaction.',
     msg: 'Database error has occurred. Please contact the site administrator',
+    status: 500,
+    type: 'error'
+  },
+  noTestInit: {
+    hint: 'Test user was not created.',
+    msg: 'Test user not initialized for local environment. Ensure the .env.production file is complete.',
     status: 500,
     type: 'error'
   },
@@ -39,7 +49,7 @@ const errors = {
     type: 'error'
   },
   invalidInput: {
-  hint: 'Input data is invalid.',
+    hint: 'Input data is invalid.',
     msg: 'Invalid or duplicated data. Please check the data fields for errors or record duplication.',
     status: 422,
     type: 'error'
@@ -116,13 +126,18 @@ const errors = {
     status: 403,
     type: 'error'
   },
+  PDFCorrupted: {
+    hint: 'PDF attachments have data corruption, encryption or other errors',
+    msg: 'Your PDF attachments are corrupted or incompatible with this system. Please save your PDFs again and resave this nomination.',
+    status: 422,
+    type: 'error'
+  },
   maxDraftsExceeded: {
     hint: 'Maximum number of drafts allowed for user.',
     msg: 'You have reached the maximum number of draft nominations for your account.',
     status: 422,
     type: 'error'
   },
-
   alreadySubmitted: {
     hint: 'Nomination has submitted status.',
     msg: 'Cannot update a submitted nomination.',
@@ -169,7 +184,7 @@ function decodeError(err = null) {
   const { message='', code='' } = err || {};
 
   // Check for Postgres error codes
-  const key = code ? code : message;
+  const key = code ? code : message ? message : err;
 
   return errors.hasOwnProperty(key) ? errors[key] : errors.default;
 }
@@ -186,21 +201,19 @@ function decodeError(err = null) {
 
 exports.globalHandler = function (err, req, res, next) {
   const e = decodeError(err);
-
-  // report to logger
-  console.error(`ERROR (${err.message})\t${e.msg}\t${e.status}\t${e.hint}`)
-  console.error(`Details:\n\n${err}\n\n`)
-
   // send response
-  return res.status(e.status).json(
-    {
-      view: e.status,
-      message: {
-        msg: e.msg,
-        type: e.type
+  res.status(e.status).json(
+      {
+        view: e.status,
+        message: {
+          msg: e.msg,
+          type: e.type
+        }
       }
-    }
   );
+  const timestamp = new Date();
+  logger.error(`[ERROR] ${e.status} | ${e.msg} ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip} ${timestamp}`);
+  logger.error(`Details:\n\n${err}\n\n`);
 }
 
 /**
@@ -210,17 +223,18 @@ exports.globalHandler = function (err, req, res, next) {
  * @public
  * @param req
  * @param res
- * @param next
  */
 
-exports.notFoundHandler = function (req, res, next) {
-  return res.status(404).json(
-    {
-      view: 'notFound',
-      message: {
-        msg: errors.notFound.msg,
-        type: 'error'
+exports.notFoundHandler = function (req, res) {
+  res.status(404).json(
+      {
+        view: 'notFound',
+        message: {
+          msg: errors.notFound.msg,
+          type: 'error'
+        }
       }
-    }
   );
+  const timestamp = new Date();
+  logger.error(`[NotFound] 404 | ${res.statusMessage} - ${req.originalUrl} - ${req.method} - ${req.ip} ${timestamp}`);
 }
