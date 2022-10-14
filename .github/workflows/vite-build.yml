@@ -51,7 +51,7 @@ jobs:
 
     - name: Copy Artifact
       run: mkdir dist
-      
+
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
       with:

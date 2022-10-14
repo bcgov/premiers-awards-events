@@ -59,7 +59,7 @@ exports.authenticate = async (req, res, next) => {
       }
     });
 
-    console.log('Response:', response)
+    // handle response
     const {data = {}} = response || {};
     const { SMGOV_GUID=[null], username=[null] } = data || {};
 
