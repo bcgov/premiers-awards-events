@@ -78,7 +78,7 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 
 // initialize frontend routes
 app.get('/', frontendRouter);
-app.use('*', authenticate);
+// app.use('*', authenticate);
 app.use('/events', express.static(path.join(__dirname, 'dist')));
 
 // handle generic errors
