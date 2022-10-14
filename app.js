@@ -39,9 +39,9 @@ require('dotenv').config();
 // initialization settings
 const nodeENV = process.env.NODE_ENV;
 const baseURL = process.env.BASE_URL;
-const appPort = process.env.PORT;
+const appPort = process.env.PORT || 3000;
 const apiURL = process.env.API_URL;
-const appURL = `${baseURL}${nodeENV === 'local' ? `:${appPort}` : ''}`
+const appURL = `${baseURL}${nodeENV === 'production' ? `/events` : ''}${nodeENV === 'local' ? `:${appPort}` : ''}`
 
 // configure CORS allowed hostnames
 const allowedOrigins = [appURL, apiURL];
