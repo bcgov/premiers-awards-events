@@ -75,9 +75,6 @@ app.use(history());
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
 // initialize frontend routes
-app.get('/', function (req, res) {
-  res.send('/app/dist/index.html')
-});
 app.use('/', express.static(path.join(__dirname, 'dist')));
 
 // handle generic errors
