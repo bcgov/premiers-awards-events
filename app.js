@@ -78,7 +78,7 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 app.get('/', function (req, res) {
   res.json('App is running.');
 });
-app.use('/events', express.static(path.join(__dirname, 'dist')));
+app.use('/', express.static(path.join(__dirname, 'dist')));
 
 // handle generic errors
 app.use(globalHandler);
