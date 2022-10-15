@@ -8,13 +8,11 @@
 'use strict';
 
 const express = require('express');
-const frontendRouter = require('./router');
 const history = require('connect-history-api-fallback');
 const path = require('path');
 const cors = require('cors');
 const {notFoundHandler, globalHandler} = require('./error');
 const cookieParser = require('cookie-parser');
-const {authenticate} = require('./auth');
 const {requestLogger} = require('./logger');
 require('dotenv').config();
 
@@ -77,8 +75,9 @@ app.use(history());
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
 // initialize frontend routes
-app.get('/', frontendRouter);
-// app.use('*', authenticate);
+app.get('/', function (req, res) {
+  res.json('App is running.');
+});
 app.use('/events', express.static(path.join(__dirname, 'dist')));
 
 // handle generic errors
