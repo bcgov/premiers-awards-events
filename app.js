@@ -77,14 +77,14 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 // initialize frontend routes
 app.use('/', express.static(path.join(__dirname, 'dist')));
 
+// log requests
+app.use(requestLogger);
+
 // handle generic errors
 app.use(globalHandler);
 
 // handle 404 errors
 app.use(notFoundHandler);
-
-// log requests
-app.use(requestLogger);
 
 // Run API server
 app.listen(appPort, () => {

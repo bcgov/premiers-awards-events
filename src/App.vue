@@ -8,7 +8,6 @@ export default {
     const user = userStore.getUser || null;
     const username = user.username;
     const menu = ref();
-    const baseURL = import.meta.env.VITE_BASE_URL;
 
     const siteNav = ref([
       {
@@ -17,7 +16,7 @@ export default {
       },
       {
         label: "About",
-        url: baseURL,
+        url: 'https://premiersawards.gww.gov.bc.ca',
       },
       {
         label: () => userStore.getUser.username || "Account",
