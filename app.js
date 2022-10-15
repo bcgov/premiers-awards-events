@@ -74,10 +74,7 @@ app.use(history());
 // parse cookies to store session data
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
-// initialize frontend routes
-app.get('/', function (req, res) {
-  res.json('App is running.');
-});
+// initialize frontend build routes
 app.use('/', express.static(path.join(__dirname, 'dist')));
 
 // handle generic errors
