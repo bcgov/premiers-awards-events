@@ -42,7 +42,7 @@ const apiURL = process.env.API_URL;
 const appURL = `${baseURL}${nodeENV === 'production' ? `/events` : ''}${nodeENV === 'local' ? `:${appPort}` : ''}`
 
 // configure CORS allowed hostnames
-const allowedOrigins = [appURL, apiURL];
+const allowedOrigins = [baseURL, appURL, apiURL];
 
 const corsConfig = {
   origin: function(origin, callback) {
