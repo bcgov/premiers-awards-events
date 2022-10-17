@@ -7,6 +7,7 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   plugins: [vue()],
   base: "/events/",
+  envDir: "/app",
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
