@@ -99,10 +99,14 @@ export const useGuestsStore = defineStore({
       await apiRoutes.updateGuest(id, guestData).then(() => {
         tableStore.registerTable(table._id, {
           $push: {
-            guests: id,
+            guests: { $each: [id] },
             organizations: {
-              organization: guestData.organization,
-              guestID: id,
+              $each: [
+                {
+                  organization: guestData.organization,
+                  guestID: id,
+                },
+              ],
             },
           },
         });
@@ -126,7 +130,7 @@ export const useGuestsStore = defineStore({
       const newGuest = await apiRoutes.createGuest(guestData);
       const id = newGuest.data._id;
       await financialStore.registerFinancialInformation({
-        $push: { guests: id },
+        $push: { guests: { $each: [id] } },
       });
       this.guest["guid"] = newGuest.data["guid"];
       return this.guest;
