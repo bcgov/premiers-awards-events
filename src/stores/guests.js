@@ -1,7 +1,8 @@
 import { defineStore } from "pinia";
 import apiRoutes from "../services/api-routes.services";
+import tableRoutes from "../services/api-routes.tables";
 import { useFinancialStore } from "./financial";
-import { useAuthUserStore } from "./users";
+import { useTablesStore } from "./tables";
 
 export const useGuestsStore = defineStore({
   id: "guestsStore",
@@ -15,6 +16,7 @@ export const useGuestsStore = defineStore({
         organization: "",
         accessibility: [],
         dietary: [],
+        notes: "",
       },
       guests: [],
     };
@@ -22,6 +24,9 @@ export const useGuestsStore = defineStore({
   getters: {
     getGuestsCount() {
       return this.guests.length;
+    },
+    getGuestTableStatus() {
+      return this.guest.table;
     },
   },
   actions: {
@@ -32,22 +37,22 @@ export const useGuestsStore = defineStore({
       this.guests = guestList.guests || [];
     },
 
+    async fillGuestsTable(guid) {
+      const guestList = await (
+        await tableRoutes.getGuestsByTable(guid)
+      ).data[0];
+      this.guests = guestList.guests || [];
+    },
+
     async fillGuests() {
-      //this.guests = await apiRoutes.getGuestByRegistration(registrationID);
       this.guests = await (await apiRoutes.getAllGuests()).data;
     },
 
     async addRegistrationData() {
-      console.log("registrationdata add");
       const registrationData = useFinancialStore();
       this.guest.registration = await registrationData.getId;
     },
     async addGuestList() {
-      // const userData = useAuthUserStore();
-      // this.guest.registration = await userData.getId;
-      // const registrationData = useFinancialStore();
-      // this.guest.registration = await registrationData.getId;
-
       const {
         registration = "",
         guid = "",
@@ -74,6 +79,36 @@ export const useGuestsStore = defineStore({
       await apiRoutes.updateGuest(id, guestData);
     },
 
+    async removeGuestFromTable(id, guestData, table) {
+      const tableStore = useTablesStore();
+      await apiRoutes.updateGuest(id, guestData).then(() => {
+        tableStore.registerTable(table._id, {
+          $pull: {
+            guests: id,
+            organizations: {
+              organization: guestData.organization,
+              guestID: id,
+            },
+          },
+        });
+      });
+    },
+
+    async addGuestToTable(id, guestData, table) {
+      const tableStore = useTablesStore();
+      await apiRoutes.updateGuest(id, guestData).then(() => {
+        tableStore.registerTable(table._id, {
+          $push: {
+            guests: id,
+            organizations: {
+              organization: guestData.organization,
+              guestID: id,
+            },
+          },
+        });
+      });
+    },
+
     async deleteGuest(id, registrationID) {
       const financialStore = useFinancialStore();
       await apiRoutes.deleteGuest(id).then(() => {
@@ -87,7 +122,6 @@ export const useGuestsStore = defineStore({
     },
 
     async registerGuest(guestData) {
-      // await apiRoutes.createGuest(guestData);
       const financialStore = useFinancialStore();
       const newGuest = await apiRoutes.createGuest(guestData);
       const id = newGuest.data._id;

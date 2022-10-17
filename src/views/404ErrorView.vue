@@ -1,7 +1,7 @@
 <template>
   <div class="page-not-found">
-    <Message severity="error" :closable="false"
-      >404: Page could not be found.</Message
+    <PrimeMessage severity="error" :closable="false"
+      >404: Page could not be found.</PrimeMessage
     >
   </div>
 </template>

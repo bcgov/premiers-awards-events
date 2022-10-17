@@ -90,14 +90,15 @@ const authenticate = async (to, from, next) => {
  */
 
 const authorizeRegistrar = async (to, from, next) => {
-  const { role = "" } = (await getUserData()) || {};
+  const { role = "", eventregistrar = false } = (await getUserData()) || {};
   if (
     ![
       "registrar",
       "nominator",
       "administrator",
       "super-administrator",
-    ].includes(role)
+    ].includes(role) ||
+    ((role === "registrar" || role === "nominator") && !eventregistrar)
   )
     return next({ name: "unauthorized" });
   else next();
@@ -110,12 +111,14 @@ const authorizeAdmin = async (to, from, next) => {
   else next();
 };
 
+/*
 const authorizeSuperAdmin = async (to, from, next) => {
   const { role = "" } = (await getUserData()) || {};
   if (!["super-administrator"].includes(role))
     return next({ name: "unauthorized" });
   else next();
 };
+*/
 
 /**
  * Retrieve user role for route authorization
@@ -161,6 +164,12 @@ const router = createRouter({
       path: "/admin",
       name: "admin",
       component: () => import("../views/AdminRegistrationView.vue"),
+      beforeEnter: authorizeAdmin,
+    },
+    {
+      path: "/admin/settings",
+      name: "admin-settings",
+      component: () => import("../views/AdminSettingsView.vue"),
       beforeEnter: authorizeAdmin,
     },
     {
@@ -211,6 +220,33 @@ const router = createRouter({
     },
 
     {
+      path: "/admin/tables",
+      name: "admin-table-view",
+      component: () => import("../views/AdminTableView.vue"),
+      meta: getMeta("Administration Table View"),
+      beforeEnter: authorizeAdmin,
+    },
+
+    //tables view event planning
+
+    {
+      path: "/admin/tables/event/planning",
+      name: "admin-table-event-view",
+      component: () => import("../views/AdminVisualTableView.vue"),
+      meta: getMeta("Administration Table Event Planning"),
+      beforeEnter: authorizeAdmin,
+    },
+
+    {
+      path: "/admin/table/:id",
+      name: "individual-table-view",
+      component: () => import("../views/IndividualTableView.vue"),
+      props: true,
+      meta: getMeta("Edit Table Details"),
+      beforeEnter: authorizeAdmin,
+    },
+
+    {
       path: "/register",
       name: "admin-user-register",
       component: () => import("../views/NewUser.vue"),
@@ -229,13 +265,13 @@ const router = createRouter({
     {
       path: "/401",
       name: "unauthorized",
-      component: () => import("../views/401.vue"),
+      component: () => import("../views/401ErrorView.vue"),
       meta: getMeta("Unauthorized"),
     },
     {
       path: "/:pathMatch(.*)*",
       name: "page-not-found",
-      component: () => import("../views/404.vue"),
+      component: () => import("../views/404ErrorView.vue"),
       meta: getMeta("Page Not Found"),
     },
   ],

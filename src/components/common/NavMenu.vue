@@ -1,8 +1,14 @@
+<!-- Navbar common component -->
 <template>
   <div>
-    <div class="card">
-      <h5>{{ title }}</h5>
-      <TabMenu :model="items" :activeIndex="activeIndex" />
+    <div class="card navigation-card">
+      <h5 v-if="title" class="spacer">{{ title }}</h5>
+      <div class="spacer" v-else></div>
+      <TabMenu
+        class="admin-nav"
+        :model="menuitems"
+        :activeIndex="activeIndex"
+      />
       <RouterView />
     </div>
   </div>
@@ -16,14 +22,18 @@ export default {
     title: String,
     menuitems: Array,
   },
-  setup(props) {
-    const items = ref(props.menuitems);
-    const title = props.title;
+  setup() {
     const activeIndex = ref(0);
 
-    return { title, items, activeIndex };
+    return { activeIndex };
   },
 };
 </script>
 
-<style scoped></style>
+<style lang="scss">
+.navigation-card {
+  .spacer {
+    margin: 1rem;
+  }
+}
+</style>

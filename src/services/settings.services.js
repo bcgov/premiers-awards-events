@@ -7,7 +7,24 @@
 import { FilterMatchMode, FilterOperator } from "primevue/api";
 
 const schemaData = {
-  year: "2022",
+  navItems: [
+    {
+      label: "Registrations",
+      to: "/admin",
+    },
+    {
+      label: "Guests",
+      to: "/admin/guests",
+    },
+    {
+      label: "Tables",
+      to: "/admin/tables",
+    },
+    {
+      label: "Event Planning",
+      to: "/admin/tables/event/planning",
+    },
+  ],
   registrationSelection: [
     { field: "organization", text: "Organization" },
     { field: "branch", text: "Branch" },
@@ -28,6 +45,14 @@ const schemaData = {
     { field: "accessibility", text: "Accessibility Requirements" },
     { field: "dietary", text: "Dietary Requirements" },
   ],
+  tableSelection: [
+    { field: "tablename", text: "Table Name" },
+    { field: "tabletype", text: "Type of Table" },
+    { field: "tablecapacity", text: "Table Capacity" },
+    { field: "tableguestcount", text: "Number of Guests at Table" },
+    { field: "tablefull", text: "Table Full?" },
+    { field: "organizations", text: "Organizations at Table" },
+  ],
   roles: [
     { value: "inactive", text: "Inactive" },
     { value: "registrar", text: "Registrar" },
@@ -36,10 +61,6 @@ const schemaData = {
     { value: "super-administrator", text: "Super-Administrator" },
   ],
   organizations: [
-    {
-      value: null,
-      text: "Please select an eligible Ministry or organization",
-    },
     { value: "org-1", text: "Advanced Education and Skills Training" },
     { value: "org-2", text: "Agriculture, Food and Fisheries" },
     { value: "org-3", text: "Attorney General & Housing" },
@@ -75,7 +96,8 @@ const schemaData = {
   attendancetypes: [
     { value: "minister", text: "Minister" },
     { value: "deputyminister", text: "Deputy Minister" },
-    { value: "associateminister", text: "Associate/Assistant Deputy Minister" },
+    { value: "assistantminister", text: "Assistant Deputy Minister" },
+    { value: "associateminister", text: "Associate Deputy Minister" },
     { value: "finalist", text: "Finalist" },
     { value: "finalistguest", text: "Finalist Guest" },
     { value: "generalattendee", text: "General Attendee" },
@@ -96,12 +118,16 @@ const schemaData = {
     { value: "attendantrequired", text: "Attendant Required" },
     { value: "mobilityneeds", text: "Mobility Needs" },
   ],
+  tabletypes: [
+    { value: "Standard", text: "Standard" },
+    { value: "Reserved", text: "Reserved" },
+  ],
   registrationFilters: {
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 
     organization: {
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+      operator: FilterOperator.OR,
+      constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
     },
     branch: {
       operator: FilterOperator.AND,
@@ -139,29 +165,31 @@ const schemaData = {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
     },
-    tables: {
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
-    },
-    submitted: {
+    guestCount: {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
     },
+    submitted: { value: null, matchMode: FilterMatchMode.EQUALS },
     createdAt: {
       operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+      constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],
     },
     updatedAt: {
       operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+      constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],
     },
+    guestList: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
+    },
+    allAssigned: { value: null, matchMode: FilterMatchMode.EQUALS },
   },
   guestFilters: {
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 
     organization: {
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+      operator: FilterOperator.OR,
+      constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
     },
     firstname: {
       operator: FilterOperator.AND,
@@ -172,24 +200,61 @@ const schemaData = {
       constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
     },
     attendancetype: {
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+      operator: FilterOperator.OR,
+      constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
     },
     accessibility: {
+      operator: FilterOperator.OR,
+      constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
+    },
+    dietary: {
+      operator: FilterOperator.OR,
+      constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
+    },
+    createdAt: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],
+    },
+    updatedAt: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],
+    },
+    assignedTable: { value: null, matchMode: FilterMatchMode.EQUALS },
+  },
+  tableFilters: {
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    guid: {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
     },
-    dietary: {
+    tablename: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+    },
+    tabletype: {
+      operator: FilterOperator.OR,
+      constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
+    },
+    tablecapacity: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
+    },
+    guestCount: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
+    },
+    tableStatus: { value: null, matchMode: FilterMatchMode.EQUALS },
+    organizations: {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
     },
     createdAt: {
       operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+      constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],
     },
     updatedAt: {
       operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+      constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],
     },
   },
   userFilters: {
@@ -226,6 +291,7 @@ const schemaData = {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
     },
+    eventregistrar: { value: null, matchMode: FilterMatchMode.EQUALS },
   },
 };
 

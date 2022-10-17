@@ -1,5 +1,5 @@
 import api from "./api.services";
-class TablesDataService {
+class RegistrationsDataService {
   getAllGuests() {
     return api.get("/tables/guests");
   }
@@ -42,11 +42,8 @@ class TablesDataService {
   deleteRegistration(id) {
     return api.post(`/tables/registrations/delete/${id}`);
   }
-  //   deleteAll() {
-  //     return api.delete(`/registrations`);
-  //   }
   findBy(name) {
     return api.get(`/tables/guests?name=${name}`);
   }
 }
-export default new TablesDataService();
+export default new RegistrationsDataService();

@@ -19,7 +19,6 @@ export const useMessageStore = defineStore({
   },
   actions: {
     setMessage(newValue) {
-      //   console.log(newValue, "this is newvalue");
       const { text = "", type = "", spinner = false } = newValue || {};
       this.message = { text: text, type: type, spinner: spinner };
     },

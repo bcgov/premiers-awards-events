@@ -1,6 +1,7 @@
+<!-- Handle user registration -->
 <template>
   <div>
-    <Message show v-if="user && isRegistered" variant="info" :closable="false">
+    <PrimeMessage show v-if="isRegistered()" variant="info" :closable="false">
       <p v-if="user.role === 'inactive'">
         Your registration is currently under review. Please check back regularly
         for updates.
@@ -9,8 +10,23 @@
         You are currently registered as a(n) <b>{{ user.role }}</b
         >.
       </p>
-    </Message>
-    <Message
+      <p
+        v-if="
+          (user.role !== 'inactive' &&
+            user.eventregistrar === false &&
+            !isAdmin) ||
+          user.eventregistrar === undefined
+        "
+      >
+        Your profile is not currently eligible to submit and event registration.
+        If you believe this is a mistake, please contact
+        <a href="mailto: PremiersAwards@gov.bc.ca">PremiersAwards@gov.bc.ca</a>.
+      </p>
+      <p v-else-if="user.role !== 'inactive' && user.eventregistrar === true">
+        You are currently eligible to submit an event registration.
+      </p>
+    </PrimeMessage>
+    <PrimeMessage
       show
       v-if="activeMessage"
       :variant="message.type"
@@ -20,13 +36,14 @@
       <p>
         {{ message.text }}
       </p>
-    </Message>
+    </PrimeMessage>
 
-    <Card v-if="user && (!isRegistered || edit)">
+    <PrimeCard v-if="!isRegistered() || edit">
       <template #content>
         <form>
           <InputText
             id="input-user-register-username"
+            title="username"
             :disabled="true"
             :value="user.username"
           >
@@ -34,53 +51,68 @@
 
           <InputText
             id="input-user-register-firstname"
+            title="first name"
             v-model="user.firstname"
             placeholder="Enter user's given name"
+            :disabled="edit && !isAdmin"
           >
           </InputText>
 
           <InputText
             id="input-user-register-lastname"
+            title="last name"
             v-model="user.lastname"
             placeholder="Enter user's last name"
+            :disabled="edit && !isAdmin"
           />
 
           <InputText
             type="email"
+            title="email address"
             id="input-user-register-email"
             v-model="user.email"
             placeholder="Enter user's email"
+            :disabled="edit && !isAdmin"
           >
           </InputText>
-          <Button
-            v-if="edit"
+          <PrimeButton
+            v-if="edit && isAdmin"
             @click="update"
             :disabled="!validation"
             class="m-2"
             type="button"
             variant="info"
-            >Update</Button
+            >Update</PrimeButton
           >
 
-          <Button
-            v-else
+          <PrimeButton
+            v-else-if="!edit && !isAdmin"
             @click="register"
             :disabled="!validation"
             class="m-2"
             type="button"
             variant="info"
-            >Register</Button
+            >Register</PrimeButton
           >
         </form>
+        <small v-if="!isAdmin && edit">
+          <p class="p-error">
+            Please contact
+            <a href="mailto: PremiersAwards@gov.bc.ca"
+              >PremiersAwards@gov.bc.ca</a
+            >
+            if you need to update your personal profile information.
+          </p>
+        </small>
       </template>
-    </Card>
+    </PrimeCard>
   </div>
 </template>
 
 <script>
 import { useAuthUserStore } from "../stores/users";
 import { storeToRefs } from "pinia";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import useVuelidate from "@vuelidate/core";
 import { required, email } from "@vuelidate/validators";
 import { useMessageStore } from "../stores/messages";
@@ -90,29 +122,42 @@ export default {
   props: {
     edit: Boolean,
   },
-  setup(props) {
+  setup() {
     const userStore = useAuthUserStore();
     const messageStore = useMessageStore();
     const { message } = storeToRefs(useMessageStore());
     const activeMessage = ref(false);
     const { user } = storeToRefs(useAuthUserStore());
+
+    //Submission rules and validation
     const rules = {
       firstname: { required },
       lastname: { required },
       email: { required, email },
     };
 
-    const edit = props.edit || false;
-
     const v$ = useVuelidate(rules, user);
 
-    const validation = function () {
-      return !!this.user.guid && !!this.user.username;
-    };
+    const validation = computed(() => {
+      const valid =
+        user.value.email && user.value.firstname && user.value.lastname;
+      return valid;
+    });
+
+    const isAdmin = computed(() => {
+      const admin =
+        user.value.role === "administrator" ||
+        user.value.role === "super-administrator"
+          ? true
+          : false;
+      return admin;
+    });
+
+    //Data check and handling
 
     const isRegistered = function () {
       const currentUser = userStore.getUser;
-      return this.mode === "register" && !!currentUser.role;
+      return currentUser.role;
     };
 
     const register = async function () {
@@ -124,10 +169,11 @@ export default {
           spinner: true,
         });
         // handle data submission
-        const response = await apiRoutesUsers.registerUser(user.value);
-        messageStore.setMessage({
-          text: "Successfully registered user!",
-          type: "success",
+        await apiRoutesUsers.registerUser(user.value).then(() => {
+          messageStore.setMessage({
+            text: "Successfully registered user!",
+            type: "success",
+          });
         });
       } catch (err) {
         console.error(err);
@@ -149,10 +195,7 @@ export default {
         });
 
         // handle data submission
-        const response = await apiRoutesUsers.updateUser(
-          user.value.guid,
-          user.value
-        );
+        await apiRoutesUsers.updateUser(user.value.guid, user.value);
         messageStore.setMessage({
           text: "Successfully updated user!",
           type: "success",
@@ -171,13 +214,13 @@ export default {
       user,
       message,
       rules,
-      edit,
       v$,
       isRegistered,
       validation,
       register,
       update,
       activeMessage,
+      isAdmin,
     };
   },
 };

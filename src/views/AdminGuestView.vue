@@ -4,29 +4,21 @@ import { useGuestsStore } from "../stores/guests";
 import { ref } from "vue";
 import PageHeader from "../components/common/PageHeader.vue";
 import GuestList from "../components/GuestList.vue";
+import formServices from "../services/settings.services";
 import NavMenu from "../components/common/NavMenu.vue";
 const userStore = useAuthUserStore();
 const guestStore = useGuestsStore();
 
-const navItems = [
-  {
-    label: "Registrations",
-    to: "/admin",
-  },
-  {
-    label: "Guests",
-    to: "/admin/guests",
-  },
-];
+const navItems = ref(formServices.get("navItems") || []);
 
 const guestInfoDialog = ref(false);
 const guestCountAll = () => {
   return String(guestStore.getGuestsCount);
 };
 
-//Dialog controls
+//PrimeDialog controls
 
-const guestInfo = (prod) => {
+const guestInfo = () => {
   guestInfoDialog.value = true;
 };
 
@@ -36,7 +28,7 @@ userStore.login();
 <template>
   <main>
     <PageHeader title="All Guests" subtitle="Manage PA Guests" />
-    <Button
+    <PrimeButton
       label="Guest Count"
       type="button"
       icon="pi pi-ticket"
@@ -46,14 +38,14 @@ userStore.login();
       badgeClass="p-badge-danger"
     />
 
-    <Dialog
+    <PrimeDialog
       v-model:visible="guestInfoDialog"
       header="Total Count of Current Guests"
       :modal="true"
       class="p-fluid"
       >Current guest count across all registrations:
       {{ guestCountAll() }}
-    </Dialog>
+    </PrimeDialog>
     <NavMenu :title="''" :menuitems="navItems" />
     <GuestList :adminView="true" />
   </main>

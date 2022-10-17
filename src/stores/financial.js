@@ -14,10 +14,10 @@ export const useFinancialStore = defineStore({
         primaryemail: "",
         financialcontact: "",
         clientministry: null,
-        respcode: null,
+        respcode: "",
         serviceline: null,
         stob: null,
-        project: null,
+        project: "",
         guests: [],
         submitted: false,
       },
@@ -27,6 +27,20 @@ export const useFinancialStore = defineStore({
   getters: {
     getRegistration() {
       return this.registration;
+    },
+    getCompleted() {
+      const status =
+        this.registration.organization &&
+        this.registration.branch &&
+        this.registration.primarycontact &&
+        this.registration.primaryemail &&
+        this.registration.financialcontact &&
+        this.registration.clientministry &&
+        this.registration.respcode &&
+        this.registration.serviceline &&
+        this.registration.stob &&
+        this.registration.project;
+      return status;
     },
     getId() {
       return this.registration._id;
