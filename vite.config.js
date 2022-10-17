@@ -11,7 +11,7 @@ export default defineConfig(({ command, mode }) => {
   return {
     envPrefix: 'PA_APPS_',
     plugins: [vue()],
-    base: env.PA_APPS_BASE,
+    base: env.PA_APPS_EVENTS_BASE,
     define: `{"PA_APPS_API_URL": "${env.PA_APPS_API_URL}"}`,
     resolve: {
       alias: {
