@@ -12,7 +12,8 @@ require('dotenv').config();
 
 // initialization settings
 const nodeEnv = process.env.NODE_ENV;
-const apiURL = process.env.API_URL;
+const baseURL = process.env.PA_APPS_BASE_URL;
+const apiURL = process.env.PA_APPS_API_URL;
 const superadminGUID = process.env.SUPER_ADMIN_GUID;
 const superadminUser = process.env.SUPER_ADMIN_USER;
 
@@ -53,7 +54,7 @@ exports.authenticate = async (req, res, next) => {
     const SessionCookie = "session=" + session + "; " + expires + "; path=/; HttpOnly; Secure=true;";
 
     // call SAML API - user data endpoint
-    let response = await axios.get(`${apiURL}/user_info`, {
+    let response = await axios.get(`${baseURL}/user_info`, {
       headers: {
         'Cookie': `${SessionCookie} ${SMSCookie}`
       }
