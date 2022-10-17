@@ -36,10 +36,10 @@ require('dotenv').config();
 
 // initialization settings
 const nodeENV = process.env.NODE_ENV;
-const baseURL = process.env.PA_EVENTS_BASE_URL;
-const appPort = process.env.PA_EVENTS_APP_PORT || 3000;
-const apiURL = process.env.PA_EVENTS_API_URL;
-const appURL = `${baseURL}${nodeENV === 'production' ? `/events` : ''}${nodeENV === 'development' ? `:${appPort}` : ''}`
+const baseURL = process.env.PA_APPS_BASE_URL;
+const appPort = process.env.PA_APPS_EVENTS_PORT || 3000;
+const apiURL = process.env.PA_APPS_API_URL;
+const appURL = process.env.PA_APPS_EVENTS_URL;
 
 // configure CORS allowed hostnames
 const allowedOrigins = [baseURL, appURL, apiURL];
@@ -97,7 +97,6 @@ app.listen(appPort, () => {
   console.log(`\t- Allowed origins:`, allowedOrigins.join(', '));
   console.log(`============================================`);
 });
-
 
 // expose application
 exports.app = app;

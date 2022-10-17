@@ -8,7 +8,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: import.meta.env.PA_EVENTS_API_URL,
+  baseURL: import.meta.env.PA_APPS_API_URL,
   headers: {
     "Content-Type": "application/json",
     dataType: "json",
