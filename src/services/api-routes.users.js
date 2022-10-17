@@ -2,27 +2,27 @@ import api from "./api.services";
 
 class UsersDataService {
   getAllUsers() {
-    return api.get("/users/view");
+    return api.get("/admin/users/view");
   }
 
   getUserByID(guid) {
-    return api.get(`/users/view/${guid}`);
+    return api.get(`/admin/users/view/${guid}`);
   }
 
   getUserInfo() {
-    return api.get(`users/info`);
+    return api.get(`/admin/users/info`);
   }
 
   login() {
-    return api.get("users/login");
+    return api.get("/admin/users/login");
   }
 
   logout() {
-    return api.get("users/logout");
+    return api.get("/admin/users/logout");
   }
 
   activate(guid) {
-    return api.get(`users/activate/${guid}`);
+    return api.get(`/admin/users/activate/${guid}`);
   }
 
   getUserByRegistration(registrationID) {
@@ -30,19 +30,19 @@ class UsersDataService {
   }
 
   registerUser(data) {
-    return api.post("users/register", data);
+    return api.post("/admin/users/register", data);
   }
 
   deleteUser(id) {
-    return api.get(`/users/delete/${id}`);
+    return api.get(`/admin/users/delete/${id}`);
   }
 
   updateUser(id, data) {
-    return api.post(`/users/update/${id}`, data);
+    return api.post(`/admin/users/update/${id}`, data);
   }
 
   findBy(name) {
-    return api.get(`/users?firstname=${name}`);
+    return api.get(`/admin/users?firstname=${name}`);
   }
 }
 export default new UsersDataService();
