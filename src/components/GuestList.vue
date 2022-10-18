@@ -368,10 +368,8 @@
         class="p-fluid"
         @show="
           () =>
-            (guest.organization = lookup(
-              'organizations',
-              guest.organization || guest.organization
-            ))
+            (guest.organization =
+              lookup('organizations', guest.organization) || guest.organization)
         "
       >
         <div class="dropdown">
