@@ -179,6 +179,7 @@
         <PrimeColumn header="Options">
           <template #body="{ data }">
             <PrimeButton
+              v-if="data.submitted"
               icon="pi pi-pencil"
               label="Bulk Seat Registration"
               class="p-button-rounded p-button-success mr-2 edit-button"

@@ -8,7 +8,7 @@
           `${
             table.registrationOrganizations
               ? table.registrationOrganizations
-              : 'No Guests'
+              : ''
           }`
         "
       />

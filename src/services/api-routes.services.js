@@ -39,6 +39,15 @@ class RegistrationsDataService {
   updateRegistration(id, data) {
     return api.post(`/tables/registrations/${id}`, data);
   }
+
+  pushToRegistration(id, data) {
+    return api.post(`/tables/registrations/${id}/push`, data);
+  }
+
+  pullFromRegistration(id, data) {
+    return api.post(`/tables/registrations/${id}/pull`, data);
+  }
+
   deleteRegistration(id) {
     return api.post(`/tables/registrations/delete/${id}`);
   }

@@ -37,6 +37,7 @@ import Row from "primevue/row";
 import Dialog from "primevue/dialog";
 import TriStateCheckbox from "primevue/tristatecheckbox";
 import Calendar from "primevue/calendar";
+import AutoComplete from "primevue/autocomplete";
 
 const app = createApp(App);
 
@@ -74,5 +75,6 @@ app.component("PrimeRow", Row);
 app.component("PrimeDialog", Dialog);
 app.component("TriStateCheckbox", TriStateCheckbox);
 app.component("PrimeCalendar", Calendar);
+app.component("AutoComplete", AutoComplete);
 
 app.mount("#app");

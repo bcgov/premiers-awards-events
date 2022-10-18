@@ -78,7 +78,10 @@
           <template #body="{ data }">
             {{ lookup("attendancetypes", data.attendancetype) }}
             <br />
-            Organization: {{ lookup("organizations", data.organization) }}
+            Organization:
+            {{
+              lookup("organizations", data.organization) || data.organization
+            }}
 
             <br />
             Registration:

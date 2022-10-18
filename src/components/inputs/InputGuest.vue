@@ -17,15 +17,20 @@
       <div class="guest-registration-selections">
         <div class="dropdown">
           <label for="organization">Organization:</label>
-          <DropDown
+          <AutoComplete
             v-bind:class="{ 'p-invalid': v$.organization.$error }"
-            id="organization"
             v-model="guest.organization"
-            :options="organizations"
+            :dropdown="true"
+            :suggestions="filteredOrganizations"
+            @complete="searchOrganization($event)"
+            placeholder="Select an organization or enter manually"
             optionLabel="text"
-            optionValue="value"
-            placeholder="Select an Organization"
-          />
+            field="text"
+          >
+            <template #option="slotProps">
+              <div>{{ slotProps.option.text }}</div>
+            </template></AutoComplete
+          >
           <small
             v-if="v$.organization.$error"
             class="p-error"
@@ -153,6 +158,7 @@ export default {
 
     const v$ = useVuelidate(rules, guest);
     const organizations = ref(formServices.get("organizations") || []);
+    const filteredOrganizations = ref();
     const attendancetypes = ref(formServices.get("attendancetypes") || []);
     const accessibility = ref(formServices.get("accessibilityoptions") || []);
     const dietary = ref(formServices.get("dietaryoptions") || []);
@@ -160,6 +166,23 @@ export default {
     if (props.registrationID) {
       registrationData.fill(props.registrationID);
     }
+
+    //filters organizations on drop-down
+    const searchOrganization = (event) => {
+      setTimeout(() => {
+        if (!event.query.trim().length) {
+          filteredOrganizations.value = organizations.value;
+        } else {
+          filteredOrganizations.value = organizations.value.filter(
+            (organization) => {
+              return organization.text
+                .toLowerCase()
+                .startsWith(event.query.toLowerCase());
+            }
+          );
+        }
+      }, 100);
+    };
 
     let loading = ref(false);
     let message = ref(false);
@@ -170,6 +193,10 @@ export default {
       const isFormCorrect = await this.v$.$validate();
       if (!isFormCorrect) return;
       this.guest.registration = registrationData.getId;
+      this.guest.organization =
+        typeof this.guest.organization === "string"
+          ? this.guest.organization
+          : this.guest.organization.value;
       try {
         loading.value = true;
         guestData
@@ -225,6 +252,8 @@ export default {
       accessibility,
       attendancetypes,
       rules,
+      filteredOrganizations,
+      searchOrganization,
       onSubmit,
       onReset,
     };

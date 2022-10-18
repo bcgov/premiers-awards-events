@@ -188,6 +188,20 @@ export const useTablesStore = defineStore({
       return this.table;
     },
 
+    async pushTableDetails(guid, tableData) {
+      const id = guid || this.table._id;
+      const newTable = await tableRoutes.pushToTable(id, tableData);
+      this.table = newTable.data;
+      return this.table;
+    },
+
+    async pullTableDetails(guid, tableData) {
+      const id = guid || this.table._id;
+      const newTable = await tableRoutes.pullFromTable(id, tableData);
+      this.table = newTable.data;
+      return this.table;
+    },
+
     async registerTableHandler(tableData) {
       const id = tableData["_id"] || "";
       if (await tableRoutes.getTable(id)) {

@@ -132,5 +132,25 @@ export const useFinancialStore = defineStore({
       this.registration = newRegistration.data;
       return this.registration;
     },
+
+    async pushFinancialInformation(registrationData, regID) {
+      const id = regID || this.registration._id;
+      const newRegistration = await apiRoutes.pushToRegistration(
+        id,
+        registrationData
+      );
+      this.registration = newRegistration.data;
+      return this.registration;
+    },
+
+    async pullFinancialInformation(registrationData, regID) {
+      const id = regID || this.registration._id;
+      const newRegistration = await apiRoutes.pullFromRegistration(
+        id,
+        registrationData
+      );
+      this.registration = newRegistration.data;
+      return this.registration;
+    },
   },
 });

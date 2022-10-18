@@ -23,6 +23,12 @@ class SeatingDataService {
   updateTable(id, data) {
     return api.post(`/tables/seating/${id}`, data);
   }
+  pushToTable(id, data) {
+    return api.post(`/tables/seating/${id}/push`, data);
+  }
+  pullFromTable(id, data) {
+    return api.post(`/tables/seating/${id}/pull`, data);
+  }
   deleteTable(id) {
     return api.post(`/tables/seating/delete/${id}`);
   }

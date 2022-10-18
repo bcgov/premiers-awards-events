@@ -82,13 +82,11 @@ export const useGuestsStore = defineStore({
     async removeGuestFromTable(id, guestData, table) {
       const tableStore = useTablesStore();
       await apiRoutes.updateGuest(id, guestData).then(() => {
-        tableStore.registerTable(table._id, {
-          $pull: {
-            guests: id,
-            organizations: {
-              organization: guestData.organization,
-              guestID: id,
-            },
+        tableStore.pullTableDetails(table._id, {
+          guests: id,
+          organizations: {
+            organization: guestData.organization,
+            guestID: id,
           },
         });
       });
@@ -97,17 +95,11 @@ export const useGuestsStore = defineStore({
     async addGuestToTable(id, guestData, table) {
       const tableStore = useTablesStore();
       await apiRoutes.updateGuest(id, guestData).then(() => {
-        tableStore.registerTable(table._id, {
-          $push: {
-            guests: { $each: [id] },
-            organizations: {
-              $each: [
-                {
-                  organization: guestData.organization,
-                  guestID: id,
-                },
-              ],
-            },
+        tableStore.pushTableDetails(table._id, {
+          guests: id,
+          organizations: {
+            organization: guestData.organization,
+            guestID: id,
           },
         });
       });
@@ -116,10 +108,9 @@ export const useGuestsStore = defineStore({
     async deleteGuest(id, registrationID) {
       const financialStore = useFinancialStore();
       await apiRoutes.deleteGuest(id).then(() => {
-        financialStore.registerFinancialInformation(
-          {
-            $pull: { guests: id },
-          },
+        financialStore.pullFinancialInformation(
+          { guests: id },
+
           registrationID
         );
       });
@@ -129,9 +120,7 @@ export const useGuestsStore = defineStore({
       const financialStore = useFinancialStore();
       const newGuest = await apiRoutes.createGuest(guestData);
       const id = newGuest.data._id;
-      await financialStore.registerFinancialInformation({
-        $push: { guests: { $each: [id] } },
-      });
+      await financialStore.pushFinancialInformation({ guests: id });
       this.guest["guid"] = newGuest.data["guid"];
       return this.guest;
     },

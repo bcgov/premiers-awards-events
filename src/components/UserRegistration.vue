@@ -18,7 +18,7 @@
           user.eventregistrar === undefined
         "
       >
-        Your profile is not currently eligible to submit an event registration.
+        Your profile is not currently eligible to submit and event registration.
         If you believe this is a mistake, please contact
         <a href="mailto: PremiersAwards@gov.bc.ca">PremiersAwards@gov.bc.ca</a>.
       </p>
