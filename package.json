@@ -12,7 +12,8 @@
     "dev": "vite --port 3002",
     "build": "vite build",
     "preview": "vite preview --port 4173",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+    "cy:run": "cypress run"
   },
   "dependencies": {
     "@vuelidate/core": "^2.0.0-alpha.42",
@@ -36,6 +37,7 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.3",
     "cross-env": "^7.0.3",
+    "cypress": "^10.10.0",
     "dotenv": "^16.0.3",
     "eslint": "^8.5.0",
     "eslint-plugin-vue": "^9.0.0",

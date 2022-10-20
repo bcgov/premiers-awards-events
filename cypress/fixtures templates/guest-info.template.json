@@ -1,0 +1,74 @@
+{
+  "guest1":{
+    "organization": "",
+    "firstname": "",
+    "lastname": "",
+    "attendancetype": "",
+    "accessibility": [""],
+    "dietary": [""]
+  },
+
+  "guest2":{
+    "organization": "",
+    "firstname": "",
+    "lastname": "",
+    "attendancetype": "",
+    "accessibility": [""],
+    "dietary": [""]
+  },
+
+  "guest3":{
+    "organization": "",
+    "firstname": "",
+    "lastname": "",
+    "attendancetype": "",
+    "accessibility": [""],
+    "dietary": [""]
+  },
+
+  "guest4":{
+    "organization": "",
+    "firstname": "",
+    "lastname": "",
+    "attendancetype": "",
+    "accessibility": [""],
+    "dietary": [""]
+  },
+
+  "guest5":{
+    "organization": "",
+    "firstname": "",
+    "lastname": "",
+    "attendancetype": "",
+    "accessibility": [""],
+    "dietary": [""]
+  },
+
+  "guest6":{
+    "organization": "",
+    "firstname": "",
+    "lastname": "",
+    "attendancetype": "",
+    "accessibility": [""],
+    "dietary": [""]
+  },
+
+  "guest7":{
+    "organization": "",
+    "firstname": "",
+    "lastname": "",
+    "attendancetype": "",
+    "accessibility": [""],
+    "dietary": [""]
+  },
+
+  "guestFaulty":{
+    "organization": "",
+    "firstname": "",
+    "lastname": "",
+    "attendancetype": "",
+    "accessibility": [""],
+    "dietary": [""]
+  }
+
+}
