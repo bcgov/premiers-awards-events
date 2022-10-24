@@ -34,12 +34,12 @@ export default {
 
     financialStore
       .fill(guid)
-      .then(function (data) {
+      .then((data) => {
         if (data) router.push(`/registration/${guid}`);
         else {
           financialStore
             .createRegistration(guid, username, firstname, lastname, email)
-            .then(function (data) {
+            .then((data) => {
               if (data) router.push(`/edit/${data.guid}`);
             });
         }

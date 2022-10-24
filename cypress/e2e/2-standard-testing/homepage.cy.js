@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-const url = Cypress.env("local");
+const url = Cypress.env("url");
 
 describe("Homepage Premier's Awards Events", () => {
   beforeEach(() => {

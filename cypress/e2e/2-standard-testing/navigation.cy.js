@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-const url = Cypress.env("local");
+const url = Cypress.env("url");
 const user = Cypress.env("user");
 
 context("Navigation", () => {

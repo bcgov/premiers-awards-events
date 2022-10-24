@@ -208,7 +208,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import formServices from "@/services/settings.services";
 import useVuelidate from "@vuelidate/core";
 import {
@@ -354,7 +354,15 @@ export default {
         return (await register.fill(user.guid)) ? register.fill(user.guid) : [];
     };
 
-    fillList();
+    const loadLazyData = async function () {
+      await fillList();
+    };
+
+    onMounted(() => {
+      loadLazyData();
+    });
+
+    //fillList();
 
     return {
       loading,
