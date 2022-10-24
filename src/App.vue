@@ -151,6 +151,8 @@ header {
   top: 0;
   font-size: 1.3em;
   z-index: 9999 !important;
+  width: 100%;
+  justify-content: flex-start;
 }
 
 #navbar .p-menuitem-text {
