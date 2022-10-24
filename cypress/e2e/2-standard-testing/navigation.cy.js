@@ -6,7 +6,7 @@ const user = Cypress.env("user");
 context("Navigation", () => {
   beforeEach(() => {
     cy.visit(url);
-    cy.get(".dropdown-account").contains(user).click();
+    cy.get(".dropdown-account .p-menuitem-link span").contains(user).click();
     cy.get(".dropdown-account").contains("View Profile").click();
   });
 

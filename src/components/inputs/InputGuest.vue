@@ -94,10 +94,11 @@
             v-for="each of accessibility"
             :key="each.key"
             class="field-checkbox"
+            id="accessibility-checkbox"
           >
             <CheckBox
               :id="each.key"
-              name="each"
+              :name="each.value"
               :value="each.value"
               v-model="guest.accessibility"
             />

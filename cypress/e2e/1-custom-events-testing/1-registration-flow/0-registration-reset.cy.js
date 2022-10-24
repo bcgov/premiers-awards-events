@@ -13,7 +13,7 @@ if (nodeEnv === "local" || nodeEnv === "test" || nodeEnv === "development") {
       beforeEach(() => {
         cy.visit(`${url}create/registration`, { timeout: 50000 });
       });
-      it("confirm deletion of the current registration", () => {
+      it("confirms deletion of the current registration", () => {
         Cypress.$("document").ready(function () {
           cy.wait(1000);
           cy.get("#personal-registration-table .delete-button")
