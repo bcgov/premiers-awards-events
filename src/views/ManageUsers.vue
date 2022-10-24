@@ -31,6 +31,8 @@
         ref="dt"
         stripedRows
         v-model:filters="filters"
+        sortField="createdAt"
+        :sortOrder="-1"
         filterDisplay="menu"
         :globalFilterFields="[
           'guid',
@@ -138,13 +140,30 @@
           <template #body="{ data }">
             {{ lookup("roles", data.role) }} </template
           ><template #filter="{ filterModel }">
-            <InputText
-              type="text"
+            <DropDown
               v-model="filterModel.value"
+              :options="rolesFilter"
+              optionLabel="text"
+              placeholder="Any"
               class="p-column-filter"
-              placeholder="Search by role"
-            /> </template
-        ></PrimeColumn>
+              :showClear="true"
+            >
+              <template #value="slotProps">
+                <div v-if="slotProps.value">
+                  <div>{{ lookup("roles", slotProps.value) }}</div>
+                </div>
+                <span v-else>
+                  {{ slotProps.placeholder }}
+                </span>
+              </template>
+              <template #option="slotProps">
+                <div class="item">
+                  <div>{{ lookup("roles", slotProps.option) }}</div>
+                </div>
+              </template>
+            </DropDown>
+          </template></PrimeColumn
+        >
 
         <PrimeColumn
           field="eventregistrar"
@@ -189,17 +208,17 @@
           header="Created:"
           key="createdAt"
           :sortable="true"
+          dataType="date"
         >
           <template #body="{ data }">
             {{ formatDate(data.createdAt) }},<br />{{
               formatTime(data.createdAt)
             }} </template
           ><template #filter="{ filterModel }">
-            <InputText
-              type="text"
+            <PrimeCalendar
               v-model="filterModel.value"
-              class="p-column-filter"
-              placeholder="Search by Date Created"
+              dateFormat="mm/dd/yy"
+              placeholder="mm/dd/yyyy"
             /> </template
         ></PrimeColumn>
 
@@ -208,16 +227,16 @@
           header="Updated:"
           key="updatedAt"
           :sortable="true"
+          dataType="date"
         >
           <template #body="{ data }">
             {{ formatDate(data.updatedAt) }},<br />
             {{ formatTime(data.updatedAt) }} </template
           ><template #filter="{ filterModel }">
-            <InputText
-              type="text"
+            <PrimeCalendar
               v-model="filterModel.value"
-              class="p-column-filter"
-              placeholder="Search by Date Updated"
+              dateFormat="mm/dd/yy"
+              placeholder="mm/dd/yyyy"
             /> </template
         ></PrimeColumn>
         <PrimeColumn
@@ -376,6 +395,9 @@ export default {
     const isSuperAdmin = userStore.isSuperAdmin;
     const dt = ref();
     const roles = ref(formServices.get("roles") || []);
+    const rolesFilter = ref(
+      (formServices.get("roles") || []).map((each) => each.value)
+    );
     const dropdownRoles = (formServices.get("roles") || []).filter(
       (item) => item.value !== "nominator"
     );
@@ -400,7 +422,12 @@ export default {
       try {
         loading.value = true;
         userStore.$reset;
-        await userStore.getUsers();
+        await userStore.getUsers().then(() => {
+          users.value.forEach((user) => {
+            user.createdAt = new Date(user.createdAt);
+            user.updatedAt = new Date(user.updatedAt);
+          });
+        });
         loading.value = false;
       } catch (err) {
         loading.value = false;
@@ -546,6 +573,7 @@ export default {
       deleteUserDialog,
       adminURL,
       toggleRegistrar,
+      rolesFilter,
     };
   },
   components: { PageHeader },

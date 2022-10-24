@@ -312,11 +312,11 @@ const schemaData = {
     },
     createdAt: {
       operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+      constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],
     },
     updatedAt: {
       operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+      constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],
     },
     eventregistrar: { value: null, matchMode: FilterMatchMode.EQUALS },
   },
