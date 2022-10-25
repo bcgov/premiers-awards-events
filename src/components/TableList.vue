@@ -121,6 +121,7 @@
           header="Table Capacity"
           key="tablecapacity"
           class="tablecapacity"
+          dataType="numeric"
         >
           <template #body="{ data }">
             {{ data.tablecapacity }}
@@ -144,6 +145,7 @@
           header="Number of Guests"
           key="guestCount"
           class="guestCount"
+          dataType="numeric"
         >
           <template #body="{ data }">
             {{ data.guestCount || 0 }}

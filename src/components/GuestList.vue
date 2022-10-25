@@ -100,6 +100,13 @@
               placeholder="Any"
               class="p-column-filter"
               :showClear="true"
+              @change="
+                (event) => {
+                  event.value !== event.originalEvent
+                    ? (dropdownSelected = true)
+                    : null;
+                }
+              "
             >
               <template #value="slotProps">
                 <div v-if="slotProps.value">
@@ -115,6 +122,25 @@
                 </div>
               </template>
             </DropDown>
+            <InputText
+              v-if="!dropdownSelected"
+              type="text"
+              v-model="filterModel.value"
+              class="p-column-filter"
+              placeholder="Search by Text"
+            />
+          </template>
+          <template #filterfooter>
+            <PrimeButton
+              type="button"
+              @click="
+                () => {
+                  dropdownSelected = false;
+                  filterModel = null;
+                }
+              "
+              >Reset Selector Options</PrimeButton
+            >
           </template></PrimeColumn
         >
         <PrimeColumn field="firstname" header="First Name" key="firstname">
@@ -582,6 +608,7 @@ export default {
     const settingsStore = useSettingsStore();
     const { guests } = storeToRefs(useGuestsStore());
     const tables = ref();
+    const dropdownSelected = ref(false);
 
     const columns = ref(formServices.get("guestSelection") || []);
     const organizationsFilter = ref(
@@ -688,11 +715,13 @@ export default {
     //Sorting Filters for DataList
 
     const filters = ref(formServices.get("guestFilters") || {});
-    const clearFilters = () => {
-      initFilters();
-    };
+
     const initFilters = () => {
       filters.value = formServices.get("guestFilters") || {};
+    };
+    const clearFilters = () => {
+      initFilters();
+      dropdownSelected.value = false;
     };
 
     //Helper Functions
@@ -919,6 +948,8 @@ export default {
       userStore,
       filteredOrganizations,
       searchOrganization,
+      dropdownSelected,
+      formServices,
     };
   },
 };

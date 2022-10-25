@@ -216,7 +216,7 @@ const schemaData = {
 
     organization: {
       operator: FilterOperator.OR,
-      constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
     },
     firstname: {
       operator: FilterOperator.AND,
