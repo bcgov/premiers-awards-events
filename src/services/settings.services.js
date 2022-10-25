@@ -216,7 +216,7 @@ const schemaData = {
 
     organization: {
       operator: FilterOperator.OR,
-      constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
     },
     firstname: {
       operator: FilterOperator.AND,
@@ -247,6 +247,7 @@ const schemaData = {
       constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],
     },
     assignedTable: { value: null, matchMode: FilterMatchMode.EQUALS },
+    hasNotes: { value: null, matchMode: FilterMatchMode.EQUALS },
   },
   tableFilters: {
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -272,6 +273,10 @@ const schemaData = {
     },
     tableStatus: { value: null, matchMode: FilterMatchMode.EQUALS },
     organizations: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+    },
+    orgList: {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
     },

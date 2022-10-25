@@ -173,8 +173,10 @@
             >
           </template>
           <template #filter="{ filterModel }">
-            <TriStateCheckbox v-model="filterModel.value" /> </template
-        ></PrimeColumn>
+            <TriStateCheckbox v-model="filterModel.value" /> Registration
+            Submitted?</template
+          ></PrimeColumn
+        >
         <PrimeColumn
           v-if="adminView"
           field="createdAt"

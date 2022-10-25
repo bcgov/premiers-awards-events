@@ -145,10 +145,8 @@ header {
 }
 
 #navbar {
-  position: sticky;
   color: white !important;
   background-color: #343a40;
-  top: 0;
   font-size: 1.3em;
   z-index: 9999 !important;
   width: 100%;
@@ -204,6 +202,12 @@ header {
 .dropdown-account-item .p-menuitem-text {
   color: #343a40 !important;
   z-index: 9999 !important;
+}
+@media only screen and (min-width: 960px) {
+  #navbar {
+    position: sticky !important;
+    top: 0 !important;
+  }
 }
 
 @media only screen and (max-width: 960px) {

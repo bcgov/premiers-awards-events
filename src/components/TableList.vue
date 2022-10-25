@@ -25,7 +25,7 @@
           'tablecapacity',
           'tableguestcount',
           'tablefull',
-          'organizations',
+          `orgList`,
         ]"
         :loading="loading"
         showGridlines
@@ -121,6 +121,7 @@
           header="Table Capacity"
           key="tablecapacity"
           class="tablecapacity"
+          dataType="numeric"
         >
           <template #body="{ data }">
             {{ data.tablecapacity }}
@@ -144,6 +145,7 @@
           header="Number of Guests"
           key="guestCount"
           class="guestCount"
+          dataType="numeric"
         >
           <template #body="{ data }">
             {{ data.guestCount || 0 }}
@@ -183,14 +185,17 @@
             >
           </template>
           <template #filter="{ filterModel }">
-            <TriStateCheckbox v-model="filterModel.value" /> </template
-        ></PrimeColumn>
+            <TriStateCheckbox v-model="filterModel.value" /> Space
+            Available?</template
+          ></PrimeColumn
+        >
 
         <PrimeColumn
           field="organizations"
-          header="Organizations"
+          header="Government Organizations"
           key="organizations"
           class="organizations"
+          filterField="orgList"
         >
           <template #body="{ data }">
             {{
@@ -205,13 +210,30 @@
             }}
           </template>
           <template #filter="{ filterModel }">
-            <InputText
-              type="text"
+            <DropDown
               v-model="filterModel.value"
+              :options="organizationsFilter"
+              optionLabel="text"
+              placeholder="Any"
               class="p-column-filter"
-              :placeholder="`Search by Organization`"
-            /> </template
-        ></PrimeColumn>
+              :showClear="true"
+            >
+              <template #value="slotProps">
+                <div v-if="slotProps.value">
+                  <div>{{ lookup("organizations", slotProps.value) }}</div>
+                </div>
+                <span v-else>
+                  {{ slotProps.placeholder }}
+                </span>
+              </template>
+              <template #option="slotProps">
+                <div class="item">
+                  <div>{{ lookup("organizations", slotProps.option) }}</div>
+                </div>
+              </template>
+            </DropDown>
+          </template></PrimeColumn
+        >
         <PrimeColumn
           field="createdAt"
           header="Created:"
@@ -353,6 +375,27 @@ export default {
       filters.value = formServices.get("tableFilters") || {};
     };
 
+    const organizationsFilter = ref(
+      (formServices.get("organizations") || []).map((each) => each.value)
+    );
+    const filteredOrganizations = ref();
+    //filters organizations on drop-down
+    const searchOrganization = (event) => {
+      setTimeout(() => {
+        if (!event.query.trim().length) {
+          filteredOrganizations.value = organizations.value;
+        } else {
+          filteredOrganizations.value = organizations.value.filter(
+            (organization) => {
+              return organization.text
+                .toLowerCase()
+                .startsWith(event.query.toLowerCase());
+            }
+          );
+        }
+      }, 100);
+    };
+
     const loading = ref(false);
 
     //Fill tables datatables with appropriate data based on props
@@ -384,6 +427,9 @@ export default {
           table.guestCount = Number(table.guests.length);
           table.tableStatus =
             table.guests.length < table.tablecapacity ? true : false;
+          table["orgList"] = table.organizations
+            .map((each) => each.organization)
+            .join("\r\n");
         });
       });
     };
@@ -498,6 +544,9 @@ export default {
       hideDialog,
       loadLazyData,
       tables,
+      filteredOrganizations,
+      searchOrganization,
+      organizationsFilter,
     };
   },
   components: { InputTable },
