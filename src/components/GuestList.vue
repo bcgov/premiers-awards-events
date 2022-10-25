@@ -136,7 +136,6 @@
               @click="
                 () => {
                   dropdownSelected = false;
-                  filterModel = null;
                 }
               "
               >Reset Selector Options</PrimeButton
@@ -273,8 +272,17 @@
             </DropDown>
           </template></PrimeColumn
         >
-        <PrimeColumn v-if="adminView" field="notes" header="Notes:" key="notes">
-          <template #body="{ data }"> {{ data.notes }}</template></PrimeColumn
+        <PrimeColumn
+          v-if="adminView"
+          field="notes"
+          header="Notes:"
+          key="notes"
+          filterField="hasNotes"
+        >
+          <template #body="{ data }"> {{ data.notes }}</template>
+          <template #filter="{ filterModel }">
+            <TriStateCheckbox v-model="filterModel.value" /> Has Notes?
+          </template></PrimeColumn
         >
         <PrimeColumn
           v-if="adminView"
@@ -304,8 +312,9 @@
             >
           </template>
           <template #filter="{ filterModel }">
-            <TriStateCheckbox v-model="filterModel.value" /> </template
-        ></PrimeColumn>
+            <TriStateCheckbox v-model="filterModel.value" /> Assigned a Table?
+          </template></PrimeColumn
+        >
         <PrimeColumn
           v-if="adminView"
           field="createdAt"
@@ -681,6 +690,7 @@ export default {
               guest.createdAt = new Date(guest.createdAt);
               guest.updatedAt = new Date(guest.updatedAt);
               guest.assignedTable = guest.table ? true : false;
+              guest["hasNotes"] = guest.notes ? true : false;
               guest["tabledetails"] = tables.value.filter(
                 (each) => each._id === guest.table
               )[0];

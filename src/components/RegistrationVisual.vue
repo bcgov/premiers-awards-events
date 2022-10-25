@@ -46,14 +46,6 @@
               class="p-button-outlined"
               @click="clearFilters()"
             />
-            <span class="p-input-icon-left">
-              <i class="pi pi-search" />
-              <InputText
-                title="Search all by keyword"
-                v-model="filters['global'].value"
-                placeholder="Keyword Search"
-              />
-            </span>
           </div>
         </template>
         <template #empty> No registrations found. </template>
@@ -111,6 +103,7 @@
           key="guestList"
           filterField="guestList"
           sortable
+          datatype="numeric"
         >
           <template #body="{ data }">
             {{ data.guests.length }}
@@ -148,8 +141,10 @@
             >
           </template>
           <template #filter="{ filterModel }">
-            <TriStateCheckbox v-model="filterModel.value" /> </template
-        ></PrimeColumn>
+            <TriStateCheckbox v-model="filterModel.value" /> Registration
+            Submitted?</template
+          ></PrimeColumn
+        >
         <PrimeColumn
           field="seated"
           header="All Guests Seated?"
@@ -174,8 +169,10 @@
             >
           </template>
           <template #filter="{ filterModel }">
-            <TriStateCheckbox v-model="filterModel.value" /> </template
-        ></PrimeColumn>
+            <TriStateCheckbox v-model="filterModel.value" /> All Guests
+            Seated?</template
+          ></PrimeColumn
+        >
         <PrimeColumn header="Options">
           <template #body="{ data }">
             <PrimeButton
@@ -196,7 +193,8 @@
             >
               <PrimeColumn field="organization" header="Organization" sortable>
                 <template #body="{ data }">{{
-                  lookup("organizations", data.organization)
+                  lookup("organizations", data.organization) ||
+                  data.organization
                 }}</template></PrimeColumn
               >
 
