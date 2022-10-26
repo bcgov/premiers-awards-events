@@ -15,7 +15,7 @@ if (nodeEnv === "local" || nodeEnv === "test" || nodeEnv === "development") {
           cy.visit(`${url}create/registration`, { timeout: 50000 });
         });
       });
-      it("resets all info with the reset button and prevents submission with missing info", () => {
+      it.skip("resets all info with the reset button and prevents submission with missing info", () => {
         cy.get(".submission-form-buttons button").contains("Reset").click();
         cy.get(".submission-form-buttons button").contains("Submit").click();
         cy.get("#branch-help").should("exist");
@@ -29,7 +29,7 @@ if (nodeEnv === "local" || nodeEnv === "test" || nodeEnv === "development") {
         cy.get("#stob-help").should("exist");
         cy.get("#project-help").should("exist");
       });
-      it("prevents submission with incorrect info", () => {
+      it.skip("prevents submission with incorrect info", () => {
         cy.fixture("financial-info").then((finances) => {
           const { faultyOrg } = finances;
           const testOrg = faultyOrg;
