@@ -18,6 +18,32 @@ if (nodeEnv === "local" || nodeEnv === "test" || nodeEnv === "development") {
           .click();
         cy.get(".dropdown-account").contains("My Registration").click();
       });
+      it("unsubmits the registration", () => {
+        cy.get(`.submission-buttons button`)
+          .contains("Unsubmit Registration")
+          .click();
+        cy.get(".p-dialog-header")
+          .contains("Confirm Submission")
+          .should("be.visible");
+
+        cy.get(".p-button").contains("Re-open registration").click();
+
+        cy.get(".p-message-text")
+          .contains("Successfully re-opened registration!")
+          .should("exist");
+        cy.get(".p-dialog-header-close").click();
+
+        cy.get(".p-dialog-header")
+          .contains("Confirm Submission")
+          .should("not.exist");
+        cy.get(`.submission-buttons button`)
+          .contains("Submit Registration")
+          .should("exist");
+
+        cy.get("#personal-registration-table td")
+          .contains("Pending")
+          .should("exist");
+      });
       it("confirms deletion of the current registration", () => {
         Cypress.$("document").ready(function () {
           cy.wait(1000);
