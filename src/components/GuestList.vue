@@ -521,7 +521,7 @@
         <div class="field-text" v-if="adminView">
           <label for="guest-notes">Notes:</label>
           <InputText
-            id="lastname"
+            id="guestnotes"
             v-model.trim="guest.notes"
             name="guestnotes"
             title="Notes"

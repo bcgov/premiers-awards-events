@@ -10,8 +10,13 @@ const nodeEnv = process.env.NODE_ENV;
 if (nodeEnv === "local" || nodeEnv === "test" || nodeEnv === "development") {
   describe("Create Blank Slate in local env for Testing Registration Process", () => {
     context("Deletes Current Registration", () => {
-      beforeEach(() => {
-        cy.visit(`${url}create/registration`, { timeout: 50000 });
+      before(() => {
+        //cy.visit(`${url}create/registration`, { timeout: 50000 });
+        cy.visit(url, { timeout: 50000 });
+        cy.get(".dropdown-account .p-menuitem-link span")
+          .contains(user)
+          .click();
+        cy.get(".dropdown-account").contains("My Registration").click();
       });
       it("confirms deletion of the current registration", () => {
         Cypress.$("document").ready(function () {
