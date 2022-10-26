@@ -10,6 +10,7 @@ export default {
     const user = userStore.getUser || null;
     const username = user.username;
     const menu = ref();
+    const devMode = import.meta.env.DEV;
 
     settingsStore.fillSettings();
     userStore.login();
@@ -48,8 +49,16 @@ export default {
             class: "dropdown-account-item",
           },
           {
-            label: "Manage Users",
+            label: "Manage Users Local",
+            //url: "https://premiersawards.gww.gov.bc.ca/app/users",
             to: "/admin/user/list",
+            visible: () => userStore.isAdmin && devMode,
+            class: "dropdown-account-item",
+          },
+          {
+            label: "Manage Users",
+            url: "https://premiersawards.gww.gov.bc.ca/app/users",
+            // to: "/admin/user/list",
             visible: () => userStore.isAdmin,
             class: "dropdown-account-item",
           },

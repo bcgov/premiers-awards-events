@@ -2,28 +2,33 @@
 <template>
   <div>
     <PrimeMessage show v-if="isRegistered()" variant="info" :closable="false">
-      <p v-if="user.role === 'inactive'">
+      <p v-if="user.roles.includes('inactive')">
         Your registration is currently under review. Please check back regularly
         for updates.
       </p>
-      <p v-else>
-        You are currently registered as a(n) <b>{{ user.role }}</b
-        >.
-      </p>
+      <p v-else>You are currently registered.</p>
       <p
         v-if="
-          (user.role !== 'inactive' &&
-            user.eventregistrar === false &&
-            !isAdmin) ||
-          user.eventregistrar === undefined
+          user.roles.includes('nominator') &&
+          !user.roles.includes('inactive') &&
+          !user.roles.includes('registrar') &&
+          !user.roles.includes('administrator') &&
+          !user.roles.includes('super-administrator')
         "
       >
         Your profile is not currently eligible to submit an event registration.
         If you believe this is a mistake, please contact
         <a href="mailto: PremiersAwards@gov.bc.ca">PremiersAwards@gov.bc.ca</a>.
       </p>
-      <p v-else-if="user.role !== 'inactive' && user.eventregistrar === true">
-        You are currently eligible to submit an event registration.
+      <p
+        v-else-if="
+          (!user.roles.includes('inactive') &&
+            user.roles.includes('registrar')) ||
+          user.roles.includes('administrator') ||
+          user.roles.includes('super-administrator')
+        "
+      >
+        You are eligible to submit an event registration.
       </p>
     </PrimeMessage>
     <PrimeMessage
@@ -54,7 +59,7 @@
             title="first name"
             v-model="user.firstname"
             placeholder="Enter user's given name"
-            :disabled="edit && !isAdmin"
+            :disabled="edit && !userStore.isAdmin"
           >
           </InputText>
 
@@ -63,7 +68,7 @@
             title="last name"
             v-model="user.lastname"
             placeholder="Enter user's last name"
-            :disabled="edit && !isAdmin"
+            :disabled="edit && !userStore.isAdmin"
           />
 
           <InputText
@@ -72,11 +77,11 @@
             id="input-user-register-email"
             v-model="user.email"
             placeholder="Enter user's email"
-            :disabled="edit && !isAdmin"
+            :disabled="edit && !userStore.isAdmin"
           >
           </InputText>
           <PrimeButton
-            v-if="edit && isAdmin"
+            v-if="edit && userStore.isAdmin"
             @click="update"
             :disabled="!validation"
             class="m-2"
@@ -86,7 +91,7 @@
           >
 
           <PrimeButton
-            v-else-if="!edit && !isAdmin"
+            v-else-if="!edit && !userStore.isAdmin"
             @click="register"
             :disabled="!validation"
             class="m-2"
@@ -95,7 +100,7 @@
             >Register</PrimeButton
           >
         </form>
-        <small v-if="!isAdmin && edit">
+        <small v-if="!userStore.isAdmin && edit">
           <p class="p-error">
             Please contact
             <a href="mailto: PremiersAwards@gov.bc.ca"
@@ -144,20 +149,20 @@ export default {
       return valid;
     });
 
-    const isAdmin = computed(() => {
-      const admin =
-        user.value.role === "administrator" ||
-        user.value.role === "super-administrator"
-          ? true
-          : false;
-      return admin;
-    });
+    // const isAdmin = computed(() => {
+    //   const admin =
+    //     user.value.role === "administrator" ||
+    //     user.value.role === "super-administrator"
+    //       ? true
+    //       : false;
+    //   return admin;
+    // });
 
     //Data check and handling
 
     const isRegistered = function () {
       const currentUser = userStore.getUser;
-      return currentUser.role;
+      return currentUser.roles.length > 0;
     };
 
     const register = async function () {
@@ -220,7 +225,8 @@ export default {
       register,
       update,
       activeMessage,
-      isAdmin,
+      userStore,
+      // isAdmin,
     };
   },
 };

@@ -89,26 +89,33 @@ const authenticate = async (to, from, next) => {
  * @src public
  */
 
-const authorizeRegistrar = async (to, from, next) => {
-  const { role = "", eventregistrar = false } = (await getUserData()) || {};
+const authorizeUser = async (to, from, next) => {
+  const { roles = [], guid = "" } = (await getUserData()) || {};
   if (
-    ![
-      "registrar",
-      "nominator",
-      "administrator",
-      "super-administrator",
-    ].includes(role) ||
-    ((role === "registrar" || role === "nominator") && !eventregistrar)
+    (roles.includes("registrar") && to["path"].includes(guid)) ||
+    roles.includes("administrator") ||
+    roles.includes("super-administrator")
   )
-    return next({ name: "unauthorized" });
-  else next();
+    return next();
+  else next({ name: "unauthorized" });
+};
+
+const authorizeRegistrar = async (to, from, next) => {
+  const { roles = [] } = (await getUserData()) || {};
+  if (
+    roles.includes("registrar") ||
+    roles.includes("administrator") ||
+    roles.includes("super-administrator")
+  )
+    return next();
+  else next({ name: "unauthorized" });
 };
 
 const authorizeAdmin = async (to, from, next) => {
-  const { role = "" } = (await getUserData()) || {};
-  if (!["administrator", "super-administrator"].includes(role))
-    return next({ name: "unauthorized" });
-  else next();
+  const { roles = [] } = (await getUserData()) || {};
+  if (roles.includes("administrator") || roles.includes("super-administrator"))
+    return next();
+  else next({ name: "unauthorized" });
 };
 
 /*
@@ -185,7 +192,7 @@ const router = createRouter({
       component: () => import("../views/PersonalRegistrationView.vue"),
       props: true,
       meta: getMeta("Edit Financial Details"),
-      beforeEnter: authorizeRegistrar,
+      beforeEnter: authorizeUser,
     },
     {
       path: "/edit/:id",
