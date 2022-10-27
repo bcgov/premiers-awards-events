@@ -323,7 +323,6 @@ const schemaData = {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],
     },
-    eventregistrar: { value: null, matchMode: FilterMatchMode.EQUALS },
   },
 };
 
