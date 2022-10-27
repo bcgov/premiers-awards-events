@@ -115,13 +115,14 @@
         <div class="form-break"></div>
         <div class="form-item number-field">
           <label for="clientministry">Client/Ministry Number:</label>
-          <InputNumber
+          <InputText
             v-bind:class="{ 'p-invalid': v$.clientministry.$error }"
             id="clientministry"
-            v-model="registration.clientministry"
+            v-model.trim="registration.clientministry"
             aria-placeholder="3 digit number"
             placeholder="3 digit number"
             :useGrouping="false"
+            aria-describedby="clientministry-help"
           />
           <small
             v-if="v$.clientministry.$error"
@@ -147,10 +148,10 @@
         </div>
         <div class="form-item number-field">
           <label for="serviceline">Service Line:</label>
-          <InputNumber
+          <InputText
             v-bind:class="{ 'p-invalid': v$.serviceline.$error }"
             id="serviceline"
-            v-model="registration.serviceline"
+            v-model.trim="registration.serviceline"
             aria-placeholder="5 digit number"
             placeholder="5 digit number"
             :useGrouping="false"
@@ -164,10 +165,10 @@
         </div>
         <div class="form-item number-field">
           <label for="stob">STOB:</label>
-          <InputNumber
+          <InputText
             v-bind:class="{ 'p-invalid': v$.stob.$error }"
             id="stob"
-            v-model="registration.stob"
+            v-model.trim="registration.stob"
             aria-placeholder="4 digit number"
             placeholder="4 digit number"
             :useGrouping="false"
@@ -247,9 +248,9 @@ export default {
       financialcontact: { required },
       clientministry: {
         required,
-        numeric,
-        minValueValue: minValue(100),
-        maxValueValue: maxValue(999),
+        alphaNum,
+        minLengthValue: minLength(3),
+        maxLengthValue: maxLength(3),
       },
       respcode: {
         required,
@@ -259,15 +260,15 @@ export default {
       },
       serviceline: {
         required,
-        numeric,
-        minValueValue: minValue(10000),
-        maxValueValue: maxValue(99999),
+        alphaNum,
+        minLengthValue: minLength(5),
+        maxLengthValue: maxLength(5),
       },
       stob: {
         required,
-        numeric,
-        minValueValue: minValue(1000),
-        maxValueValue: maxValue(9999),
+        alphaNum,
+        minLengthValue: minLength(4),
+        maxLengthValue: maxLength(4),
       },
       project: {
         required,
