@@ -54,7 +54,7 @@
             title="first name"
             v-model="user.firstname"
             placeholder="Enter user's given name"
-            :disabled="edit && !userStore.isAdmin"
+            :disabled="edit"
           >
           </InputText>
 
@@ -63,7 +63,7 @@
             title="last name"
             v-model="user.lastname"
             placeholder="Enter user's last name"
-            :disabled="edit && !userStore.isAdmin"
+            :disabled="edit"
           />
 
           <InputText
@@ -72,17 +72,18 @@
             id="input-user-register-email"
             v-model="user.email"
             placeholder="Enter user's email"
-            :disabled="edit && !userStore.isAdmin"
+            :disabled="edit"
           >
           </InputText>
           <PrimeButton
             v-if="edit && userStore.isAdmin"
-            @click="update"
             :disabled="!validation"
             class="m-2"
             type="button"
             variant="info"
-            >Update</PrimeButton
+            ><a style="color: white; text-decoration: none" :href="adminURL"
+              >Update in Admin Portal</a
+            ></PrimeButton
           >
 
           <PrimeButton
@@ -117,6 +118,7 @@ import useVuelidate from "@vuelidate/core";
 import { required, email } from "@vuelidate/validators";
 import { useMessageStore } from "../stores/messages";
 import apiRoutesUsers from "../services/api-routes.users";
+import router from "../router";
 
 export default {
   props: {
@@ -128,6 +130,7 @@ export default {
     const { message } = storeToRefs(useMessageStore());
     const activeMessage = ref(false);
     const { user } = storeToRefs(useAuthUserStore());
+    const adminURL = import.meta.env.PA_APPS_ADMIN_URL;
 
     //Submission rules and validation
     const rules = {
@@ -222,6 +225,8 @@ export default {
       activeMessage,
       userStore,
       // isAdmin,
+      adminURL,
+      router,
     };
   },
 };

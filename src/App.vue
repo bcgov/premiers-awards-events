@@ -57,7 +57,7 @@ export default {
           },
           {
             label: "Manage Users",
-            url: "https://premiersawards.gww.gov.bc.ca/app/users",
+            url: import.meta.env.PA_APPS_ADMIN_URL,
             // to: "/admin/user/list",
             visible: () => userStore.isAdmin,
             class: "dropdown-account-item",
