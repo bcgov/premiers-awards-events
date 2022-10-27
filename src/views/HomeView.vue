@@ -4,13 +4,13 @@
       :subtitle="`Welcome to the registration system for the ${settings.year} Premier's Awards.`"
       :content="userGreeting"
     />
-    <div v-if="isRegistrar()">
+    <div v-if="userStore.isRegistrar">
       <router-link to="/create/registration/">
         <PrimeButton block variant="info"> Register </PrimeButton>
       </router-link>
     </div>
     <div>
-      <PrimeCard v-if="!isRegistrar()">
+      <PrimeCard v-if="!userStore.isRegistrar">
         <template #content>
           <div v-if="settingsStore.getIsSalesOpen">
             <p>
@@ -63,12 +63,10 @@ import { storeToRefs } from "pinia";
 const userStore = useAuthUserStore();
 const settingsStore = useSettingsStore();
 
-const isRegistrar = () => {
-  return userStore.isRegistrar;
-};
-
 const userGreeting = computed(() =>
-  isRegistrar() ? `You are logged in as ${userStore.getUser.username}.` : ""
+  userStore.isRegistrar
+    ? `You are logged in as ${userStore.getUser.username}.`
+    : ""
 );
 
 const { settings } = storeToRefs(useSettingsStore());

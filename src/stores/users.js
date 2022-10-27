@@ -31,20 +31,24 @@ export const useAuthUserStore = defineStore({
     },
 
     isRegistrar() {
-      return (
+      const active = !this.user.roles.includes("inactive");
+      const hasRoles =
         this.user.roles.includes("registrar") ||
         this.user.roles.includes("administrator") ||
-        this.user.roles.includes("super-administrator")
-      );
+        this.user.roles.includes("super-administrator");
+      return active && hasRoles;
     },
     isAdmin() {
-      return (
+      const active = !this.user.roles.includes("inactive");
+      const hasAdmin =
         this.user.roles.includes("administrator") ||
-        this.user.roles.includes("super-administrator")
-      );
+        this.user.roles.includes("super-administrator");
+      return active && hasAdmin;
     },
     isSuperAdmin() {
-      return this.user.roles.includes("super-administrator");
+      const active = !this.user.roles.includes("inactive");
+      const hasSuperAdmin = this.user.roles.includes("super-administrator");
+      return active && hasSuperAdmin;
     },
   },
   actions: {

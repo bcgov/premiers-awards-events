@@ -16,18 +16,13 @@
           !user.roles.includes('super-administrator')
         "
       >
-        Your profile is not currently eligible to submit an event registration.
-        If you believe this is a mistake, please contact
+        Your profile is currently only registered as a nominator, and is not
+        eligible to submit an event registration. If you believe this is a
+        mistake or would like your profile updated as an eligible event
+        registrar, please contact
         <a href="mailto: PremiersAwards@gov.bc.ca">PremiersAwards@gov.bc.ca</a>.
       </p>
-      <p
-        v-else-if="
-          (!user.roles.includes('inactive') &&
-            user.roles.includes('registrar')) ||
-          user.roles.includes('administrator') ||
-          user.roles.includes('super-administrator')
-        "
-      >
+      <p v-else-if="userStore.isRegistered">
         You are eligible to submit an event registration.
       </p>
     </PrimeMessage>

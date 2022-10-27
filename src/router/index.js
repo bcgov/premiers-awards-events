@@ -92,20 +92,28 @@ const authenticate = async (to, from, next) => {
 const authorizeUser = async (to, from, next) => {
   const { roles = [], guid = "" } = (await getUserData()) || {};
   if (
-    (roles.includes("registrar") && to["path"].includes(guid)) ||
-    roles.includes("administrator") ||
-    roles.includes("super-administrator")
+    !roles.includes("inactive") &&
+    ((roles.includes("registrar") && to["path"].includes(guid)) ||
+      roles.includes("administrator") ||
+      roles.includes("super-administrator"))
   )
     return next();
+  else next({ name: "unauthorized" });
+};
+
+const authorizeRegistered = async (to, from, next) => {
+  const { roles = [] } = (await getUserData()) || {};
+  if (roles.length > 0) return next();
   else next({ name: "unauthorized" });
 };
 
 const authorizeRegistrar = async (to, from, next) => {
   const { roles = [] } = (await getUserData()) || {};
   if (
-    roles.includes("registrar") ||
-    roles.includes("administrator") ||
-    roles.includes("super-administrator")
+    !roles.includes("inactive") &&
+    (roles.includes("registrar") ||
+      roles.includes("administrator") ||
+      roles.includes("super-administrator"))
   )
     return next();
   else next({ name: "unauthorized" });
@@ -113,7 +121,10 @@ const authorizeRegistrar = async (to, from, next) => {
 
 const authorizeAdmin = async (to, from, next) => {
   const { roles = [] } = (await getUserData()) || {};
-  if (roles.includes("administrator") || roles.includes("super-administrator"))
+  if (
+    !roles.includes("inactive") &&
+    (roles.includes("administrator") || roles.includes("super-administrator"))
+  )
     return next();
   else next({ name: "unauthorized" });
 };
