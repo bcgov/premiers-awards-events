@@ -2,7 +2,7 @@
 const url = Cypress.env("url");
 const user = Cypress.env("user");
 
-describe("Admin Registrations Page", () => {
+describe("Admin Guests Page", () => {
   context("Guests page shows all admin navigation features", () => {
     before(() => {
       cy.visit(`${url}admin/guests`, { timeout: 50000 });
