@@ -8,15 +8,13 @@ require("dotenv").config();
 const nodeEnv = process.env.NODE_ENV;
 
 if (nodeEnv === "local" || nodeEnv === "test" || nodeEnv === "development") {
-  describe("Create Blank Slate in local env for Testing Registration Process", () => {
+  describe.skip("Create Blank Slate in local env for Testing Registration Process", () => {
     context("Deletes Current Registration", () => {
       before(() => {
-        //cy.visit(`${url}create/registration`, { timeout: 50000 });
-        cy.visit(url, { timeout: 50000 });
-        cy.get(".dropdown-account .p-menuitem-link span")
-          .contains(user)
-          .click();
-        cy.get(".dropdown-account").contains("My Registration").click();
+        cy.visit(`${url}create/registration`, { timeout: 50000 });
+        //cy.visit(url, { timeout: 50000 });
+        //cy.get(".dropdown-account").click();
+        //cy.get(".dropdown-account").contains("My Registration").click();
       });
       it("unsubmits the registration", () => {
         cy.get(`.submission-buttons button`)
@@ -45,20 +43,20 @@ if (nodeEnv === "local" || nodeEnv === "test" || nodeEnv === "development") {
           .should("exist");
       });
       it("confirms deletion of the current registration", () => {
-        Cypress.$("document").ready(function () {
-          cy.wait(1000);
-          cy.get("#personal-registration-table .delete-button")
-            .contains("Delete")
-            .click();
-          cy.wait(1000);
-          cy.get(".confirmation-content")
-            .contains("Are you sure you want to delete")
-            .should("be.visible");
+        // Cypress.$("document").ready(function () {
+        //   cy.wait(1000);
+        cy.get("#personal-registration-table .delete-button")
+          .contains("Delete")
+          .click();
+        //cy.wait(1000);
+        cy.get(".confirmation-content")
+          .contains("Are you sure you want to delete")
+          .should("be.visible");
 
-          cy.get(".p-button").contains("Yes").click();
-          cy.visit(`${url}`, { timeout: 50000 });
-          cy.get(".confirmation-content").should("not.exist");
-        });
+        cy.get(".p-button").contains("Yes").click();
+        cy.visit(`${url}`, { timeout: 50000 });
+        cy.get(".confirmation-content").should("not.exist");
+        // });
       });
     });
   });

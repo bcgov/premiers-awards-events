@@ -2,7 +2,7 @@
 const url = Cypress.env("url");
 const user = Cypress.env("user");
 
-describe("Users can submit a registration.", () => {
+describe.skip("Users can submit a registration.", () => {
   context("Submission/unsubmission/resubmission of registration", () => {
     beforeEach(() => {
       cy.visit(`${url}create/registration`);

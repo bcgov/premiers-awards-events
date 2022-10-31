@@ -2,7 +2,7 @@
 const url = Cypress.env("url");
 const user = Cypress.env("user");
 
-describe("Users can edit registration financial details.", () => {
+describe.skip("Users can edit registration financial details.", () => {
   context("Registration edit functionality", () => {
     beforeEach(() => {
       cy.visit(`${url}create/registration`);

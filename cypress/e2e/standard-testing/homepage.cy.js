@@ -2,7 +2,7 @@
 
 const url = Cypress.env("url");
 
-describe("Homepage Premier's Awards Events", () => {
+describe.skip("Homepage Premier's Awards Events", () => {
   beforeEach(() => {
     cy.visit(url);
   });

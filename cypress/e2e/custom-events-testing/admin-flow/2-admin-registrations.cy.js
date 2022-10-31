@@ -4,50 +4,122 @@ const user = Cypress.env("user");
 
 describe("Admin Registrations Page", () => {
   context("Registrations page shows all admin navigation features", () => {
-    beforeEach(() => {
+    before(() => {
       cy.visit(`${url}admin`, { timeout: 50000 });
     });
-
-    it("displays functional table count button", () => {
-      cy.get(`button .p-button .p-component`)
-        .contains("Table Count")
-        .should("exist");
-      cy.get(`button .p-button .p-component`).contains("Table Count").click();
-      cy.get(`.p-dialog-header`).contains("Table Information").should("exist");
-      cy.get(`button .p-dialog-header-close`).click();
-      cy.get(`.p-dialog-header`)
-        .contains("Table Information")
-        .should("not.be.visible");
-    });
-
     it("displays admin nav bar with all items", () => {
       cy.get(".admin-nav").contains("Registrations").should("exist");
       cy.get(".admin-nav").contains("Guests").should("exist");
       cy.get(".admin-nav").contains("Tables").should("exist");
       cy.get(".admin-nav").contains("Event Planning").should("exist");
     });
-
-    it("displays Admin Portal button", () => {
-      cy.get("form button").contains("Admin Portal").should("exist");
-    });
   });
 
-  context("Registrations page shows all registrations and details", () => {
-    beforeEach(() => {
+  context("Registrations page buttons functional", () => {
+    before(() => {
       cy.visit(`${url}admin`, { timeout: 50000 });
     });
 
-    it("displays registration status message", () => {
-      cy.get(".p-message-wrapper").contains("You").should("exist");
+    it("displays functional table count button", () => {
+      cy.get(".p-button-label").contains("Table Count:").should("exist");
+      cy.get(`.p-button-label`).contains("Table Count").click();
+      cy.get(`.p-dialog-header`).contains("Table Information").should("exist");
+      cy.get(`.p-dialog-header-close`).click();
+      cy.get(`.p-dialog-header`)
+        .contains("Table Information")
+        .should("not.exist");
     });
-    it("displays disabled username and details", () => {
-      cy.get(`form #input-user-register-username`).should("be.disabled");
-      cy.get(`form #input-user-register-firstname`).should("be.disabled");
-      cy.get(`form #input-user-register-lastname`).should("be.disabled");
+  });
+
+  context(
+    "Registrations page shows registrations table and column details",
+    () => {
+      before(() => {
+        cy.visit(`${url}admin`, { timeout: 50000 });
+      });
+
+      it("displays registrations data table", () => {
+        cy.get(".p-datatable").should("exist");
+      });
+
+      it("displays ID column", () => {
+        cy.get("th").contains("ID").should("exist");
+      });
+
+      it("displays organization column", () => {
+        cy.get("th").contains("Organization").should("exist");
+      });
+
+      it("displays branch column", () => {
+        cy.get("th").contains("Branch").should("exist");
+      });
+
+      it("displays primary contact column", () => {
+        cy.get("th").contains("Primary Contact").should("exist");
+      });
+      it("displays primary contact email column", () => {
+        cy.get("th").contains("Primary Contact's Email").should("exist");
+      });
+
+      it("displays financial contact column", () => {
+        cy.get("th").contains("Financial Contact").should("exist");
+      });
+
+      it("displays client/ministry code column", () => {
+        cy.get("th").contains("Client / Ministry Code").should("exist");
+      });
+
+      it("displays resp code column", () => {
+        cy.get("th").contains("RESP Code").should("exist");
+      });
+
+      it("displays service line column", () => {
+        cy.get("th").contains("Service Line").should("exist");
+      });
+      it("displays stob column", () => {
+        cy.get("th").contains("STOB").should("exist");
+      });
+
+      it("displays project code column", () => {
+        cy.get("th").contains("Project Code").should("exist");
+      });
+
+      it("displays guest count column", () => {
+        cy.get("th").contains("Guest Count:").should("exist");
+      });
+
+      it("displays submitted column", () => {
+        cy.get("th").contains("Submitted?").should("exist");
+      });
+
+      it("displays created column", () => {
+        cy.get("th").contains("Created:").should("exist");
+      });
+
+      it("displays updated column", () => {
+        cy.get("th").contains("Updated:").should("exist");
+      });
+
+      it("displays options column", () => {
+        cy.get("th").contains("Options:").should("exist");
+      });
+    }
+  );
+
+  context("Registrations page lists registrations with details", () => {
+    before(() => {
+      cy.visit(`${url}admin`, { timeout: 50000 });
     });
 
-    it("displays Admin Portal button", () => {
-      cy.get("form button").contains("Admin Portal").should("exist");
+    it("displays registration data under every column", () => {
+      cy.get(".p-datatable-tbody > tr")
+        .first()
+        .children()
+        .should("not.be.empty");
+      cy.get(".p-datatable-tbody > tr")
+        .first()
+        .children()
+        .should("have.length", 16);
     });
   });
 
@@ -58,17 +130,20 @@ describe("Admin Registrations Page", () => {
         cy.visit(`${url}admin`, { timeout: 50000 });
       });
 
-      it("displays registration status message", () => {
-        cy.get(".p-message-wrapper").contains("You").should("exist");
-      });
-      it("displays disabled username and details", () => {
-        cy.get(`form #input-user-register-username`).should("be.disabled");
-        cy.get(`form #input-user-register-firstname`).should("be.disabled");
-        cy.get(`form #input-user-register-lastname`).should("be.disabled");
+      it("displays edit buttons with functional popups", () => {
+        cy.get(".options-buttons").contains("Edit").first().click();
+        cy.get(".registration-dialog").should("exist");
+
+        cy.get(".submission-form-buttons button").contains("Submit").click();
+        cy.contains("Registration Updated").should("exist");
+        cy.get(".registration-dialog .p-dialog-header-close").click();
+        cy.get(".financial-registration-form").should("not.exist");
       });
 
-      it("displays Admin Portal button", () => {
-        cy.get("form button").contains("Admin Portal").should("exist");
+      it("displays view button with functional redirection", () => {
+        cy.get(".info-button").contains("View").should("exist");
+        cy.get(".info-button").contains("View").first().click();
+        cy.location("pathname").should("include", "admin/edit");
       });
     }
   );

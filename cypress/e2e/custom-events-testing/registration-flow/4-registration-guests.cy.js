@@ -2,7 +2,7 @@
 const url = Cypress.env("url");
 const user = Cypress.env("user");
 
-describe("Users can add, edit, and delete guests on a registration.", () => {
+describe.skip("Users can add, edit, and delete guests on a registration.", () => {
   context("Guest add and edit functionality, using 'add guests' popup", () => {
     beforeEach(() => {
       cy.visit(`${url}create/registration`);
@@ -80,7 +80,7 @@ describe("Users can add, edit, and delete guests on a registration.", () => {
       });
     });
 
-    it("adds multiple guest (guests 2-6)", () => {
+    it("adds multiple guests (guests 2-6)", () => {
       cy.fixture("guest-info").then((guests) => {
         for (let each in guests) {
           if (
@@ -247,7 +247,6 @@ describe("Users can add, edit, and delete guests on a registration.", () => {
           .click();
 
         cy.get(".p-dialog-footer button").contains("Save").click();
-        cy.get(".p-dialog .p-dialog-header-close").click();
         cy.get(".p-dialog-header")
           .contains("Guest Details")
           .should("not.exist");

@@ -2,7 +2,7 @@
 const url = Cypress.env("url");
 const user = Cypress.env("user");
 
-describe("Registration Navigation Process", () => {
+describe.skip("Registration Navigation Process", () => {
   context("Registration Page for registrar", () => {
     beforeEach(() => {
       cy.visit(url, { timeout: 50000 });
@@ -25,7 +25,7 @@ describe("Registration Navigation Process", () => {
   });
 });
 
-describe("Registration Functional and Displays Information", () => {
+describe.skip("Registration Functional and Displays Information", () => {
   context("Page Buttons", () => {
     beforeEach(() => {
       cy.visit(`${url}create/registration`);

@@ -8,7 +8,7 @@ require("dotenv").config();
 const nodeEnv = process.env.NODE_ENV;
 
 if (nodeEnv === "local" || nodeEnv === "test" || nodeEnv === "development") {
-  describe("Initializes Financial Registration", () => {
+  describe.skip("Initializes Financial Registration", () => {
     context("Register", () => {
       before(() => {
         cy.visit(`${url}`, { timeout: 50000 }).then(() => {
