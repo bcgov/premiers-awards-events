@@ -6,7 +6,7 @@
   "author": "BC Gov, PSA",
   "description": "Premier's Awards table registration web app",
   "scripts": {
-    "test": "cross-env NODE_ENV=test DEBUG=false jest --testTimeout=10000 --forceExit --detectOpenHandles --watchAll --maxWorkers=1",
+    "test": "npx run cypress",
     "start": "node app.js",
     "dev-node": "nodemon app.js",
     "dev": "vite --port 3002",
