@@ -141,4 +141,83 @@ describe("Admin Tables Page", () => {
       });
     }
   );
+
+  context("Table creation, editing and deletion functional", () => {
+    before(() => {
+      cy.visit(`${url}admin/tables`, { timeout: 50000 });
+    });
+
+    it("adds new table", () => {
+      cy.get(`.p-button-label`).contains("Add New Table").click();
+      cy.get(".text-field #tablename").type("{selectAll}", "{del}");
+      cy.get(`.text-field #tablename`).type("0123-testing");
+
+      cy.get("#tabletype .p-dropdown-trigger").click();
+      cy.get("#tabletype_list li").contains("Reserved").click();
+
+      cy.get(".number-field #tablecapacity").type("{selectAll}", "{del}");
+      cy.get(`.number-field #tablecapacity`).type("99");
+      cy.get(`.p-dialog-content form button`).contains("Submit").click();
+      cy.contains("Table Updated").should("exist");
+      cy.get(`.p-dialog-header-close`).click();
+      cy.get(`.p-dialog-header`).contains("Add New Table").should("not.exist");
+    });
+
+    it("edits testing table", () => {
+      cy.get(".p-datatable-header input").type("{selectAll}", "{del}");
+      cy.get(`.p-datatable-header input`).type("0123-testing");
+      cy.get(".p-datatable-tbody .edit-button").should("have.length", 1);
+      cy.get(".p-datatable-tbody .edit-button").click();
+
+      cy.get(".text-field #tablename").type("{selectAll}", "{del}");
+      cy.get(`.text-field #tablename`).type("4567-testing");
+
+      cy.get("#tabletype .p-dropdown-trigger").click();
+      cy.get("#tabletype_list li").contains("Standard").click();
+
+      cy.get(".number-field #tablecapacity").type("{selectAll}", "{del}");
+      cy.get(`.number-field #tablecapacity`).type("1");
+      cy.get(`.p-dialog-content form button`).contains("Submit").click();
+      cy.contains("Table Updated").should("exist");
+      cy.get(`.p-dialog-header-close`).click();
+      cy.get(`.p-dialog-header`).contains("Add New Table").should("not.exist");
+
+      cy.get(".p-datatable-header input").type("{selectAll}", "{del}");
+      cy.get(`.p-datatable-header input`).type("0123-testing");
+      cy.get(".p-datatable-tbody .edit-button").should("not.exist");
+
+      cy.get(".p-datatable-header input").type("{selectAll}", "{del}");
+      cy.get(`.p-datatable-header input`).type("4567-testing");
+      cy.get(".p-datatable-tbody .edit-button").should("have.length", 1);
+    });
+
+    it("deletes testing table", () => {
+      cy.get(".p-datatable-header input").type("{selectAll}");
+      cy.get(`.p-datatable-header input`).type("4567-testing");
+      cy.get(".p-datatable-tbody .delete-button").should("have.length", 1);
+
+      cy.get(".p-datatable-tbody .delete-button").click();
+
+      cy.get(".p-dialog-header").contains("Confirm").should("exist");
+      cy.get(".p-dialog-content").contains("4567-testing").should("exist");
+      cy.get(".p-dialog-footer button").contains("Yes").click();
+      cy.get(".p-dialog-header").contains("Confirm").should("not.exist");
+
+      cy.contains("Successfully").should("exist");
+      //cy.wait(1500);
+
+      //clears filter and displays all tables again
+      cy.get(".p-datatable-header input").type("{selectAll}");
+      cy.get(".p-datatable-header input").type("{del}");
+
+      cy.get(".p-datatable-tbody > tr")
+        .first()
+        .children()
+        .should("not.be.empty");
+      cy.get(".p-datatable-tbody > tr")
+        .first()
+        .children()
+        .should("have.length", 9);
+    });
+  });
 });
