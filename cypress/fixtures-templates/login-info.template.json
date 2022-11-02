@@ -1,0 +1,47 @@
+{
+  "user1":{
+      "guid": "",
+      "username": "",
+      "email": "",
+      "roles": [""],
+      "firstname": "",
+      "lastname": ""
+  },
+
+  "user2":{
+    "guid": "",
+    "username": "",
+    "email": "",
+    "roles": [""],
+    "firstname": "",
+    "lastname": ""
+  },
+
+  "user3":{
+    "guid": "",
+    "username": "",
+    "email": "",
+    "roles": [""],
+    "firstname": "",
+    "lastname": ""
+  },
+
+  "user4":{
+    "guid": "",
+    "username": "",
+    "email": "",
+    "roles": [""],
+    "firstname": "",
+    "lastname": ""
+  },
+
+  "user5":{
+    "guid": "",
+    "username": "",
+    "email": "",
+    "roles": [""],
+    "firstname": "",
+    "lastname": ""
+  }
+
+}

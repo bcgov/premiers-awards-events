@@ -1,8 +1,16 @@
 const { defineConfig } = require("cypress");
+require("dotenv").config();
+
+const nodeENV = process.env.NODE_ENV;
+const baseURL = process.env.PA_APPS_BASE_URL;
+const appPort = process.env.PA_APPS_EVENTS_PORT || 3000;
+const apiURL = process.env.PA_APPS_API_URL;
+const appURL = process.env.PA_APPS_EVENTS_URL;
 
 module.exports = defineConfig({
   projectId: "x91brq",
   e2e: {
+    experimentalSessionAndOrigin: true,
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
@@ -15,8 +23,12 @@ module.exports = defineConfig({
       : [],
   },
   env: {
-    url: "http://localhost:3002/",
-    user: "sprose",
+    url: appURL,
+    nodeENV,
+    baseURL,
+    appPort,
+    apiURL,
+    appURL,
   },
   video: false,
   retries: {
