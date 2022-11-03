@@ -3,7 +3,7 @@
 const url = Cypress.env("url");
 const user = Cypress.env("user");
 const apiURL = Cypress.env("apiURL");
-import loginStub from "./login-stub";
+import loginStub from "../helpers/login-stub";
 
 describe("Registration Process", () => {
   context("Registration Page for new user", () => {

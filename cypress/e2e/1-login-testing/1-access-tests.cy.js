@@ -1,7 +1,7 @@
 // const { guid = "", username = "" } = res.locals.user;
 // (guid = ""), (username = ""), (firstname = ""), (lastname = ""), (email = "");
 const url = Cypress.env("url");
-import loginStub from "./login-stub";
+import loginStub from "../helpers/login-stub";
 
 describe("Login Process", () => {
   context("login on page entry", () => {

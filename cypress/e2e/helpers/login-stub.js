@@ -1,6 +1,6 @@
 const url = Cypress.env("url");
 
-//Default stub login as super-administrator for testing
+//Default stub logs in as super-administrator for testing
 
 const loginStub = (loginFile) => {
   const infoURL = "/admin/users/info";
@@ -9,9 +9,12 @@ const loginStub = (loginFile) => {
   const loginID = loginFile
     ? `user-info/user-states/${loginFile}`
     : "user-info/user-states/super-administrator";
+  const infoID = loginFile
+    ? `user-info/user-states/${loginFile}-info`
+    : "user-info/user-states/super-administrator-info";
 
   cy.intercept("GET", infoURL, {
-    fixture: "user-info/info.json",
+    fixture: infoID,
   }).as("inituser");
 
   cy.intercept("GET", loginURL, {

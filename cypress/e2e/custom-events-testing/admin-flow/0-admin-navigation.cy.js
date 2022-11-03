@@ -1,13 +1,11 @@
 /// <reference types="cypress" />
-const url = Cypress.env("url");
-const user = Cypress.env("user");
+import loginStub from "../../helpers/login-stub";
 
 describe("Admin Navigation Process", () => {
+  beforeEach(() => {
+    loginStub();
+  });
   context("Registration Page for admin", () => {
-    beforeEach(() => {
-      cy.visit(url, { timeout: 50000 });
-    });
-
     it("navigates to the registration page when clicking on the register button", () => {
       Cypress.$("document").ready(function () {
         cy.get(".p-button").contains("Register").click();
@@ -25,9 +23,6 @@ describe("Admin Navigation Process", () => {
   });
 
   context("View Profile Page for admin", () => {
-    beforeEach(() => {
-      cy.visit(url, { timeout: 50000 });
-    });
     it("navigates to the view profile page from the dropdown", () => {
       Cypress.$("document").ready(function () {
         cy.get(".dropdown-account").click();
@@ -38,9 +33,6 @@ describe("Admin Navigation Process", () => {
   });
 
   context("View Registrations Page for admin", () => {
-    beforeEach(() => {
-      cy.visit(url, { timeout: 50000 });
-    });
     it("navigates to the view registrations page from the dropdown", () => {
       Cypress.$("document").ready(function () {
         cy.get(".dropdown-account").click();
@@ -51,9 +43,6 @@ describe("Admin Navigation Process", () => {
   });
 
   context("View Guests Page for admin", () => {
-    beforeEach(() => {
-      cy.visit(url, { timeout: 50000 });
-    });
     it("navigates to the view guests page from the dropdown", () => {
       Cypress.$("document").ready(function () {
         cy.get(".dropdown-account").click();
@@ -64,9 +53,6 @@ describe("Admin Navigation Process", () => {
   });
 
   context("View Tables Page for admin", () => {
-    beforeEach(() => {
-      cy.visit(url, { timeout: 50000 });
-    });
     it("navigates to the view tables page from the dropdown", () => {
       Cypress.$("document").ready(function () {
         cy.get(".dropdown-account").click();
@@ -77,9 +63,6 @@ describe("Admin Navigation Process", () => {
   });
 
   context("Event Planner Page for admin", () => {
-    beforeEach(() => {
-      cy.visit(url, { timeout: 50000 });
-    });
     it("navigates to the Event Planning page from the dropdown", () => {
       Cypress.$("document").ready(function () {
         cy.get(".dropdown-account").click();
@@ -90,9 +73,6 @@ describe("Admin Navigation Process", () => {
   });
 
   context("Event Settings Page for admin", () => {
-    beforeEach(() => {
-      cy.visit(url, { timeout: 50000 });
-    });
     it("navigates to the event settings page from the dropdown", () => {
       Cypress.$("document").ready(function () {
         cy.get(".dropdown-account").click();

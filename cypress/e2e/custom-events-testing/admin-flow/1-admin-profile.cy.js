@@ -1,11 +1,13 @@
 /// <reference types="cypress" />
-const url = Cypress.env("url");
-const user = Cypress.env("user");
+import loginStub from "../../helpers/login-stub";
 
 describe("Admin Profile Page", () => {
   context("Profile page presents user info", () => {
     beforeEach(() => {
-      cy.visit(`${url}user/update`, { timeout: 50000 });
+      loginStub();
+      cy.get(".dropdown-account").click();
+      cy.get(".dropdown-account").contains("View Profile").click();
+      cy.location("pathname").should("include", "user/update");
     });
 
     it("displays registration status message", () => {

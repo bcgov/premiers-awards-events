@@ -1,12 +1,18 @@
 /// <reference types="cypress" />
-const url = Cypress.env("url");
-const user = Cypress.env("user");
+import loginStub from "../../helpers/login-stub";
+import tableStub from "../../helpers/tables-stub";
+import singleTableStub from "../../helpers/tables-stub-single";
 
 describe("Admin Tables Page", () => {
+  beforeEach(() => {
+    loginStub();
+    tableStub();
+    singleTableStub();
+    cy.get(".dropdown-account").click();
+    cy.get(".dropdown-account").contains("View Tables").click();
+    cy.location("pathname").should("include", "admin/tables");
+  });
   context("Table page shows all admin navigation features", () => {
-    before(() => {
-      cy.visit(`${url}admin/tables`, { timeout: 50000 });
-    });
     it("displays admin nav bar with all items", () => {
       cy.get(".admin-nav").contains("Registrations").should("exist");
       cy.get(".admin-nav").contains("Guests").should("exist");
@@ -16,10 +22,6 @@ describe("Admin Tables Page", () => {
   });
 
   context("Table page buttons functional", () => {
-    beforeEach(() => {
-      cy.visit(`${url}admin/tables`, { timeout: 50000 });
-    });
-
     it("displays functional table count button", () => {
       cy.get(".p-button-label").contains("Table Count:").should("exist");
       cy.get(`.p-button-label`).contains("Table Count:").click();
@@ -48,10 +50,6 @@ describe("Admin Tables Page", () => {
   });
 
   context("Tables page shows table and column details", () => {
-    beforeEach(() => {
-      cy.visit(`${url}admin/tables`, { timeout: 50000 });
-    });
-
     it("displays tables data table", () => {
       cy.get(".table-data-view").should("exist");
     });
@@ -93,8 +91,8 @@ describe("Admin Tables Page", () => {
   });
 
   context("Tables page lists tables with details", () => {
-    before(() => {
-      cy.visit(`${url}admin/tables`, { timeout: 50000 });
+    beforeEach(() => {
+      cy.wait(["@getTables"]);
     });
 
     it("displays table data under every column", () => {
@@ -113,11 +111,12 @@ describe("Admin Tables Page", () => {
     "Tables page allow edits, linking to view specific tables, and delete option.",
     () => {
       beforeEach(() => {
-        cy.visit(`${url}admin/tables`, { timeout: 50000 });
+        cy.wait(["@getTables"]);
       });
 
       it("displays edit buttons with functional popups", () => {
         cy.get(".edit-button").contains("Edit").first().click();
+        cy.wait(["@getSingleTable"]);
         cy.get(".p-dialog-header").contains("Table Details").should("exist");
         cy.get("button").contains("Submit").click();
         cy.contains("Table Updated").should("exist");
@@ -129,6 +128,7 @@ describe("Admin Tables Page", () => {
 
       it("displays link to table with functional redirection", () => {
         cy.get(".p-datatable-tbody .tablename a").first().click();
+        cy.wait(["@getSingleTable"]);
         cy.location("pathname").should("include", "admin/table/");
       });
 
@@ -144,7 +144,7 @@ describe("Admin Tables Page", () => {
 
   context("Table creation, editing and deletion functional", () => {
     beforeEach(() => {
-      cy.visit(`${url}admin/tables`, { timeout: 50000 });
+      cy.wait(["@getTables"]);
     });
 
     it("adds new table", () => {
@@ -157,13 +157,31 @@ describe("Admin Tables Page", () => {
 
       cy.get(".number-field #tablecapacity").type("{selectAll}", "{del}");
       cy.get(`.number-field #tablecapacity`).type("99");
+
+      //Add New Table
+      cy.intercept("POST", `/tables/seating`, {
+        fixture: "tables/tables-seating-updated-single",
+      }).as("postTable");
       cy.get(`.p-dialog-content form button`).contains("Submit").click();
+      cy.wait(["@postTable"]);
       cy.contains("Table Updated").should("exist");
+
+      //Load updated table list
+      tableStub("updated");
       cy.get(`.p-dialog-header-close`).click();
+      cy.wait(["@getTables"]);
       cy.get(`.p-dialog-header`).contains("Add New Table").should("not.exist");
     });
 
     it("edits testing table", () => {
+      //load updated table list
+      loginStub();
+      tableStub("updated");
+      cy.get(".dropdown-account").click();
+      cy.get(".dropdown-account").contains("View Tables").click();
+      cy.location("pathname").should("include", "admin/tables");
+      cy.wait(["@getTables"]);
+
       cy.get(".p-datatable-header input").type("{selectAll}", "{del}");
       cy.get(`.p-datatable-header input`).type("0123-testing");
       cy.get(".p-datatable-tbody .edit-button").should("have.length", 1);
@@ -177,10 +195,22 @@ describe("Admin Tables Page", () => {
 
       cy.get(".number-field #tablecapacity").type("{selectAll}", "{del}");
       cy.get(`.number-field #tablecapacity`).type("1");
+
+      //Updates Table
+      cy.intercept("POST", `/tables/seating/*`, {
+        fixture: "tables/tables-seating-final-single",
+      }).as("postTable");
+
       cy.get(`.p-dialog-content form button`).contains("Submit").click();
+      cy.wait(["@postTable"]);
       cy.contains("Table Updated").should("exist");
+
+      //Load final table list
+      tableStub("final");
       cy.get(`.p-dialog-header-close`).click();
-      cy.get(`.p-dialog-header`).contains("Add New Table").should("not.exist");
+      cy.wait(["@getTables"]);
+
+      cy.get(`.p-dialog-header`).contains("Table Details").should("not.exist");
 
       cy.get(".p-datatable-header input").type("{selectAll}", "{del}");
       cy.get(`.p-datatable-header input`).type("0123-testing");
@@ -192,6 +222,14 @@ describe("Admin Tables Page", () => {
     });
 
     it("deletes testing table", () => {
+      loginStub();
+      tableStub("final");
+      cy.get(".dropdown-account").click();
+      cy.get(".dropdown-account").contains("View Tables").click();
+      cy.location("pathname").should("include", "admin/tables");
+      cy.wait(["@getTables"]);
+
+      //Load final table list
       cy.get(".p-datatable-header input").type("{selectAll}");
       cy.get(`.p-datatable-header input`).type("4567-testing");
       cy.get(".p-datatable-tbody .delete-button").should("have.length", 1);
@@ -200,10 +238,21 @@ describe("Admin Tables Page", () => {
 
       cy.get(".p-dialog-header").contains("Confirm").should("exist");
       cy.get(".p-dialog-content").contains("4567-testing").should("exist");
+
+      //Deletes Table
+      cy.intercept("POST", `/tables/seating/delete/*`, {
+        acknowledged: true,
+        deletedCount: 1,
+      }).as("postTable");
+      tableStub();
+
       cy.get(".p-dialog-footer button").contains("Yes").click();
+      cy.wait(["@postTable"]);
       cy.get(".p-dialog-header").contains("Confirm").should("not.exist");
 
       cy.contains("Successfully").should("exist");
+      cy.wait(["@getTables"]);
+
       //cy.wait(1500);
 
       //clears filter and displays all tables again

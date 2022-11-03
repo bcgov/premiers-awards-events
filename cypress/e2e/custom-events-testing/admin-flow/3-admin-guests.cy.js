@@ -1,12 +1,18 @@
 /// <reference types="cypress" />
-const url = Cypress.env("url");
-const user = Cypress.env("user");
+import loginStub from "../../helpers/login-stub";
+import guestStub from "../../helpers/guests-stub";
+import tableStub from "../../helpers/tables-stub";
 
 describe("Admin Guests Page", () => {
+  beforeEach(() => {
+    loginStub();
+    guestStub();
+    tableStub();
+    cy.get(".dropdown-account").click();
+    cy.get(".dropdown-account").contains("View Guests").click();
+    cy.location("pathname").should("include", "admin/guests");
+  });
   context("Guests page shows all admin navigation features", () => {
-    before(() => {
-      cy.visit(`${url}admin/guests`, { timeout: 50000 });
-    });
     it("displays admin nav bar with all items", () => {
       cy.get(".admin-nav").contains("Registrations").should("exist");
       cy.get(".admin-nav").contains("Guests").should("exist");
@@ -16,10 +22,6 @@ describe("Admin Guests Page", () => {
   });
 
   context("Guests page buttons functional", () => {
-    before(() => {
-      cy.visit(`${url}admin/guests`, { timeout: 50000 });
-    });
-
     it("displays functional guest count button", () => {
       cy.get(".p-button-label").contains("Guest Count").should("exist");
       cy.get(`.p-button-label`).contains("Guest Count").click();
@@ -34,10 +36,6 @@ describe("Admin Guests Page", () => {
   });
 
   context("Guests page shows guests table and column details", () => {
-    beforeEach(() => {
-      cy.visit(`${url}admin/guests`, { timeout: 50000 });
-    });
-
     it("displays registrations data table", () => {
       cy.get(".guests-datatable").should("exist");
     });
@@ -86,11 +84,11 @@ describe("Admin Guests Page", () => {
   });
 
   context("Guests page lists guests with details", () => {
-    before(() => {
-      cy.visit(`${url}admin/guests`, { timeout: 50000 });
+    beforeEach(() => {
+      cy.wait(["@getGuests", "@getTables"]);
     });
 
-    it("displays registration data under every column", () => {
+    it("displays guest data under every column", () => {
       cy.get(".p-datatable-tbody > tr")
         .first()
         .children()
@@ -106,7 +104,7 @@ describe("Admin Guests Page", () => {
     "Guests page allow edits, linking to view specific registrations, and remove/delete option.",
     () => {
       beforeEach(() => {
-        cy.visit(`${url}admin/guests`, { timeout: 50000 });
+        cy.wait(["@getGuests", "@getTables"]);
       });
 
       it("displays edit buttons with functional popups", () => {

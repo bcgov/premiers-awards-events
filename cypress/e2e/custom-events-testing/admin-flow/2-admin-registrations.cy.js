@@ -1,12 +1,18 @@
 /// <reference types="cypress" />
-const url = Cypress.env("url");
-const user = Cypress.env("user");
+import loginStub from "../../helpers/login-stub";
+import registrationStub from "../../helpers/registrations-stub";
+import singleRegistrationStub from "../../helpers/single-registration-stub";
 
 describe("Admin Registrations Page", () => {
+  beforeEach(() => {
+    loginStub();
+    registrationStub();
+    singleRegistrationStub();
+    cy.get(".dropdown-account").click();
+    cy.get(".dropdown-account").contains("View Registrations").click();
+    cy.location("pathname").should("include", "admin");
+  });
   context("Registrations page shows all admin navigation features", () => {
-    before(() => {
-      cy.visit(`${url}admin`, { timeout: 50000 });
-    });
     it("displays admin nav bar with all items", () => {
       cy.get(".admin-nav").contains("Registrations").should("exist");
       cy.get(".admin-nav").contains("Guests").should("exist");
@@ -16,10 +22,6 @@ describe("Admin Registrations Page", () => {
   });
 
   context("Registrations page buttons functional", () => {
-    before(() => {
-      cy.visit(`${url}admin`, { timeout: 50000 });
-    });
-
     it("displays functional table count button", () => {
       cy.get(".p-button-label").contains("Table Count:").should("exist");
       cy.get(`.p-button-label`).contains("Table Count").click();
@@ -35,9 +37,8 @@ describe("Admin Registrations Page", () => {
     "Registrations page shows registrations table and column details",
     () => {
       beforeEach(() => {
-        cy.visit(`${url}admin`, { timeout: 50000 });
+        cy.wait(["@getRegistrations"]);
       });
-
       it("displays registrations data table", () => {
         cy.get(".p-datatable").should("exist");
       });
@@ -107,10 +108,9 @@ describe("Admin Registrations Page", () => {
   );
 
   context("Registrations page lists registrations with details", () => {
-    before(() => {
-      cy.visit(`${url}admin`, { timeout: 50000 });
+    beforeEach(() => {
+      cy.wait(["@getRegistrations"]);
     });
-
     it("displays registration data under every column", () => {
       cy.get(".p-datatable-tbody > tr")
         .first()
@@ -127,11 +127,12 @@ describe("Admin Registrations Page", () => {
     "Registrations page allow edits and linking to view specific registrations ",
     () => {
       beforeEach(() => {
-        cy.visit(`${url}admin`, { timeout: 50000 });
+        cy.wait(["@getRegistrations"]);
       });
-
       it("displays edit buttons with functional popups", () => {
         cy.get(".options-buttons").contains("Edit").first().click();
+        cy.wait(["@getSingleRegistration"]);
+
         cy.get(".registration-dialog").should("exist");
 
         cy.get(".submission-form-buttons button").contains("Submit").click();
@@ -143,6 +144,7 @@ describe("Admin Registrations Page", () => {
       it("displays view button with functional redirection", () => {
         cy.get(".info-button").contains("View").should("exist");
         cy.get(".info-button").contains("View").first().click();
+        cy.wait(["@getSingleRegistration"]);
         cy.location("pathname").should("include", "admin/edit");
       });
     }
