@@ -16,7 +16,7 @@ describe("Admin Tables Page", () => {
   });
 
   context("Table page buttons functional", () => {
-    before(() => {
+    beforeEach(() => {
       cy.visit(`${url}admin/tables`, { timeout: 50000 });
     });
 
@@ -48,7 +48,7 @@ describe("Admin Tables Page", () => {
   });
 
   context("Tables page shows table and column details", () => {
-    before(() => {
+    beforeEach(() => {
       cy.visit(`${url}admin/tables`, { timeout: 50000 });
     });
 
@@ -143,7 +143,7 @@ describe("Admin Tables Page", () => {
   );
 
   context("Table creation, editing and deletion functional", () => {
-    before(() => {
+    beforeEach(() => {
       cy.visit(`${url}admin/tables`, { timeout: 50000 });
     });
 

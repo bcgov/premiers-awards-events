@@ -7,8 +7,6 @@ const apiURL = Cypress.env("apiURL");
 describe("Registration Process", () => {
   context("Registration Page for new user", () => {
     beforeEach(() => {
-      cy.clearCookies();
-      cy.clearLocalStorage();
       const registrationurl = `/admin/users/register`;
       const infoURL = "/admin/users/info";
       const loginURL = "/admin/users/login";
@@ -52,69 +50,39 @@ describe("Registration Process", () => {
 
         cy.get(".p-card-content form button").click();
         cy.wait("@postRegistration");
+        cy.contains("Successfully registered user!");
       });
     });
   });
 });
 
-// const login = (user) => {
-//   const loginURL = `${apiURL}admin/users/login`;
+describe("Login Process", () => {
+  context("login on page entry", () => {
+    it("logs the user in on the main page", () => {
+      const infoURL = "/admin/users/info";
+      const loginURL = "/admin/users/login";
+      const settingsURL = "/tables/settings";
 
-//   cy.session(
-//     user.username,
-//     () => {
-//       cy.request("GET", loginURL, user).then(({ body }) => {
-//         window.localStorage.setItem("authToken", body.token);
-//       });
-//     },
-//     {
-//       validate() {
-//         cy.visit(`${url}user/register/`);
-//         cy.contains(`Your registration is currently under review.`);
-//       },
-//       cacheAcrossSpecs: true,
-//     }
-//   );
-// };
+      cy.intercept("GET", infoURL, {
+        fixture: "user-info/info.json",
+      }).as("inituser");
 
-// profile.cy.js
-//   it('can view profile', () => {
-//     cy.login()
-//   })
+      cy.intercept("GET", loginURL, {
+        fixture: "user-info/initial-user.json",
+      }).as("getLogin");
 
-// add_blog.cy.js
-//   it('can create a blog post', () => {
-//     cy.login()
-//   })
+      cy.intercept("GET", settingsURL, {
+        fixture: "user-info/eventsettings.json",
+      }).as("getSettings");
 
-// it(
-//   "can register a new user",
-//   {
-//     retries: {
-//       runMode: 0,
-//       openMode: 0,
-//     },
-//   },
-//   () => {
-//     cy.fixture("login-info").then((users) => {
-//       const { user1 } = users;
-//       register(user1);
-//     });
-//   }
-// );
+      cy.visit(url, { timeout: 50000 });
 
-// it(
-//   "can login as a new user",
-//   {
-//     retries: {
-//       runMode: 0,
-//       openMode: 0,
-//     },
-//   },
-//   () => {
-//     cy.fixture("login-info").then((users) => {
-//       const { user1 } = users;
-//       login(user1);
-//     });
-//   }
-// );
+      cy.wait(["@inituser", "@getLogin", "@getSettings"]);
+
+      cy.fixture("login-info").then((users) => {
+        const { user1 } = users;
+        cy.contains(`${user1["username"]}`);
+      });
+    });
+  });
+});

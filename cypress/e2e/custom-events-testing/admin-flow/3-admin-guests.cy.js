@@ -34,7 +34,7 @@ describe("Admin Guests Page", () => {
   });
 
   context("Guests page shows guests table and column details", () => {
-    before(() => {
+    beforeEach(() => {
       cy.visit(`${url}admin/guests`, { timeout: 50000 });
     });
 

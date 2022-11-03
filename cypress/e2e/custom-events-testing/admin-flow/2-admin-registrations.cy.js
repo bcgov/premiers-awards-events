@@ -34,7 +34,7 @@ describe("Admin Registrations Page", () => {
   context(
     "Registrations page shows registrations table and column details",
     () => {
-      before(() => {
+      beforeEach(() => {
         cy.visit(`${url}admin`, { timeout: 50000 });
       });
 
