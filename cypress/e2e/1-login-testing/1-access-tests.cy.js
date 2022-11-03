@@ -1,35 +1,12 @@
 // const { guid = "", username = "" } = res.locals.user;
 // (guid = ""), (username = ""), (firstname = ""), (lastname = ""), (email = "");
 const url = Cypress.env("url");
-const user = Cypress.env("user");
-const apiURL = Cypress.env("apiURL");
-
-const loginFunction = (loginFile) => {
-  const infoURL = "/admin/users/info";
-  const loginURL = "/admin/users/login";
-  const settingsURL = "/tables/settings";
-
-  cy.intercept("GET", infoURL, {
-    fixture: "user-info/info.json",
-  }).as("inituser");
-
-  cy.intercept("GET", loginURL, {
-    fixture: loginFile,
-  }).as("getLogin");
-
-  cy.intercept("GET", settingsURL, {
-    fixture: "user-info/eventsettings.json",
-  }).as("getSettings");
-
-  cy.visit(url, { timeout: 50000 });
-
-  cy.wait(["@inituser", "@getLogin", "@getSettings"]);
-};
+import loginStub from "./login-stub";
 
 describe("Login Process", () => {
   context("login on page entry", () => {
     it("logs the user in on the main page", () => {
-      loginFunction("user-info/initial-user.json");
+      loginStub("initial-user");
 
       cy.fixture("login-info").then((users) => {
         const { user1 } = users;
@@ -42,7 +19,7 @@ describe("Login Process", () => {
 describe("Registration Process", () => {
   context("Registration Page based on user access", () => {
     it("shows message and correct access for inactive user", () => {
-      loginFunction("user-info/user-states/inactive/inactive.json");
+      loginStub("inactive");
       cy.get(".p-button").contains("Create a profile to register").click();
       cy.location("pathname").should("include", "register");
       cy.contains(
@@ -67,7 +44,7 @@ describe("Registration Process", () => {
     });
 
     it("shows registered message and correct access for nominator user", () => {
-      loginFunction("user-info/user-states/nominator/nominator.json");
+      loginStub("nominator");
 
       cy.get(".p-button").contains("Create a profile to register").click();
       cy.location("pathname").should("include", "register");
@@ -93,7 +70,7 @@ describe("Registration Process", () => {
     });
 
     it("shows registered message and correct access for registered user", () => {
-      loginFunction("user-info/user-states/registrar/registrar.json");
+      loginStub("registrar");
 
       cy.visit(`${url}register`);
       cy.location("pathname").should("include", "register");
@@ -117,7 +94,7 @@ describe("Registration Process", () => {
     });
 
     it("shows registered message and correct access for administrator user", () => {
-      loginFunction("user-info/user-states/admin/administrator.json");
+      loginStub("administrator");
 
       cy.visit(`${url}register`);
       cy.location("pathname").should("include", "register");
@@ -139,9 +116,7 @@ describe("Registration Process", () => {
     });
 
     it("shows registered message and correct access for super-administrator user", () => {
-      loginFunction(
-        "user-info/user-states/super-admin/super-administrator.json"
-      );
+      loginStub("super-administrator");
 
       cy.visit(`${url}register`);
       cy.location("pathname").should("include", "register");
