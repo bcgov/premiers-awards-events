@@ -1,0 +1,25 @@
+[
+  {
+    "_id": "VIeWJwbVyy7ZR1mt1mpQ0001",
+    "guid": "hNMbeiJC50tQeYxc2pVTlEIXS1RjpZR98Uw4Ke9ZQCivERtXR8Rp9oF6uhMx0001",
+    "registrations": [],
+    "guests": [
+      "zm8QiMfBU3XkctyEFwFQ0001",
+      "zm8QiMfBU3XkctyEFwFQ0002",
+      "zm8QiMfBU3XkctyEFwFQ0003",
+      "zm8QiMfBU3XkctyEFwFQ0004"
+    ],
+    "tablename": "A1",
+    "tablecapacity": 10,
+    "tabletype": "Reserved",
+    "organizations": [
+      { "organization": "BC Hydro", "guestID": "zm8QiMfBU3XkctyEFwFQ0001" },
+      { "organization": "org-3", "guestID": "zm8QiMfBU3XkctyEFwFQ0002" },
+      { "organization": "org-3", "guestID": "zm8QiMfBU3XkctyEFwFQ0003" },
+      { "organization": "org-3", "guestID": "zm8QiMfBU3XkctyEFwFQ0004" }
+    ],
+    "createdAt": "2022-09-15T15:50:29.055Z",
+    "updatedAt": "2022-11-02T22:43:54.489Z",
+    "__v": 0
+  }
+]

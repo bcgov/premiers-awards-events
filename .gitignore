@@ -16,7 +16,6 @@ dist-ssr
 /cypress/videos/
 /cypress/screenshots/
 /cypress/e2e/cypress-templates
-/cypress/fixtures/
 
 
 # Editor directories and files

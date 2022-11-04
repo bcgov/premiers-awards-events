@@ -1,0 +1,14 @@
+{
+  "guid": "FJ39OXOOfK2gBjCb3FZ6bnViKbZSuhNb9i7cGWLvih8NWwXj2i15pCDDiKEA04",
+  "registration": "EanMdqL5qeEzmTj4wmQ80005",
+  "firstname": "Gary",
+  "lastname": "Oak",
+  "attendancetype": "associateminister",
+  "organization": "org-13",
+  "accessibility": ["wheelchairrequired", "attendantrequired", "mobilityneeds"],
+  "dietary": ["other"],
+  "_id": "zdhZmCTrDIJSdG3aCHjf0004",
+  "createdAt": "2022-11-03T20:45:10.860Z",
+  "updatedAt": "2022-11-03T20:45:10.860Z",
+  "__v": 0
+}

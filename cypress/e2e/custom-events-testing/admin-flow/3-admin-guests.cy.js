@@ -1,15 +1,23 @@
 /// <reference types="cypress" />
-import loginStub from "../../helpers/login-stub";
-import guestStub from "../../helpers/guests-stub";
-import tableStub from "../../helpers/tables-stub";
+const url = Cypress.env("url");
+import { getCustomLogin } from "../../helpers/login";
+import { getGuests, postSingleGuest } from "../../helpers/guests";
+import { getTables } from "../../helpers/tables";
 
 describe("Admin Guests Page", () => {
   beforeEach(() => {
-    loginStub();
-    guestStub();
-    tableStub();
-    cy.get(".dropdown-account").click();
-    cy.get(".dropdown-account").contains("View Guests").click();
+    getCustomLogin();
+    getGuests("1-guests-origin");
+    getTables("1-tables-origin");
+
+    cy.visit(`${url}admin/guests`, { timeout: 50000 });
+    cy.wait([
+      "@inituser",
+      "@getLogin",
+      "@getSettings",
+      "@getTables",
+      "@getGuests",
+    ]);
     cy.location("pathname").should("include", "admin/guests");
   });
   context("Guests page shows all admin navigation features", () => {
@@ -84,10 +92,6 @@ describe("Admin Guests Page", () => {
   });
 
   context("Guests page lists guests with details", () => {
-    beforeEach(() => {
-      cy.wait(["@getGuests", "@getTables"]);
-    });
-
     it("displays guest data under every column", () => {
       cy.get(".p-datatable-tbody > tr")
         .first()
@@ -103,29 +107,12 @@ describe("Admin Guests Page", () => {
   context(
     "Guests page allow edits, linking to view specific registrations, and remove/delete option.",
     () => {
-      beforeEach(() => {
-        cy.wait(["@getGuests", "@getTables"]);
-      });
-
       it("displays edit buttons with functional popups", () => {
+        postSingleGuest();
         cy.get(".options-buttons").contains("Edit").first().click();
         cy.get(".p-dialog-header").contains("Guest Details").should("exist");
         cy.get(".p-dialog-footer button").contains("Save").click();
-        cy.get(".p-dialog-header")
-          .contains("Guest Details")
-          .should("not.exist");
-      });
-
-      it("displays view button with functional redirection", () => {
-        cy.get(".info-button").contains("View").should("exist");
-        cy.get(".info-button").contains("View").first().click();
-        cy.location("pathname").should("include", "admin/edit");
-      });
-
-      it("displays remove from Table buttons with functional popups", () => {
-        cy.get(".options-buttons").contains("Edit").first().click();
-        cy.get(".p-dialog-header").contains("Guest Details").should("exist");
-        cy.get(".p-dialog-footer button").contains("Save").click();
+        cy.wait(["@postSingleGuest"]);
         cy.get(".p-dialog-header")
           .contains("Guest Details")
           .should("not.exist");
@@ -137,6 +124,12 @@ describe("Admin Guests Page", () => {
         cy.get(".p-dialog-header").contains("Confirm").should("exist");
         cy.get(".p-dialog-footer button").contains("No").click();
         cy.get(".p-dialog-header").contains("Confirm").should("not.exist");
+      });
+
+      it("displays view button with functional redirection", () => {
+        cy.get(".info-button").contains("View").should("exist");
+        cy.get(".info-button").contains("View").first().click();
+        cy.location("pathname").should("include", "admin/edit");
       });
     }
   );

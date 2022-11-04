@@ -1,10 +1,10 @@
 /// <reference types="cypress" />
-import loginStub from "../../helpers/login-stub";
+import { getLogin } from "../../helpers/login";
 
 describe("Admin Profile Page", () => {
   context("Profile page presents user info", () => {
     beforeEach(() => {
-      loginStub();
+      getLogin();
       cy.get(".dropdown-account").click();
       cy.get(".dropdown-account").contains("View Profile").click();
       cy.location("pathname").should("include", "user/update");

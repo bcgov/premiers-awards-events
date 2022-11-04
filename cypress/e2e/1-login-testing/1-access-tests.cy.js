@@ -1,14 +1,13 @@
 // const { guid = "", username = "" } = res.locals.user;
 // (guid = ""), (username = ""), (firstname = ""), (lastname = ""), (email = "");
 const url = Cypress.env("url");
-import loginStub from "../helpers/login-stub";
+import { getLogin } from "../helpers/login";
 
 describe("Login Process", () => {
   context("login on page entry", () => {
     it("logs the user in on the main page", () => {
-      loginStub("initial-user");
-
-      cy.fixture("login-info").then((users) => {
+      getLogin("initial-user");
+      cy.fixture("requests/login-info").then((users) => {
         const { user1 } = users;
         cy.contains(`${user1["username"]}`);
       });
@@ -19,7 +18,7 @@ describe("Login Process", () => {
 describe("Registration Process", () => {
   context("Registration Page based on user access", () => {
     it("shows message and correct access for inactive user", () => {
-      loginStub("inactive");
+      getLogin("inactive");
       cy.get(".p-button").contains("Create a profile to register").click();
       cy.location("pathname").should("include", "register");
       cy.contains(
@@ -44,7 +43,7 @@ describe("Registration Process", () => {
     });
 
     it("shows registered message and correct access for nominator user", () => {
-      loginStub("nominator");
+      getLogin("nominator");
 
       cy.get(".p-button").contains("Create a profile to register").click();
       cy.location("pathname").should("include", "register");
@@ -70,7 +69,7 @@ describe("Registration Process", () => {
     });
 
     it("shows registered message and correct access for registered user", () => {
-      loginStub("registrar");
+      getLogin("registrar");
 
       cy.visit(`${url}register`);
       cy.location("pathname").should("include", "register");
@@ -94,7 +93,7 @@ describe("Registration Process", () => {
     });
 
     it("shows registered message and correct access for administrator user", () => {
-      loginStub("administrator");
+      getLogin("administrator");
 
       cy.visit(`${url}register`);
       cy.location("pathname").should("include", "register");
@@ -116,7 +115,7 @@ describe("Registration Process", () => {
     });
 
     it("shows registered message and correct access for super-administrator user", () => {
-      loginStub("super-administrator");
+      getLogin("super-administrator");
 
       cy.visit(`${url}register`);
       cy.location("pathname").should("include", "register");

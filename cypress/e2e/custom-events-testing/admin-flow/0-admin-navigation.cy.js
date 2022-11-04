@@ -1,9 +1,9 @@
 /// <reference types="cypress" />
-import loginStub from "../../helpers/login-stub";
+import { getLogin } from "../../helpers/login";
 
 describe("Admin Navigation Process", () => {
   beforeEach(() => {
-    loginStub();
+    getLogin();
   });
   context("Registration Page for admin", () => {
     it("navigates to the registration page when clicking on the register button", () => {

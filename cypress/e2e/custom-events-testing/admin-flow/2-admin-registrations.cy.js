@@ -1,15 +1,20 @@
 /// <reference types="cypress" />
-import loginStub from "../../helpers/login-stub";
-import registrationStub from "../../helpers/registrations-stub";
-import singleRegistrationStub from "../../helpers/single-registration-stub";
+const url = Cypress.env("url");
+import { getCustomLogin } from "../../helpers/login";
+import {
+  getRegistrations,
+  getSingleRegistration,
+  postSingleRegistration,
+} from "../../helpers/registrations";
 
 describe("Admin Registrations Page", () => {
   beforeEach(() => {
-    loginStub();
-    registrationStub();
-    singleRegistrationStub();
-    cy.get(".dropdown-account").click();
-    cy.get(".dropdown-account").contains("View Registrations").click();
+    getCustomLogin();
+    getRegistrations();
+    getSingleRegistration("4-admin-registration-list-edit");
+    cy.visit(`${url}admin`, { timeout: 50000 });
+    cy.wait(["@inituser", "@getLogin", "@getSettings"]);
+
     cy.location("pathname").should("include", "admin");
   });
   context("Registrations page shows all admin navigation features", () => {
@@ -127,6 +132,7 @@ describe("Admin Registrations Page", () => {
     "Registrations page allow edits and linking to view specific registrations ",
     () => {
       beforeEach(() => {
+        postSingleRegistration("4-admin-registration-list-edit");
         cy.wait(["@getRegistrations"]);
       });
       it("displays edit buttons with functional popups", () => {
@@ -136,6 +142,8 @@ describe("Admin Registrations Page", () => {
         cy.get(".registration-dialog").should("exist");
 
         cy.get(".submission-form-buttons button").contains("Submit").click();
+        cy.wait(["@postSingleRegistration"]);
+
         cy.contains("Registration Updated").should("exist");
         cy.get(".registration-dialog .p-dialog-header-close").click();
         cy.get(".financial-registration-form").should("not.exist");

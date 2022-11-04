@@ -1,0 +1,40 @@
+{
+  "org1": {
+    "organization": "Ministry of Advanced Education and Skills Training",
+    "branch": "AEST",
+    "primarycontact": "John Doe",
+    "primaryemail": "John.Doe@test.com",
+    "financialcontact": "Stacy",
+    "clientministry": "123",
+    "respcode": "12345",
+    "serviceline": "12345",
+    "stob": "1234",
+    "project": "1234567"
+  },
+
+  "org2": {
+    "organization": "Ministry of Health",
+    "branch": "Mental Health",
+    "primarycontact": "Jane Doe",
+    "primaryemail": "Jane.Doe@test.com",
+    "financialcontact": "Gary",
+    "clientministry": "321",
+    "respcode": "54321",
+    "serviceline": "54321",
+    "stob": "4321",
+    "project": "7654321"
+  },
+
+  "faultyOrg": {
+    "organization": "Testing",
+    "branch": "",
+    "primarycontact": "",
+    "primaryemail": "",
+    "financialcontact": "",
+    "clientministry": "13",
+    "respcode": "1245",
+    "serviceline": "1245",
+    "stob": "14",
+    "project": "123567"
+  }
+}

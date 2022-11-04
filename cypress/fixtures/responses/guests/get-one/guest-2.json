@@ -1,0 +1,14 @@
+{
+  "guid": "FJ39OXOOfK2gBjCb3FZ6bnViKbZSuhNb9i7cGWLvih8NWwXj2i15pCDDiKEA02",
+  "registration": "EanMdqL5qeEzmTj4wmQ80005",
+  "firstname": "Jane",
+  "lastname": "Doe",
+  "attendancetype": "deputyminister",
+  "organization": "org-17",
+  "accessibility": ["mobilityneeds"],
+  "dietary": ["vegan", "vegetarian"],
+  "_id": "zdhZmCTrDIJSdG3aCHjf0002",
+  "createdAt": "2022-11-03T20:45:10.860Z",
+  "updatedAt": "2022-11-03T20:45:10.860Z",
+  "__v": 0
+}

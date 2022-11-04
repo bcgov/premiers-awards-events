@@ -1,0 +1,86 @@
+{
+  "guest1": {
+    "organization": "Ministry of Advanced Education and Skills Training",
+    "firstname": "John",
+    "lastname": "Doe",
+    "attendancetype": "General Attendee",
+    "accessibility": ["Wheelchair Required"],
+    "dietary": ["Vegan"],
+    "notes": "Testing of Notes"
+  },
+
+  "guest2": {
+    "organization": "Ministry of Labour",
+    "firstname": "Jane",
+    "lastname": "Doe",
+    "attendancetype": "Deputy Minister",
+    "accessibility": ["Mobility Needs"],
+    "dietary": ["Vegan", "Vegetarian"]
+  },
+
+  "guest3": {
+    "organization": "Office of the Premier",
+    "firstname": "Susan",
+    "lastname": "Oak",
+    "attendancetype": "Assistant Deputy Minister",
+    "accessibility": ["Attendant Required", "Mobility Needs"],
+    "dietary": ["Shellfish-Free", "Nut-Free", "Sugar-Free"]
+  },
+
+  "guest4": {
+    "organization": "Ministry of Forests",
+    "firstname": "Gary",
+    "lastname": "Oak",
+    "attendancetype": "Associate Deputy Minister",
+    "accessibility": [
+      "Wheelchair Required",
+      "Attendant Required",
+      "Mobility Needs"
+    ],
+    "dietary": ["Other"]
+  },
+
+  "guest5": {
+    "organization": "Testing Anything",
+    "firstname": "Derek",
+    "lastname": "Berry",
+    "attendancetype": "Finalist",
+    "accessibility": ["Attendant Required"],
+    "dietary": ["Dairy-Free"]
+  },
+
+  "guest6": {
+    "organization": "lək̓ʷəŋən",
+    "firstname": "Siksika",
+    "lastname": "Needle",
+    "attendancetype": "Finalist Guest",
+    "accessibility": [],
+    "dietary": ["Gluten-Free"]
+  },
+
+  "guest7": {
+    "organization": "W̱SÁNEĆ Organization",
+    "firstname": "Mquqʷin",
+    "lastname": "Brooks",
+    "attendancetype": "Minister",
+    "accessibility": ["Mobility Needs"],
+    "dietary": [
+      "Dairy-Free",
+      "Shellfish-Free",
+      "Nut-Free",
+      "Sugar-Free",
+      "Other",
+      "Vegan",
+      "Vegetarian"
+    ]
+  },
+
+  "guestFaulty": {
+    "organization": "",
+    "firstname": "",
+    "lastname": "",
+    "attendancetype": "Something Wrong",
+    "accessibility": ["Something Unexpected"],
+    "dietary": ["Something Unexpected"]
+  }
+}

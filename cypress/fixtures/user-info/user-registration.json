@@ -1,0 +1,8 @@
+{
+  "guid": "123456789ABCDEFGHIJKLMNOPQRSTU01",
+  "username": "01testuser",
+  "email": "01test@test.gov.bc.ca",
+  "roles": ["inactive"],
+  "firstname": "01testfirstname",
+  "lastname": "01testlastname"
+}

@@ -1,0 +1,14 @@
+{
+  "guid": "FJ39OXOOfK2gBjCb3FZ6bnViKbZSuhNb9i7cGWLvih8NWwXj2i15pCDDiKEA01",
+  "registration": "EanMdqL5qeEzmTj4wmQ80005",
+  "firstname": "John",
+  "lastname": "Doe",
+  "attendancetype": "generalattendee",
+  "organization": "org-4",
+  "accessibility": ["wheelchairrequired"],
+  "dietary": ["vegan"],
+  "_id": "zdhZmCTrDIJSdG3aCHjf0001",
+  "createdAt": "2022-11-03T20:45:10.860Z",
+  "updatedAt": "2022-11-03T20:45:10.860Z",
+  "__v": 0
+}
