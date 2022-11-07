@@ -144,10 +144,6 @@ describe("Admin Tables Page", () => {
   );
 
   context("Table creation, editing and deletion functional", () => {
-    beforeEach(() => {
-      // cy.wait(["@getTables"]);
-    });
-
     it("adds new table", () => {
       cy.get(`.p-button-label`).contains("Add New Table").click();
       cy.get(".text-field #tablename").type("{selectAll}", "{del}");
@@ -246,7 +242,6 @@ describe("Admin Tables Page", () => {
       cy.get(".p-dialog-footer button").contains("Yes").click();
       cy.wait(["@postTable"]);
       cy.contains("Successfully").should("exist");
-      //cy.get(".p-dialog-header").contains("Confirm").should("not.exist");
 
       cy.wait(["@getTables"]);
 

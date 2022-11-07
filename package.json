@@ -6,7 +6,7 @@
   "author": "BC Gov, PSA",
   "description": "Premier's Awards table registration web app",
   "scripts": {
-    "test": "npx run cypress",
+    "test": "./node_modules/.bin/cypress run",
     "start": "node app.js",
     "dev-node": "nodemon app.js",
     "dev": "vite --port 3002",

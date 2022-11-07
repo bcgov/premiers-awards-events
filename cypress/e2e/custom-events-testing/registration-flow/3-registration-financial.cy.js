@@ -1,11 +1,43 @@
 /// <reference types="cypress" />
 const url = Cypress.env("url");
-const user = Cypress.env("user");
+import { getCustomLogin } from "../../helpers/login";
+import {
+  getRegistrations,
+  getSingleRegistration,
+  postRegistrations,
+  postSingleRegistration,
+} from "../../helpers/registrations";
+import { getTables } from "../../helpers/tables";
 
-describe.skip("Users can edit registration financial details.", () => {
+describe("Users can edit registration financial details.", () => {
   context("Registration edit functionality", () => {
     beforeEach(() => {
-      cy.visit(`${url}create/registration`);
+      getCustomLogin();
+      getRegistrations();
+      getSingleRegistration();
+      postRegistrations();
+      getTables();
+
+      getSingleRegistration("0-registration-new-guests");
+
+      cy.fixture("responses/registrations/get-one/0-registration-new").then(
+        (registration) => {
+          const userInfo = registration;
+          cy.intercept("GET", `/tables/registrations/${userInfo.guid}/guests`, {
+            fixture:
+              "responses/registrations/get-one/0-registration-new-guests",
+          }).as("getRegistrationGuests");
+
+          cy.visit(`${url}registration/${userInfo.guid}`, { timeout: 50000 });
+        }
+      );
+      cy.wait([
+        "@inituser",
+        "@getLogin",
+        "@getSettings",
+        "@getSingleRegistration",
+        "@getTables",
+      ]);
     });
 
     it("opens registration popup and makes one edit", () => {
@@ -20,7 +52,7 @@ describe.skip("Users can edit registration financial details.", () => {
         ".financial-registration-form #organization .p-dropdown-trigger"
       ).click();
 
-      cy.fixture("financial-info").then((finances) => {
+      cy.fixture("requests/financial-info").then((finances) => {
         const { org2 } = finances;
         cy.get("#organization_list li").contains(org2["organization"]).click();
 
@@ -28,8 +60,15 @@ describe.skip("Users can edit registration financial details.", () => {
           ".financial-registration-form #organization .p-inputtext"
         ).should("contain", org2["organization"]);
 
+        postSingleRegistration("1a-registration-edited-POST");
+        getSingleRegistration("1a-registration-edited-GET");
+
         cy.get(".submission-form-buttons button").contains("Submit").click();
+        cy.wait(["@postSingleRegistration"]);
+
         cy.get(".registration-dialog .p-dialog-header-close").click();
+        cy.wait(["@getSingleRegistration"]);
+
         cy.get(".financial-registration-form").should("not.exist");
         cy.get("#personal-registration-table td")
           .contains(org2["organization"])
@@ -49,7 +88,7 @@ describe.skip("Users can edit registration financial details.", () => {
         ".financial-registration-form #organization .p-dropdown-trigger"
       ).click();
 
-      cy.fixture("financial-info").then((finances) => {
+      cy.fixture("requests/financial-info").then((finances) => {
         //Conditionally select organization to use in testing based on current form
         const { org2 } = finances;
         let testOrg = org2;
@@ -87,8 +126,14 @@ describe.skip("Users can edit registration financial details.", () => {
         cy.get(".number-field #project").type("{selectAll}", "{del}");
         cy.get(".number-field #project").type(testOrg["project"]);
 
+        postSingleRegistration("1b-registration-edited-POST");
+        getSingleRegistration("1b-registration-edited-GET");
+
         cy.get(".submission-form-buttons button").contains("Submit").click();
+        cy.wait(["@postSingleRegistration"]);
         cy.get(".registration-dialog .p-dialog-header-close").click();
+        cy.wait(["@getSingleRegistration"]);
+
         cy.get(".financial-registration-form").should("not.exist");
         cy.get("#personal-registration-table td")
           .contains(testOrg["organization"])
@@ -135,7 +180,7 @@ describe.skip("Users can edit registration financial details.", () => {
         ".financial-registration-form #organization .p-dropdown-trigger"
       ).click();
 
-      cy.fixture("financial-info").then((finances) => {
+      cy.fixture("requests/financial-info").then((finances) => {
         const { faultyOrg } = finances;
         cy.get("#organization_list li")
           .contains(faultyOrg["organization"])
