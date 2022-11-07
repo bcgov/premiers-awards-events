@@ -55,10 +55,6 @@ describe("Resets registration", () => {
       getSingleRegistration("3-registration-unsubmitted-GET");
       getRegistrations();
       postSingleRegistration("3-registration-unsubmitted-POST");
-      cy.intercept("GET", `**/tables/registrations/*`, {
-        fixture:
-          "responses/registrations/get-one/3-registration-unsubmitted-GET",
-      }).as("getSingleRegistration");
 
       cy.get(".p-button").contains("Re-open registration").click();
       cy.wait(["@getSingleRegistration"]);
