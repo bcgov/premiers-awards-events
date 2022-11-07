@@ -1,11 +1,53 @@
 /// <reference types="cypress" />
 const url = Cypress.env("url");
-const user = Cypress.env("user");
+import { getCustomLogin } from "../../helpers/login";
+import {
+  getRegistrations,
+  getSingleRegistration,
+  postRegistrations,
+} from "../../helpers/registrations";
+import { getTables } from "../../helpers/tables";
+import {
+  getGuests,
+  getSingleGuest,
+  postGuests,
+  postSingleGuest,
+} from "../../helpers/guests";
 
-describe.skip("Users can add, edit, and delete guests on a registration.", () => {
+describe("Users can add, edit, and delete guests on a registration.", () => {
   context("Guest add and edit functionality, using 'add guests' popup", () => {
     beforeEach(() => {
-      cy.visit(`${url}create/registration`);
+      getCustomLogin();
+      getRegistrations();
+      postRegistrations();
+      getTables();
+      postGuests();
+      getGuests();
+      getSingleGuest();
+      postSingleGuest();
+
+      getSingleRegistration("1b-registration-edited-GET");
+
+      cy.fixture(
+        "responses/registrations/get-one/1b-registration-edited-POST"
+      ).then((registration) => {
+        const userInfo = registration;
+        cy.intercept("GET", `/tables/registrations/${userInfo.guid}/guests`, {
+          fixture:
+            "responses/registrations/get-one/5-registration-submitted-guests",
+        }).as("getRegistrationGuests");
+
+        cy.visit(`${url}registration/${userInfo.guid}`, { timeout: 50000 });
+      });
+      cy.wait([
+        "@inituser",
+        "@getLogin",
+        "@getSettings",
+        "@getSingleRegistration",
+        "@getSingleRegistration",
+        "@getTables",
+        "@getRegistrationGuests",
+      ]);
     });
 
     it("adds one guest (guest1)", () => {
@@ -14,7 +56,7 @@ describe.skip("Users can add, edit, and delete guests on a registration.", () =>
 
       cy.get(".guest-registration-form .p-autocomplete-dropdown").click();
 
-      cy.fixture("guest-info").then((guests) => {
+      cy.fixture("requests/guest-info").then((guests) => {
         const { guest1 } = guests;
         cy.get(".p-autocomplete-panel li")
           .contains(guest1["organization"])
@@ -46,7 +88,12 @@ describe.skip("Users can add, edit, and delete guests on a registration.", () =>
             .click();
         }
 
+        postGuests("guest1");
+        cy.intercept(`/tables/registrations/*/*`, {
+          fixture: "responses/registrations/get-one/2a-registration-guests",
+        }).as("pushGuests");
         cy.get(".guest-registration-form button").contains("Add Guest").click();
+        cy.wait(["@postGuests", "@pushGuests"]);
         cy.get(".p-dialog .p-dialog-header-close").click();
         cy.get(".guest-registration-form").should("not.exist");
 
@@ -81,7 +128,7 @@ describe.skip("Users can add, edit, and delete guests on a registration.", () =>
     });
 
     it("adds multiple guests (guests 2-6)", () => {
-      cy.fixture("guest-info").then((guests) => {
+      cy.fixture("requests/guest-info").then((guests) => {
         for (let each in guests) {
           if (
             each !== "guest1" &&
@@ -131,6 +178,15 @@ describe.skip("Users can add, edit, and delete guests on a registration.", () =>
                 .click();
             }
 
+            postGuests(`${each}`);
+            cy.intercept(`/tables/registrations/*/*`, {
+              fixture: "responses/registrations/get-one/2b-registration-guests",
+            }).as("pushGuests");
+            cy.get(".guest-registration-form button")
+              .contains("Add Guest")
+              .click();
+            cy.wait(["@postGuests", "@pushGuests"]);
+
             cy.get(".guest-registration-form button")
               .contains("Add Guest")
               .click();
@@ -173,7 +229,7 @@ describe.skip("Users can add, edit, and delete guests on a registration.", () =>
       cy.get(`[aria-label="Add Guests"]`).click();
       cy.get(".guest-registration-form").should("be.visible");
 
-      cy.fixture("guest-info").then((guests) => {
+      cy.fixture("requests/guest-info").then((guests) => {
         const { guestFaulty } = guests;
 
         cy.get(".guest-registration-form .p-autocomplete-input").type(
@@ -226,7 +282,7 @@ describe.skip("Users can add, edit, and delete guests on a registration.", () =>
         .click();
       cy.get(".p-dialog-header").contains("Guest Details").should("be.visible");
 
-      cy.fixture("guest-info").then((guests) => {
+      cy.fixture("requests/guest-info").then((guests) => {
         const { guest7 } = guests;
 
         cy.get(".p-autocomplete-input").type("{selectAll}", "{del}");
@@ -246,10 +302,15 @@ describe.skip("Users can add, edit, and delete guests on a registration.", () =>
           .contains(guest7["attendancetype"])
           .click();
 
+        postSingleGuest("guest1-edited");
+
+        cy.intercept(`/tables/registrations/*/*`, {
+          fixture:
+            "responses/registrations/get-one/5-registration-submitted-guests-edited",
+        }).as("pushGuests");
+
         cy.get(".p-dialog-footer button").contains("Save").click();
-        cy.get(".p-dialog-header")
-          .contains("Guest Details")
-          .should("not.exist");
+        cy.wait(["@postSingleGuest", "@pushGuests"]);
 
         cy.get("#personal-registration-guests-table td")
           .contains(guest7["organization"])
@@ -273,12 +334,28 @@ describe.skip("Users can add, edit, and delete guests on a registration.", () =>
       cy.get("#personal-registration-guests-table .delete-button")
         .first()
         .click();
+      postGuests;
       cy.get(".p-dialog-header").contains("Confirm").should("be.visible");
 
-      cy.get(".p-dialog-footer button").contains("Yes").click();
-      cy.get(".p-dialog-header").contains("Confirm").should("not.exist");
+      cy.intercept("POST", "/tables/guests/delete/*", {
+        acknowledged: true,
+        deletedCount: 1,
+      }).as("deleteGuest");
 
-      cy.fixture("guest-info").then((guests) => {
+      cy.intercept("POST", `/tables/registrations/*/pull`, {
+        fixture:
+          "responses/registrations/get-one/3-registration-unsubmitted-POST",
+      }).as("pullGuest");
+
+      cy.intercept("GET", `/tables/registrations/*/*`, {
+        fixture:
+          "responses/registrations/get-one/5-registration-submitted-guests",
+      }).as("pullGuest");
+
+      cy.get(".p-dialog-footer button").contains("Yes").click();
+      cy.wait(["@deleteGuest", "@pullGuest"]);
+
+      cy.fixture("requests/guest-info").then((guests) => {
         const { guest7 } = guests;
 
         cy.get("#personal-registration-guests-table td")

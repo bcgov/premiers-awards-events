@@ -16,7 +16,7 @@ const getSingleGuest = (file) => {
   const guestSingleUrl = `${guestsURL}/*`;
   const guestList = file
     ? `${guestsFixture}get-one/${file}`
-    : `${guestsFixture}get-one/guest-1`;
+    : `${guestsFixture}get-one/guest1`;
 
   cy.intercept("GET", guestSingleUrl, {
     fixture: guestList,
@@ -25,8 +25,8 @@ const getSingleGuest = (file) => {
 
 const postGuests = (file) => {
   const guestList = file
-    ? `${guestsFixture}get-all/${file}`
-    : `${guestsFixture}get-all/1-guests-origin`;
+    ? `${guestsFixture}get-one/${file}`
+    : `${guestsFixture}get-one/guest1`;
 
   cy.intercept("POST", guestsURL, {
     fixture: guestList,
@@ -37,7 +37,7 @@ const postSingleGuest = (file) => {
   const guestSingleUrl = `${guestsURL}/*`;
   const guestList = file
     ? `${guestsFixture}get-one/${file}`
-    : `${guestsFixture}get-one/guest-1`;
+    : `${guestsFixture}get-one/guest1`;
 
   cy.intercept("POST", guestSingleUrl, {
     fixture: guestList,
