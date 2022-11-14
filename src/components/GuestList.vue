@@ -273,14 +273,13 @@
           </template></PrimeColumn
         >
         <PrimeColumn
-          v-if="adminView"
           field="notes"
           header="Notes:"
           key="notes"
           filterField="hasNotes"
         >
           <template #body="{ data }"> {{ data.notes }}</template>
-          <template #filter="{ filterModel }">
+          <template #filter="{ filterModel }" v-if="adminView">
             <TriStateCheckbox v-model="filterModel.value" /> Has Notes?
           </template></PrimeColumn
         >
@@ -518,7 +517,7 @@
             <label :for="each.key">{{ each.text }}</label>
           </div>
         </div>
-        <div class="field-text" v-if="adminView">
+        <div class="field-text">
           <label for="guest-notes">Notes:</label>
           <InputText
             id="guestnotes"
@@ -527,9 +526,6 @@
             title="Notes"
             autofocus
           />
-          <small class="p-error" id="guest-notes-help"
-            >Notes field visible to admin only.</small
-          >
         </div>
 
         <template #footer>
