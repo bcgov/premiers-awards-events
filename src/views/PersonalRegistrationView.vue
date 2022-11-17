@@ -9,6 +9,7 @@ import { storeToRefs } from "pinia";
 import { useFinancialStore } from "../stores/financial";
 import { useSettingsStore } from "../stores/settings";
 import { ref } from "vue";
+import RegistrationSelector from "../components/inputs/RegistrationSelector.vue";
 
 export default {
   props: {
@@ -96,12 +97,16 @@ export default {
     //guestList Reactivity
 
     const keyCount = ref(0);
+    const keyCountRegistration = ref(0);
+
     const keyAdd = () => keyCount.value++;
+    const keyAddRegistration = () => keyCountRegistration.value++;
 
     const addGuestDialog = ref(false);
     const tableInfoDialog = ref(false);
     const guestInfoDialog = ref(false);
     const submissionDialog = ref(false);
+    const registrationsDialog = ref(false);
 
     //PrimeDialog controls
     const addGuest = () => {
@@ -121,6 +126,10 @@ export default {
       submissionDialog.value = true;
     };
 
+    const registrationSelect = () => {
+      registrationsDialog.value = true;
+    };
+
     return {
       userStore,
       financialStore,
@@ -138,6 +147,10 @@ export default {
       tableInfoDialog,
       guestInfoDialog,
       submissionDialog,
+      registrationsDialog,
+      registrationSelect,
+      keyCountRegistration,
+      keyAddRegistration,
       addGuest,
       tableInfo,
       guestInfo,
@@ -151,7 +164,13 @@ export default {
       keyAdd,
     };
   },
-  components: { GuestList, RegistrationList, InputGuest, PageHeader },
+  components: {
+    GuestList,
+    RegistrationList,
+    InputGuest,
+    PageHeader,
+    RegistrationSelector,
+  },
 };
 </script>
 
@@ -203,11 +222,22 @@ export default {
     </div>
     <ProgressSpinner v-if="loading" />
     <div v-else class="page-body">
+      <div id="multiregistration-dropdown">
+        <PrimeButton
+          type="button"
+          label="Registration Selection"
+          icon="pi pi-ticket"
+          class="p-button-warning"
+          @click="registrationSelect()"
+          badgeClass="p-badge-danger"
+        />
+      </div>
       <RegistrationList
         id="personal-registration-table"
         :registrationID="id"
         :detailsView="false"
         :adminView="false || isAdmin()"
+        :key="keyCountRegistration"
       />
       <div>
         <PrimeCard id="guest-seating-info">
@@ -433,6 +463,15 @@ export default {
         :modal="true"
         class="p-fluid"
         ><InputGuest :registrationID="id"
+      /></PrimeDialog>
+      <PrimeDialog
+        v-model:visible="registrationsDialog"
+        :style="{ width: '50rem', margin: '5rem' }"
+        header="Select registration or create new"
+        @hide="keyAddRegistration()"
+        :modal="true"
+        class="p-fluid"
+        ><RegistrationSelector
       /></PrimeDialog>
       <GuestList
         id="personal-registration-guests-table"

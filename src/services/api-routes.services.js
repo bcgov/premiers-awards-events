@@ -28,6 +28,10 @@ class RegistrationsDataService {
     return api.get("/tables/registrations");
   }
 
+  getAllUserRegistrations(guid) {
+    return api.get(`/tables/registrations/${guid}/all`);
+  }
+
   getRegistration(guid) {
     return api.get(`/tables/registrations/${guid}`);
   }

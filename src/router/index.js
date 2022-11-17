@@ -191,12 +191,21 @@ const router = createRouter({
       beforeEnter: authorizeAdmin,
     },
     {
-      path: "/create/registration",
+      path: "/create/registration/:extraRegistration?",
       name: "financial-registration",
-      component: CreateRegistration,
+      component: () => import("../components/CreateRegistration.vue"),
+      props: true,
       meta: getMeta("Create Event Registration"),
       beforeEnter: authorizeRegistrar,
     },
+    // {
+    //   path: "/create/extra-registration/:extraRegistration",
+    //   name: "financial-registration",
+    //   component: () => import("../components/CreateRegistration.vue"),
+    //   props: true,
+    //   meta: getMeta("Create Additional Event Registration"),
+    //   beforeEnter: authorizeRegistrar,
+    // },
     {
       path: "/registration/:id",
       name: "registration-details",

@@ -8,6 +8,7 @@ export const useFinancialStore = defineStore({
       registration: {
         guid: "",
         registrar: "",
+        users: [],
         organization: "",
         branch: "",
         primarycontact: "",
@@ -51,6 +52,9 @@ export const useFinancialStore = defineStore({
     getRegistrar() {
       return this.registration.registrar;
     },
+    getUsers() {
+      return this.registration.users;
+    },
     getGuestCount() {
       return this.registration.guests.length;
     },
@@ -86,6 +90,17 @@ export const useFinancialStore = defineStore({
       }
     },
 
+    async fillAllUserRegistrations(guid) {
+      try {
+        const registrationData = await apiRoutes.getAllUserRegistrations(guid);
+        // this.registration = registrationData.data[0];
+        this.registrations = registrationData.data;
+        return registrationData.data[0];
+      } catch (error) {
+        return error;
+      }
+    },
+
     async fillOnlyRegistration(guid) {
       const registrationData = await apiRoutes.getRegistration(guid);
       this.registration = registrationData.data[0];
@@ -111,9 +126,18 @@ export const useFinancialStore = defineStore({
       await apiRoutes.updateRegistration(id, data);
     },
 
-    async createRegistration(guid, username, firstname, lastname, email) {
+    async createRegistration(
+      guid,
+      username,
+      firstname,
+      lastname,
+      email,
+      extraGUID
+    ) {
+      const userGUID = extraGUID ? extraGUID : guid;
       const newRegistration = await apiRoutes.createRegistration({
         guid,
+        users: [userGUID],
         registrar: username,
         primarycontact: `${firstname} ${lastname}`,
         primaryemail: email,
