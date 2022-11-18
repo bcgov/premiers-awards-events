@@ -34,20 +34,18 @@ export default {
     const userStore = useAuthUserStore();
     const financialStore = useFinancialStore();
     const messages = useMessageStore();
-    const { registrations } = storeToRefs(useFinancialStore());
 
     const { guid, username, firstname, lastname, email } = userStore.getUser;
 
     const fillList = async () => {
-      console.log("list fills");
-      console.log(props);
       await financialStore
         .fill(guid)
         .then((data) => {
           if (data && props.extraRegistration) {
-            console.log("this is activating");
+            const { registrations } = storeToRefs(useFinancialStore());
+
             financialStore.fillAllUserRegistrations(guid).then(() => {
-              const registrationCount = registrations.value.length + 1;
+              const registrationCount = registrations.value.length + 2;
               const guidExtra = `${guid}${registrationCount}`;
 
               financialStore

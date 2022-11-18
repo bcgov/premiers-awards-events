@@ -10,6 +10,7 @@ import { useFinancialStore } from "../stores/financial";
 import { useSettingsStore } from "../stores/settings";
 import { ref } from "vue";
 import RegistrationSelector from "../components/inputs/RegistrationSelector.vue";
+import RegistrationUserSelector from "../components/inputs/RegistrationUserSelector.vue";
 
 export default {
   props: {
@@ -170,6 +171,7 @@ export default {
     InputGuest,
     PageHeader,
     RegistrationSelector,
+    RegistrationUserSelector,
   },
 };
 </script>
@@ -225,7 +227,7 @@ export default {
       <div id="multiregistration-dropdown">
         <PrimeButton
           type="button"
-          label="Registration Selection"
+          label="Registration Options"
           icon="pi pi-ticket"
           class="p-button-warning"
           @click="registrationSelect()"
@@ -466,13 +468,21 @@ export default {
       /></PrimeDialog>
       <PrimeDialog
         v-model:visible="registrationsDialog"
+        position="top"
         :style="{ width: '50rem', margin: '5rem' }"
-        header="Select registration or create new"
         @hide="keyAddRegistration()"
         :modal="true"
         class="p-fluid"
-        ><RegistrationSelector
-      /></PrimeDialog>
+      >
+        <template #header> <h2>Registration Management Options</h2> </template>
+        <h3>
+          Select Registration To Edit / Create New Additional Registration
+        </h3>
+        <RegistrationSelector v-if="isAdmin" />
+
+        <h3>Add/Remove Users on Registration</h3>
+        <RegistrationUserSelector />
+      </PrimeDialog>
       <GuestList
         id="personal-registration-guests-table"
         :adminView="false || isAdmin()"

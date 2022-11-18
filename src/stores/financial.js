@@ -94,6 +94,7 @@ export const useFinancialStore = defineStore({
       try {
         const registrationData = await apiRoutes.getAllUserRegistrations(guid);
         // this.registration = registrationData.data[0];
+        console.log(registrationData);
         this.registrations = registrationData.data;
         return registrationData.data[0];
       } catch (error) {
@@ -137,7 +138,7 @@ export const useFinancialStore = defineStore({
       const userGUID = extraGUID ? extraGUID : guid;
       const newRegistration = await apiRoutes.createRegistration({
         guid,
-        users: [userGUID],
+        users: [{ guid: userGUID, username }],
         registrar: username,
         primarycontact: `${firstname} ${lastname}`,
         primaryemail: email,
