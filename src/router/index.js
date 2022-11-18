@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
-import CreateRegistration from "../components/CreateRegistration.vue";
 import UsersDataService from "../services/api-routes.users";
+import FinancialDataService from "../services/api-routes.services";
 
 /**
  * Rewrite page title and metadata (head)
@@ -98,7 +98,12 @@ const authorizeUser = async (to, from, next) => {
       roles.includes("super-administrator"))
   )
     return next();
-  else next({ name: "unauthorized" });
+  else if (roles.includes("registrar") && !to["path"].includes(guid)) {
+    const { users = [] } = (await getRegistrationData(guid)) || {};
+    if (users.includes(guid)) {
+      return next();
+    } else next({ name: "unauthorized" });
+  } else next({ name: "unauthorized" });
 };
 
 const authorizeRegistered = async (to, from, next) => {
@@ -151,6 +156,18 @@ const getUserData = async () => {
 };
 
 /**
+ * Retrieve registration data for route authorization
+ *
+ * @src public
+ */
+
+const getRegistrationData = async (guid) => {
+  const response = await FinancialDataService.getRegistration(guid);
+  const { data = {} } = response || {};
+  return data[0];
+};
+
+/**
  * Set page title/metadata by route
  *
  * @src public
@@ -198,14 +215,6 @@ const router = createRouter({
       meta: getMeta("Create Event Registration"),
       beforeEnter: authorizeRegistrar,
     },
-    // {
-    //   path: "/create/extra-registration/:extraRegistration",
-    //   name: "financial-registration",
-    //   component: () => import("../components/CreateRegistration.vue"),
-    //   props: true,
-    //   meta: getMeta("Create Additional Event Registration"),
-    //   beforeEnter: authorizeRegistrar,
-    // },
     {
       path: "/registration/:id",
       name: "registration-details",
