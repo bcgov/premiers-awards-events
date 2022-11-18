@@ -16,7 +16,7 @@
               id="tabletype"
               v-model="currentRegistration"
               :options="registrations"
-              optionLabel="registrar"
+              optionLabel="customName"
               optionValue="_id"
               placeholder="Select the registration."
             />
@@ -33,7 +33,10 @@
             </PrimeButton>
             <PrimeButton
               block
-              :disabled="currentRegistration"
+              :disabled="
+                currentRegistration ||
+                (!settingsStore.getIsSalesOpen && !userStore.isAdmin)
+              "
               icon="pi pi-arrow-up-right"
               label="Create New Registration"
               class="p-button-rounded p-button-info info-button"
@@ -50,14 +53,16 @@
 <script>
 import { useFinancialStore } from "../../stores/financial";
 import { useAuthUserStore } from "../../stores/users";
+import { useSettingsStore } from "../../stores/settings";
 import { storeToRefs } from "pinia";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import router from "../../router";
 
 export default {
   setup() {
     const financialStore = useFinancialStore();
     const userStore = useAuthUserStore();
+    const settingsStore = useSettingsStore();
     const { registrations } = storeToRefs(useFinancialStore());
 
     let message = ref(false);
@@ -87,7 +92,16 @@ export default {
     };
 
     const loadLazyData = () => {
-      fillList();
+      fillList().then(() => {
+        registrations.value.forEach((registration) => {
+          registration["customName"] = computed(() => {
+            const submissionStatus = registration["submitted"]
+              ? "SUBMITTED"
+              : "PENDING SUBMISSION";
+            return `Registrar: ${registration["registrar"]} ID: ${registration["_id"]} - ${submissionStatus}`;
+          });
+        });
+      });
     };
 
     onMounted(() => {
@@ -95,7 +109,6 @@ export default {
     });
 
     const registrationPick = () => {
-      console.log(currentRegistration.value);
       if (currentRegistration.value) {
         router.push(`/registration/${currentRegistration.value}`).then(() => {
           router.go();
@@ -114,6 +127,8 @@ export default {
       messageText,
       currentRegistration,
       registrationPick,
+      settingsStore,
+      userStore,
     };
   },
 };
