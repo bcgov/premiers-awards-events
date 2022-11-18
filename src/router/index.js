@@ -100,7 +100,8 @@ const authorizeUser = async (to, from, next) => {
     return next();
   else if (roles.includes("registrar") && !to["path"].includes(guid)) {
     const { users = [] } = (await getRegistrationData(guid)) || {};
-    if (users.includes(guid)) {
+    const userExists = users.filter((each) => guid.includes(each.guid));
+    if (userExists.length > 0) {
       return next();
     } else next({ name: "unauthorized" });
   } else next({ name: "unauthorized" });
