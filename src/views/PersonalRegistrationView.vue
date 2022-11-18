@@ -478,10 +478,11 @@ export default {
         <h3>
           Select Registration To Edit / Create New Additional Registration
         </h3>
-        <RegistrationSelector v-if="isAdmin" />
-
-        <h3>Add/Remove Users on Registration</h3>
-        <RegistrationUserSelector />
+        <RegistrationSelector />
+        <div v-if="isAdmin()">
+          <h3>Add/Remove Users on Registration</h3>
+          <RegistrationUserSelector />
+        </div>
       </PrimeDialog>
       <GuestList
         id="personal-registration-guests-table"

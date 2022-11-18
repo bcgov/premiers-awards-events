@@ -550,8 +550,9 @@ export default {
 
         await new Promise((resolve) => setTimeout(resolve, 1500)).then(() => {
           message.value = false;
-          if (props.registrationID) router.push("/admin");
-          else if (!props.adminView) router.push("/");
+          if (!props.adminView && props.registrationID) {
+            router.push("/");
+          } else if (props.registrationID) router.push("/admin");
           else fillList();
         });
       }

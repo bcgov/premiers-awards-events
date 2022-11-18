@@ -63,9 +63,9 @@ export default {
             });
           } else if (data) {
             const { registrations } = storeToRefs(useFinancialStore());
-            const userRegistration = registrations.value.filter((each) =>
-              guid.includes(each.guid)
-            );
+            const userRegistration = registrations.value.filter((each) => {
+              return each.registrar === username;
+            });
             const registrationSelection =
               userRegistration.length > 0
                 ? userRegistration[0]["_id"]

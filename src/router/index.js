@@ -163,9 +163,7 @@ const getUserData = async () => {
  */
 
 const getRegistrationData = async (guid) => {
-  console.log("this is guid being searched", guid);
   const response = await FinancialDataService.getRegistration(guid);
-  console.log("this is response", response);
   const { data = {} } = response || {};
   return data[0];
 };
