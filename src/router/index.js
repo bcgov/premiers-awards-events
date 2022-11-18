@@ -99,7 +99,7 @@ const authorizeUser = async (to, from, next) => {
   )
     return next();
   else if (roles.includes("registrar") && !to["path"].includes(guid)) {
-    const { users = [] } = (await getRegistrationData(guid)) || {};
+    const { users = [] } = (await getRegistrationData(to.params.id)) || {};
     const userExists = users.filter((each) => guid.includes(each.guid));
     if (userExists.length > 0) {
       return next();
@@ -163,7 +163,9 @@ const getUserData = async () => {
  */
 
 const getRegistrationData = async (guid) => {
+  console.log("this is guid being searched", guid);
   const response = await FinancialDataService.getRegistration(guid);
+  console.log("this is response", response);
   const { data = {} } = response || {};
   return data[0];
 };

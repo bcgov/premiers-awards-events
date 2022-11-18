@@ -39,13 +39,13 @@ export default {
 
     const fillList = async () => {
       await financialStore
-        .fill(guid)
+        .fillAllUserRegistrations(guid)
         .then((data) => {
           if (data && props.extraRegistration) {
             const { registrations } = storeToRefs(useFinancialStore());
 
             financialStore.fillAllUserRegistrations(guid).then(() => {
-              const registrationCount = registrations.value.length + 2;
+              const registrationCount = registrations.value.length + 1;
               const guidExtra = `${guid}${registrationCount}`;
 
               financialStore
@@ -61,8 +61,17 @@ export default {
                   if (newData) router.push(`/edit/${newData.guid}`);
                 });
             });
-          } else if (data) router.push(`/registration/${guid}`);
-          else {
+          } else if (data) {
+            const { registrations } = storeToRefs(useFinancialStore());
+            const userRegistration = registrations.value.filter((each) =>
+              guid.includes(each.guid)
+            );
+            const registrationSelection =
+              userRegistration.length > 0
+                ? userRegistration[0]["_id"]
+                : registrations.value[0]["_id"];
+            router.push(`/registration/${registrationSelection}`);
+          } else {
             financialStore
               .createRegistration(guid, username, firstname, lastname, email)
               .then((data) => {
