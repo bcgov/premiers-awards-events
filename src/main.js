@@ -20,6 +20,7 @@ import Accordion from "primevue/accordion";
 import AccordionTab from "primevue/accordiontab";
 import Fieldset from "primevue/fieldset";
 import Tooltip from "primevue/tooltip";
+import Chip from "primevue/chip";
 
 //Form Component imports
 import Checkbox from "primevue/checkbox";
@@ -57,6 +58,7 @@ app.component("TabMenu", TabMenu);
 app.component("MenuBar", Menubar);
 app.component("ProgressSpinner", ProgressSpinner);
 app.directive("tooltip", Tooltip);
+app.component("PrimeChip", Chip);
 
 app.component("DropDown", Dropdown);
 app.component("CheckBox", Checkbox);

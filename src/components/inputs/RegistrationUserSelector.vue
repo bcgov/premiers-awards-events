@@ -14,19 +14,17 @@
     >
     <div v-else>
       <div>
-        <PrimeCard>
+        <PrimeCard id="add-users-card">
+          <template #header> Add New Users: </template>
           <template #content>
             <div class="form-item text-field">
-              <label for="user" id="user-help">Add User:</label>
+              <label for="user" id="user-help">Add IDIR:</label>
               <InputText
                 id="user"
                 type="user"
                 aria-describedby="user-help"
                 v-model.trim="userIdir"
               />
-              <small v-if="true" class="p-error" id="user-help"
-                >Please enter a user.</small
-              >
             </div>
             <PrimeButton
               block
@@ -36,6 +34,24 @@
               @click="addUser()"
             >
             </PrimeButton>
+          </template>
+        </PrimeCard>
+        <PrimeCard id="current-users-card">
+          <template #header> Current Users: </template>
+          <template #content>
+            <div class="users-chips">
+              <label for="users-list" id="user-help">Remove Users.</label>
+              <div>
+                <PrimeChip
+                  v-for="each of registration.users"
+                  v-bind:key="each"
+                  :label="each.username"
+                  class="mb-2"
+                  :removable="each.username !== registration.registrar"
+                  @remove="removeUser(each)"
+                ></PrimeChip>
+              </div>
+            </div>
           </template>
         </PrimeCard>
       </div>
@@ -95,12 +111,31 @@ export default {
       }
     };
 
+    const removeUser = async (user) => {
+      try {
+        const { guid = "", username = "" } = user || {};
+        const userDelete = await financialStore.pullFinancialInformation({
+          users: { guid, username },
+        });
+      } catch (error) {
+        loading.value = false;
+        console.warn(error);
+        message.value = true;
+        messageText.value = {
+          severity: "error",
+          text: "User access could not be removed.",
+        };
+      }
+    };
+
     return {
       registrations,
+      registration,
       message,
       loading,
       messageText,
       addUser,
+      removeUser,
       userIdir,
     };
   },

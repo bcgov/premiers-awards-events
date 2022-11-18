@@ -94,7 +94,6 @@ export const useFinancialStore = defineStore({
       try {
         const registrationData = await apiRoutes.getAllUserRegistrations(guid);
         // this.registration = registrationData.data[0];
-        console.log(registrationData);
         this.registrations = registrationData.data;
         return registrationData.data[0];
       } catch (error) {
