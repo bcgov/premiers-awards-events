@@ -42,7 +42,6 @@ export default {
         .fillAllUserRegistrations(guid)
         .then((data) => {
           if (data && props.extraRegistration) {
-            console.log(props.extraRegistration, "this is extra reg proof");
             const { registrations } = storeToRefs(useFinancialStore());
 
             financialStore.fillAllUserRegistrations(guid).then(() => {
