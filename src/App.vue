@@ -69,6 +69,12 @@ export default {
             class: "dropdown-account-item",
           },
           {
+            label: "View My Ministry Registrations",
+            to: "/ministry-admin/",
+            visible: () => !userStore.isAdmin,
+            class: "dropdown-account-item",
+          },
+          {
             label: "View Guests",
             to: "/admin/guests",
             visible: () => userStore.isAdmin,

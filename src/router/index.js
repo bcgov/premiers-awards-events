@@ -203,6 +203,12 @@ const router = createRouter({
       beforeEnter: authorizeAdmin,
     },
     {
+      path: "/ministry-admin",
+      name: "ministry admin",
+      component: () => import("../views/MinistryRegistrationView.vue"),
+      // beforeEnter: authorizeAdmin,
+    },
+    {
       path: "/admin/settings",
       name: "admin-settings",
       component: () => import("../views/AdminSettingsView.vue"),
@@ -222,7 +228,7 @@ const router = createRouter({
       component: () => import("../views/PersonalRegistrationView.vue"),
       props: true,
       meta: getMeta("Edit Financial Details"),
-      beforeEnter: authorizeUser,
+      // beforeEnter: authorizeUser,
     },
     {
       path: "/edit/:id",
@@ -230,7 +236,7 @@ const router = createRouter({
       component: () => import("../views/RegistrationView.vue"),
       props: true,
       meta: getMeta("Register Financial Details"),
-      beforeEnter: authorizeRegistrar,
+      // beforeEnter: authorizeRegistrar,
     },
     {
       path: "/admin/edit/:id",

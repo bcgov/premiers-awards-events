@@ -124,8 +124,9 @@
               v-model="filterModel.value"
               class="p-column-filter"
               :placeholder="`Search by ${col.field}`"
-            /> </template
-        ></PrimeColumn>
+            />
+          </template>
+        </PrimeColumn>
         <PrimeColumn
           v-if="adminView && !registrationID"
           field="guestCount"

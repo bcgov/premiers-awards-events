@@ -61,7 +61,7 @@ export default {
     };
 
     const isAdmin = () => {
-      return userStore.isAdmin;
+      return userStore.isAdmin || userStore.user.username === getRegistrar();
     };
 
     const toggleRegistration = async () => {
