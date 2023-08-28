@@ -239,6 +239,7 @@ export default {
         :registrationID="id"
         :detailsView="false"
         :adminView="false || isAdmin()"
+        :ministryView="false"
         :key="keyCountRegistration"
       />
       <div>

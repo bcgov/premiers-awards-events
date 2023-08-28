@@ -47,6 +47,6 @@ userStore.login();
       {{ tableCountAll() }}
     </PrimeDialog>
     <NavMenu :title="''" :menuitems="navItems" />
-    <RegistrationList :adminView="true" />
+    <RegistrationList :adminView="true" :ministryView="false"/>
   </main>
 </template>

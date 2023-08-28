@@ -39,7 +39,7 @@
         :rowsPerPageOptions="[10, 20, 50]"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
       >
-        <template v-if="adminView && !registrationID" #header>
+        <template v-if="adminView && !ministryView && !registrationID" #header>
           <div style="text-align: left" class="header-buttons">
             <PrimeButton
               icon="pi pi-external-link"
@@ -334,6 +334,7 @@ import router from "../router";
 export default {
   props: {
     adminView: Boolean,
+    ministryView: Boolean,
     detailsView: Boolean,
     registrationID: String,
   },
