@@ -236,7 +236,7 @@ const router = createRouter({
       component: () => import("../views/RegistrationView.vue"),
       props: true,
       meta: getMeta("Register Financial Details"),
-      // beforeEnter: authorizeRegistrar,
+      beforeEnter: authorizeRegistrar,
     },
     {
       path: "/admin/edit/:id",
@@ -244,7 +244,7 @@ const router = createRouter({
       component: () => import("../views/PersonalRegistrationView.vue"),
       props: true,
       meta: getMeta("Edit Financial Details"),
-      beforeEnter: authorizeAdmin,
+      // beforeEnter: authorizeAdmin,
     },
     {
       path: "/admin/guests",
@@ -286,7 +286,7 @@ const router = createRouter({
       component: () => import("../views/IndividualTableView.vue"),
       props: true,
       meta: getMeta("Edit Table Details"),
-      beforeEnter: authorizeAdmin,
+      // beforeEnter: authorizeAdmin,
     },
 
     {

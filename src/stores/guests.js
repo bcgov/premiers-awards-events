@@ -12,10 +12,14 @@ export const useGuestsStore = defineStore({
         registration: "",
         firstname: "",
         lastname: "",
+        pronouns: [],
+        custompronouns: "",
+        hascustompronouns: false || true,
         attendancetype: "",
         organization: "",
         accessibility: [],
         dietary: [],
+        supportingfinalist: "",
         notes: "",
       },
       guests: [],
@@ -58,10 +62,14 @@ export const useGuestsStore = defineStore({
         guid = "",
         firstname = "",
         lastname = "",
+        pronouns = [],
+        custompronouns = "",
+        hascustompronouns = Boolean,
         attendancetype = "",
         organization = "",
         accessibility = [],
         dietary = [],
+        supportingfinalist = "",
       } = this.guest || {};
 
       await this.guests.push({
@@ -70,9 +78,13 @@ export const useGuestsStore = defineStore({
         firstname,
         lastname,
         attendancetype,
+        pronouns,
+        custompronouns,
+        hascustompronouns,
         organization,
         accessibility,
         dietary,
+        supportingfinalist,
       });
     },
     async updateGuest(id, guestData) {

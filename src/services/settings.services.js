@@ -42,6 +42,8 @@ const schemaData = {
     { field: "firstname", text: "First Name" },
     { field: "lastname", text: "Last Name" },
     { field: "attendancetype", text: "Attendance Type" },
+    { field: "pronouns", text: "Pronouns" },
+    { field: "supportingfinalist", text: "Supporting Finalist" },
     { field: "accessibility", text: "Accessibility Requirements" },
     { field: "dietary", text: "Dietary Requirements" },
   ],
@@ -128,6 +130,12 @@ const schemaData = {
     { value: "finalist", text: "Finalist" },
     { value: "finalistguest", text: "Finalist Guest" },
     { value: "generalattendee", text: "General Attendee" },
+    { value: "partner", text: "Partner" },
+    { value: "volunteer", text: "Volunteer" },
+    { value: "guest", text: "Guest" },
+    { value: "presenter", text: "Presenter" },
+    { value: "judge", text: "Premiere's Awards Judge" },
+    { value: "adjudicator", text: "Premiere's Awards Adjudicator" },
   ],
   dietaryoptions: [
     { value: "dairyfree", text: "Dairy-Free" },
@@ -144,6 +152,101 @@ const schemaData = {
     { value: "wheelchairrequired", text: "Wheelchair Required" },
     { value: "attendantrequired", text: "Attendant Required" },
     { value: "mobilityneeds", text: "Mobility Needs" },
+  ],
+  pronounsoptions: [
+    { value: "he/him/his", text: "He / Him / His" },
+    { value: "she/he/hers", text: "She / Her / Hers" },
+    { value: "they/them/theirs", text: "They / Them / Theirs" },
+  ],
+  supportingfinalistoptions: [
+    { value: "Thyren Jacobs", text: "Thyren Jacobs - Emerging Leader" },
+    { value: "Connie Chapman", text: "Connie Chapman - Emerging Leader" },
+    { value: "Zak Zawaduk", text: "Zak Zawaduk - Emerging Leader" },
+    {
+      value: "Foundry: Work and Education Program",
+      text: "Foundry: Work and Education Program - Evidence-Based Design",
+    },
+    {
+      value: "Northern Spotten Owl Breeding and Release Program",
+      text: "Northern Spotten Owl Breeding and Release Program - Evidence-Based Design",
+    },
+    {
+      value: "Clean Transportation",
+      text: "Clean Transportation - Evidence-Based Design",
+    },
+    {
+      value: "Strengthening British Columbia’s Evacuee Emergency Supports",
+      text: "Strengthening British Columbia’s Evacuee Emergency Supports - Innovation",
+    },
+    {
+      value: "Declaration Act Action Plan: The Way Forward",
+      text: "Declaration Act Action Plan: The Way Forward - Innovation",
+    },
+    {
+      value: "Diagnostic Services",
+      text: "Diagnostic Services - Innovation",
+    },
+    {
+      value: "Teresa Butler",
+      text: "Teresa Butler - Leadership",
+    },
+    {
+      value: "Christie Harvie",
+      text: "Christie Harvie - Leadership",
+    },
+    {
+      value: "Carling Helander",
+      text: "Carling Helander  - Leadership",
+    },
+    {
+      value: "Deborah Schwartz",
+      text: "Deborah Schwartz - Legacy",
+    },
+    {
+      value: "Marj Hallihan",
+      text: "Marj Hallihan - Legacy",
+    },
+    {
+      value: "BC Corrections: Connections and Healing Through Culture",
+      text: "BC Corrections: Connections and Healing Through Culture - Organizational Excellence",
+    },
+    {
+      value: "Climate Preparedness and Adaptation Strategy",
+      text: "Climate Preparedness and Adaptation Strategy - Organizational Excellence",
+    },
+    {
+      value: "FireSmart BC: Empowering Citizens in Wildfire Protection",
+      text: "FireSmart BC: Empowering Citizens in Wildfire Protection - Organizational Excellence",
+    },
+    {
+      value: "Guardian Shared Compliance and Enforcement Pilot Project",
+      text: "Guardian Shared Compliance and Enforcement Pilot Project - Partnership",
+    },
+    {
+      value: "Indigenous Jurisdiction in Child and Family Services",
+      text: "Indigenous Jurisdiction in Child and Family Services - Partnership",
+    },
+    {
+      value:
+        "Welcoming Displaced Ukrainians: A Government-Community Partnership",
+      text: "Welcoming Displaced Ukrainians: A Government-Community Partnership - Partnership",
+    },
+    {
+      value: "First Nations Jurisdiction Over Education",
+      text: "First Nations Jurisdiction Over Education - Regional Impact",
+    },
+    {
+      value: "REMP Capital Region Tsunami Information Portal",
+      text: "REMP Capital Region Tsunami Information Portal - Regional Impact",
+    },
+    {
+      value: "Working Together: Protecting the Great Bear Sea",
+      text: "Working Together: Protecting the Great Bear Sea - Regional Impact",
+    },
+    {
+      value: "Not applicable",
+      text: "Not applicable",
+    },
   ],
   tabletypes: [
     { value: "Standard", text: "Standard" },
@@ -227,6 +330,14 @@ const schemaData = {
       constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
     },
     attendancetype: {
+      operator: FilterOperator.OR,
+      constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
+    },
+    pronouns: {
+      operator: FilterOperator.OR,
+      constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
+    },
+    supportingfinalist: {
       operator: FilterOperator.OR,
       constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
     },

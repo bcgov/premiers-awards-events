@@ -26,7 +26,9 @@
           'firstname',
           'lastname',
           'attendancetype',
+          'supportingFinalist',
           'accessibility',
+          'pronouns',
           'dietary',
           'registration',
         ]"
@@ -198,6 +200,45 @@
             </DropDown>
           </template></PrimeColumn
         >
+        <PrimeColumn field="pronouns" header="Pronouns" key="pronouns">
+          <template #body="{ data }">
+            <!-- {{ lookupLoop("pronounsoptions", data.pronouns) }} </template -->
+
+            {{
+              data.custompronouns
+                ? [...data.pronouns, data.custompronouns].toString()
+                : data.pronouns.toString()
+            }} </template
+          ><template #filter="{ filterModel }" v-if="adminView">
+            <DropDown
+              v-model="filterModel.value"
+              :options="pronounsFilter"
+              optionLabel="text"
+              placeholder="Any"
+              class="p-column-filter"
+              :showClear="true"
+            >
+              <template #value="slotProps">
+                <div v-if="slotProps.value">
+                  <div>
+                    <!-- {{ lookup("pronounsoptions", slotProps.value) }} -->
+                    {{ slotProps.value.toString() }}
+                  </div>
+                </div>
+                <span v-else>
+                  {{ slotProps.placeholder }}
+                </span>
+              </template>
+              <template #option="slotProps">
+                <div class="item">
+                  <div>
+                    {{ lookup("pronounsoptions", slotProps.option) }}
+                  </div>
+                </div>
+              </template>
+            </DropDown>
+          </template></PrimeColumn
+        >
         <PrimeColumn
           field="accessibility"
           header="Accessibility Requirements"
@@ -236,6 +277,20 @@
             </DropDown>
           </template></PrimeColumn
         >
+        <PrimeColumn
+          field="supportingfinalist"
+          header="Supporting Finalist"
+          key="supportingfinalist"
+        >
+          <template #body="{ data }"> {{ data.supportingfinalist }} </template
+          ><template #filter="{ filterModel }" v-if="adminView">
+            <InputText
+              type="text"
+              v-model="filterModel.value"
+              class="p-column-filter"
+              placeholder="Search by Supporting Finalist"
+            /> </template
+        ></PrimeColumn>
         <PrimeColumn
           field="dietary"
           header="Dietary Requirements"
@@ -482,6 +537,43 @@
             >Please select the attendance type for this guest.</small
           >
         </div>
+        <label for="pronouns">Pronouns:</label>
+        <div class="checkbox-group">
+          <div
+            v-for="each of pronouns"
+            :key="each.key"
+            name="pronouns"
+            class="field-checkbox"
+          >
+            <CheckBox
+              :id="each.key"
+              name="pronouns"
+              :value="each.value"
+              v-model="guest.pronouns"
+            />
+            <label :for="each.key">{{ each.text }}</label>
+          </div>
+          <div class="field-checkbox">
+            <CheckBox
+              name="hascustompronouns"
+              :binary="true"
+              v-model="guest.hascustompronouns"
+              @change="guest.custompronouns = ''"
+            />
+            <label :for="hascustompronouns">Other</label>
+          </div>
+        </div>
+
+        <div class="field-text" v-if="guest.hascustompronouns">
+          <label for="custompronouns">Please enter your pronouns:</label>
+          <InputText
+            id="custompronouns"
+            type="custompronouns"
+            aria-describedby="custompronouns-help"
+            v-model="guest.custompronouns"
+            placeholder="Custom pronouns"
+          />
+        </div>
         <label for="accessibility">Accessibility Requirements:</label>
         <div class="checkbox-group">
           <div
@@ -499,7 +591,6 @@
             <label :for="each.key">{{ each.text }}</label>
           </div>
         </div>
-
         <label for="dietary">Dietary Requirements:</label>
         <div class="checkbox-group">
           <div
@@ -517,6 +608,27 @@
             <label :for="each.key">{{ each.text }}</label>
           </div>
         </div>
+
+        <div class="dropdown">
+          <label for="supportingfinalist">Supporting Finalist:</label>
+          <DropDown
+            id="supportingfinalist"
+            v-model="guest.supportingfinalist"
+            :options="supportingfinalist"
+            optionLabel="text"
+            optionValue="value"
+            name="supportingfinalist"
+            title="Supporting Finalist"
+            placeholder="Select the finalist attendee is supporting:"
+          />
+          <!-- <small
+            v-if="v$.attendancetype.$error"
+            class="p-error"
+            id="attendancetype-help"
+            >Please select the attendance type for this guest.</small
+          > -->
+        </div>
+
         <div class="field-text">
           <label for="guest-notes">Notes:</label>
           <InputText
@@ -625,13 +737,25 @@ export default {
     const accessibilityFilter = ref(
       (formServices.get("accessibilityoptions") || []).map((each) => each.value)
     );
+    const pronounsFilter = ref(
+      (formServices.get("pronounsoptions") || []).map((each) => each.value)
+    );
+    const supportingfinalistFilter = ref(
+      (formServices.get("supportingfinalistoptions") || []).map(
+        (each) => each.value
+      )
+    );
     const dietaryFilter = ref(
       (formServices.get("dietaryoptions") || []).map((each) => each.value)
     );
 
     const organizations = ref(formServices.get("organizations") || []);
     const attendancetypes = ref(formServices.get("attendancetypes") || []);
+    const supportingfinalist = ref(
+      formServices.get("supportingfinalistoptions") || []
+    );
     const accessibility = ref(formServices.get("accessibilityoptions") || []);
+    const pronouns = ref(formServices.get("pronounsoptions") || []);
     const dietary = ref(formServices.get("dietaryoptions") || []);
     const filteredOrganizations = ref();
 
@@ -929,10 +1053,14 @@ export default {
       organizationsFilter,
       attendancetypesFilter,
       accessibilityFilter,
+      pronounsFilter,
+      supportingfinalistFilter,
       dietaryFilter,
       organizations,
       attendancetypes,
       accessibility,
+      pronouns,
+      supportingfinalist,
       dietary,
       guests,
       guest,

@@ -78,6 +78,7 @@
             :options="attendancetypes"
             optionLabel="text"
             optionValue="value"
+            optionDisabled="disabled"
             placeholder="Select the type of attendance for this guest"
           />
           <small
@@ -86,6 +87,63 @@
             id="attendancetype-help"
             >Please select the attendance type for this guest.</small
           >
+        </div>
+
+        <label for="pronouns">Pronouns (please select all that apply):</label>
+        <div class="checkbox-group">
+          <div
+            v-for="each of pronouns"
+            :key="each.key"
+            class="field-checkbox"
+            id="pronouns-checkbox"
+          >
+            <CheckBox
+              :id="each.key"
+              :name="each.value"
+              :value="each.value"
+              v-model="guest.pronouns"
+            />
+            <label :for="each.key">{{ each.text }}</label>
+          </div>
+          <div>
+            <CheckBox
+              name="hascustompronouns"
+              :binary="true"
+              v-model="hascustompronouns"
+              @change="guest.custompronouns = ''"
+            />
+            <label :for="hascustompronouns">Other</label>
+          </div>
+        </div>
+        <div class="field-text" v-if="hascustompronouns">
+          <label for="custompronouns">Please enter your pronouns:</label>
+          <InputText
+            id="custompronouns"
+            type="custompronouns"
+            aria-describedby="custompronouns-help"
+            v-model="guest.custompronouns"
+            placeholder="Custom pronouns"
+          />
+        </div>
+
+        <div class="dropdown">
+          <label for="supportingfinalist"
+            >Finalist attendee is supporting:</label
+          >
+          <DropDown
+            id="supportingfinalist"
+            v-model="guest.supportingfinalist"
+            :options="supportingfinalist"
+            optionLabel="text"
+            optionValue="value"
+            placeholder="Select the finalist attendee is supporting:"
+          />
+          <!-- <small
+            v-if="v$.supportingfinalist.$error"
+            class="p-error"
+            id="supportingfinalist-help"
+            >Please select the finalist attendee is supporting.</small
+          > -->
         </div>
 
         <label for="accessibility">Accessibility Requirements:</label>
@@ -157,11 +215,33 @@ export default {
       attendancetype: { required },
     };
 
+    const hascustompronouns = ref(false);
+    const custompronouns = ref("");
+
     const v$ = useVuelidate(rules, guest);
     const organizations = ref(formServices.get("organizations") || []);
     const filteredOrganizations = ref();
     const attendancetypes = ref(formServices.get("attendancetypes") || []);
+
+    const trimmedAttendancetypes = attendancetypes.value.map((opt) => ({
+      ...opt,
+      disabled:
+        opt.value !== "judge" &&
+        opt.value !== "adjudicator" &&
+        opt.value !== "volunteer" &&
+        opt.value !== "guest" &&
+        opt.value !== "presenter"
+          ? false
+          : true,
+    }));
+
+    attendancetypes.value = trimmedAttendancetypes;
+
     const accessibility = ref(formServices.get("accessibilityoptions") || []);
+    const supportingfinalist = ref(
+      formServices.get("supportingfinalistoptions") || []
+    );
+    const pronouns = ref(formServices.get("pronounsoptions") || []);
     const dietary = ref(formServices.get("dietaryoptions") || []);
 
     if (props.registrationID) {
@@ -198,7 +278,13 @@ export default {
         typeof this.guest.organization === "string"
           ? this.guest.organization
           : this.guest.organization.value;
+      // this.guest.pronouns = this.guest.custompronouns
+      //   ? [...this.guest.pronouns, this.guest.custompronouns]
+      //   : this.guest.pronouns;
+      // if (this.guest.custompronouns) delete this.guest["custompronouns"];
+
       try {
+        console.log(this.guest);
         loading.value = true;
         guestData
           .registerGuest(this.guest)
@@ -211,6 +297,10 @@ export default {
             this.guest.attendancetype = "";
             this.guest.dietary = [];
             this.guest.accessibility = [];
+            this.guest.custompronouns = "";
+            this.guest.hascustompronouns = false;
+            this.guest.pronouns = [];
+            this.guest.supportingfinalist = "";
             this.$forceUpdate;
             this.v$.$reset();
             loading.value = false;
@@ -240,6 +330,10 @@ export default {
       this.guest.attendancetype = "";
       this.guest.dietary = [];
       this.guest.accessibility = [];
+      this.guest.pronouns = [];
+      this.guest.custompronouns = "";
+      this.guest.hascustompronouns = false;
+      this.guest.supportingfinalist = "";
     };
     return {
       loading,
@@ -252,6 +346,10 @@ export default {
       dietary,
       accessibility,
       attendancetypes,
+      pronouns,
+      custompronouns,
+      hascustompronouns,
+      supportingfinalist,
       rules,
       filteredOrganizations,
       searchOrganization,
