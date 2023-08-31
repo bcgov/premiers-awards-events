@@ -234,7 +234,7 @@
                 @click="editRegistration(slotProps.data)"
               />
               <PrimeButton
-                v-if="ministryView"
+                v-if="!slotProps.data.submitted && ministryView"
                 label="Edit Guests"
                 icon="pi pi-pencil"
                 class="p-button-rounded p-button-success mr-2 edit-button"
@@ -251,7 +251,7 @@
                 @click="confirmDeleteRegistration(slotProps.data)"
               />
               <PrimeButton
-                v-if="adminView && !registrationID"
+                v-if="adminView && !ministryView && !registrationID"
                 icon="pi pi-arrow-up-right"
                 label="View"
                 class="p-button-rounded p-button-info info-button"
@@ -277,7 +277,7 @@
       /></PrimeDialog>
       <PrimeDialog
         v-model:visible="guestsDialog"
-        :style="{ width: '50rem', margin: '5rem' }"
+        :style="{ width: '150rem', margin: '5rem' }"
         header="Guest List Details"
         :modal="true"
         class="p-fluid guests-dialog"
