@@ -234,6 +234,13 @@
                 @click="editRegistration(slotProps.data)"
               />
               <PrimeButton
+                v-if="ministryView"
+                label="Edit Guests"
+                icon="pi pi-pencil"
+                class="p-button-rounded p-button-success mr-2 edit-button"
+                @click="editGuests(slotProps.data)"
+              />
+              <PrimeButton
                 v-if="
                   !slotProps.data.submitted &&
                   (!adminView || (adminView && registrationID))
@@ -268,6 +275,17 @@
           :adminView="adminView"
           :detailsView="detailsView"
       /></PrimeDialog>
+      <PrimeDialog
+        v-model:visible="guestsDialog"
+        :style="{ width: '50rem', margin: '5rem' }"
+        header="Guest List Details"
+        :modal="true"
+        class="p-fluid guests-dialog"
+        @hide="() => loadLazyData()"
+        ><GuestList
+          :registrationID="guid"
+          :adminView="false"
+      /></PrimeDialog>      
       <PrimeDialog
         v-model:visible="deleteRegistrationDialog"
         :style="{ width: '450px' }"
@@ -330,6 +348,7 @@ import { useGuestsStore } from "../stores/guests";
 import { useSettingsStore } from "../stores/settings";
 import { useTablesStore } from "../stores/tables";
 import router from "../router";
+import GuestList from "./GuestList.vue";
 
 export default {
   props: {
@@ -508,11 +527,16 @@ export default {
     const submitted = ref(false);
     const registrationDialog = ref(false);
     const deleteRegistrationDialog = ref(false);
+    const guestsDialog = ref(false);
 
     const editRegistration = (prod) => {
       registration.value = { ...prod };
       registrationDialog.value = true;
     };
+    const editGuests = (prod) => {
+      guests.value = { ...prod };
+      guestsDialog.value = true;
+    }
     const confirmDeleteRegistration = (prod) => {
       registration.value = prod;
       deleteRegistrationDialog.value = true;
@@ -571,6 +595,7 @@ export default {
       submitted,
       registrationDialog,
       deleteRegistrationDialog,
+      guestsDialog,
       dataTableRender,
       filters,
       loading,
@@ -584,6 +609,7 @@ export default {
       lookup,
       filter,
       editRegistration,
+      editGuests,
       confirmDeleteRegistration,
       deleteRegistration,
       hideDialog,
@@ -592,7 +618,7 @@ export default {
       router,
     };
   },
-  components: { InputFinancial },
+  components: { InputFinancial, GuestList },
 };
 </script>
 
