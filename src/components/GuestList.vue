@@ -473,6 +473,7 @@
             optionLabel="text"
             field="text"
             modelValue="text"
+            :disabled="guest.hasexternalorganization"
           >
             <template #option="slotProps">
               <div>{{ slotProps.option.text }}</div>
@@ -484,6 +485,31 @@
             id="organization-help"
             >Please select your organization.</small
           >
+        </div>
+
+        <div class="field-checkbox">
+          <CheckBox
+            name="hasexternalorganization"
+            :binary="true"
+            v-model="guest.hasexternalorganization"
+            @change="guest.organization = ''"
+          />
+          <label for="hasexternalorganization"
+            >Attendee is from an external organization
+          </label>
+        </div>
+
+        <div class="field-text" v-if="guest.hasexternalorganization">
+          <label for="externalorganization"
+            >Please enter external organization's name:</label
+          >
+          <InputText
+            id="externalorganization"
+            type="externalorganization"
+            aria-describedby="xternalorganization-help"
+            v-model.trim="guest.organization"
+            placeholder="External organization name"
+          />
         </div>
 
         <div class="field-text">
@@ -756,6 +782,7 @@ export default {
     );
     const accessibility = ref(formServices.get("accessibilityoptions") || []);
     const pronouns = ref(formServices.get("pronounsoptions") || []);
+    const hascustompronouns = ref(false);
     const dietary = ref(formServices.get("dietaryoptions") || []);
     const filteredOrganizations = ref();
 
@@ -1060,6 +1087,7 @@ export default {
       attendancetypes,
       accessibility,
       pronouns,
+      hascustompronouns,
       supportingfinalist,
       dietary,
       guests,

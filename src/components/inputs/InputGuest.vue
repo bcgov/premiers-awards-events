@@ -26,6 +26,7 @@
             placeholder="Select an organization or enter manually"
             optionLabel="text"
             field="text"
+            :disabled="guest.hasexternalorganization"
           >
             <template #option="slotProps">
               <div>{{ slotProps.option.text }}</div>
@@ -37,6 +38,30 @@
             id="organization-help"
             >Please select your organization.</small
           >
+        </div>
+
+        <div class="field-checkbox">
+          <CheckBox
+            name="hasexternalorganization"
+            v-model="guest.hasexternalorganization"
+            :binary="true"
+          />
+          <label for="hasexternalorganization"
+            >Attendee is from an external organization
+          </label>
+        </div>
+
+        <div class="field-text" v-if="guest.hasexternalorganization">
+          <label for="externalorganization"
+            >Please enter external organization's name:</label
+          >
+          <InputText
+            id="externalorganization"
+            type="externalorganization"
+            aria-describedby="xternalorganization-help"
+            v-model="guest.organization"
+            placeholder="External organization name"
+          />
         </div>
 
         <div class="text-field">
@@ -109,18 +134,19 @@
             <CheckBox
               name="hascustompronouns"
               :binary="true"
-              v-model="hascustompronouns"
+              v-model="guest.hascustompronouns"
               @change="guest.custompronouns = ''"
             />
             <label :for="hascustompronouns">Other</label>
           </div>
         </div>
-        <div class="field-text" v-if="hascustompronouns">
+        <div class="field-text" v-if="guest.hascustompronouns">
           <label for="custompronouns">Please enter your pronouns:</label>
           <InputText
             id="custompronouns"
             type="custompronouns"
             aria-describedby="custompronouns-help"
+            :binary="true"
             v-model="guest.custompronouns"
             placeholder="Custom pronouns"
           />
@@ -214,15 +240,13 @@ export default {
       lastname: { required },
       attendancetype: { required },
     };
-
     const hascustompronouns = ref(false);
     const custompronouns = ref("");
-
+    const hasexternalorganization = ref(false);
     const v$ = useVuelidate(rules, guest);
     const organizations = ref(formServices.get("organizations") || []);
     const filteredOrganizations = ref();
     const attendancetypes = ref(formServices.get("attendancetypes") || []);
-
     const trimmedAttendancetypes = attendancetypes.value.map((opt) => ({
       ...opt,
       disabled:
@@ -278,13 +302,8 @@ export default {
         typeof this.guest.organization === "string"
           ? this.guest.organization
           : this.guest.organization.value;
-      // this.guest.pronouns = this.guest.custompronouns
-      //   ? [...this.guest.pronouns, this.guest.custompronouns]
-      //   : this.guest.pronouns;
-      // if (this.guest.custompronouns) delete this.guest["custompronouns"];
 
       try {
-        console.log(this.guest);
         loading.value = true;
         guestData
           .registerGuest(this.guest)
@@ -300,6 +319,7 @@ export default {
             this.guest.custompronouns = "";
             this.guest.hascustompronouns = false;
             this.guest.pronouns = [];
+            this.guest.hasexternalorganization = false;
             this.guest.supportingfinalist = "";
             this.$forceUpdate;
             this.v$.$reset();
@@ -333,6 +353,7 @@ export default {
       this.guest.pronouns = [];
       this.guest.custompronouns = "";
       this.guest.hascustompronouns = false;
+      this.guest.hasexternalorganization = false;
       this.guest.supportingfinalist = "";
     };
     return {
@@ -349,6 +370,7 @@ export default {
       pronouns,
       custompronouns,
       hascustompronouns,
+      hasexternalorganization,
       supportingfinalist,
       rules,
       filteredOrganizations,

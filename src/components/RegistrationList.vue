@@ -282,10 +282,8 @@
         :modal="true"
         class="p-fluid guests-dialog"
         @hide="() => loadLazyData()"
-        ><GuestList
-          :registrationID="guid"
-          :adminView="false"
-      /></PrimeDialog>      
+        ><GuestList :registrationID="registration.guid" :adminView="adminView"
+      /></PrimeDialog>
       <PrimeDialog
         v-model:visible="deleteRegistrationDialog"
         :style="{ width: '450px' }"
@@ -534,9 +532,9 @@ export default {
       registrationDialog.value = true;
     };
     const editGuests = (prod) => {
-      guests.value = { ...prod };
+      registration.value = { ...prod };
       guestsDialog.value = true;
-    }
+    };
     const confirmDeleteRegistration = (prod) => {
       registration.value = prod;
       deleteRegistrationDialog.value = true;
