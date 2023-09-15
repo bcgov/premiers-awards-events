@@ -219,7 +219,7 @@
             /> </template
         ></PrimeColumn>
         <PrimeColumn
-          v-if="(!isSubmitted() && settingsStore.getIsSalesOpen) || adminView"
+          v-if="(!isSubmitted() && settingsStore.getIsSalesOpen) || adminView || ministryView"
           :exportable="false"
           style="min-width: 8rem"
           header="Options:"
@@ -251,7 +251,7 @@
                 @click="confirmDeleteRegistration(slotProps.data)"
               />
               <PrimeButton
-                v-if="adminView && !ministryView && !registrationID"
+                v-if="(adminView || ministryView) && !registrationID"
                 icon="pi pi-arrow-up-right"
                 label="View"
                 class="p-button-rounded p-button-info info-button"

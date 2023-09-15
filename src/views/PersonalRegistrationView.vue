@@ -43,6 +43,10 @@ export default {
       return financialStore.getRegistrar;
     };
 
+    const getMinistry = () => {
+      return financialStore.getMinistry;
+    }
+
     const isSubmitted = () => {
       return financialStore.getRegistration.submitted;
     };
@@ -61,7 +65,7 @@ export default {
     };
 
     const isAdmin = () => {
-      return userStore.isAdmin || userStore.user.username === getRegistrar();
+      return userStore.isAdmin || userStore.user.username === getRegistrar() || userStore.user.organization === getMinistry();
     };
 
     const toggleRegistration = async () => {

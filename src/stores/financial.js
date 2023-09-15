@@ -52,6 +52,9 @@ export const useFinancialStore = defineStore({
     getRegistrar() {
       return this.registration.registrar;
     },
+    getMinistry() {
+      return this.registration.organization;
+    },
     getUsers() {
       return this.registration.users;
     },

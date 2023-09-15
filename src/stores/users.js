@@ -13,6 +13,7 @@ export const useAuthUserStore = defineStore({
         lastname: "",
         email: "",
         roles: [],
+        organization: "",
       },
       users: [],
     };
@@ -86,6 +87,7 @@ export const useAuthUserStore = defineStore({
           firstname = "",
           lastname = "",
           email = "",
+          organization = "",
           createdAt = "",
           updatedAt = "",
         } = data || {};
@@ -99,6 +101,7 @@ export const useAuthUserStore = defineStore({
           firstname: firstname,
           lastname: lastname,
           email: email,
+          organization: organization,
           created: createdTS,
           updated: updatedTS,
         };
