@@ -45,6 +45,7 @@
             name="hasexternalorganization"
             v-model="guest.hasexternalorganization"
             :binary="true"
+            @change="guest.organization = ''"
           />
           <label for="hasexternalorganization"
             >Attendee is from an external organization
@@ -203,16 +204,17 @@
           </div>
         </div>
       </div>
-
-      <PrimeButton type="submit" label="primary" class="p-button-raised"
-        >Add Guest</PrimeButton
-      >
-      <PrimeButton
-        type="reset"
-        label="danger"
-        class="p-button-raised p-button-danger"
-        >Reset</PrimeButton
-      >
+      <div class="buttons">
+        <PrimeButton type="submit" label="primary" class="p-button-raised"
+          >Add Guest</PrimeButton
+        >
+        <PrimeButton
+          type="reset"
+          label="danger"
+          class="p-button-raised p-button-danger"
+          >Reset</PrimeButton
+        >
+      </div>
     </form>
   </div>
 </template>
@@ -274,6 +276,7 @@ export default {
 
     //filters organizations on drop-down
     const searchOrganization = (event) => {
+      console.log(!event.query.trim().length);
       setTimeout(() => {
         if (!event.query.trim().length) {
           filteredOrganizations.value = organizations.value;
@@ -286,7 +289,7 @@ export default {
             }
           );
         }
-      }, 100);
+      }, 10);
     };
 
     let loading = ref(false);
@@ -399,6 +402,13 @@ export default {
   .checkbox-group {
     display: flex;
     flex-wrap: wrap;
+  }
+}
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  .p-button {
+    width: 48%;
   }
 }
 </style>

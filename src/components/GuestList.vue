@@ -30,7 +30,6 @@
           'accessibility',
           'pronouns',
           'dietary',
-          'registration',
         ]"
         :loading="loading"
         showGridlines
@@ -144,6 +143,19 @@
             >
           </template></PrimeColumn
         >
+
+        <PrimeColumn field="registrar" header="Registrar" key="registrar">
+          <template #body="{ data }">
+            {{ data.registration.primarycontact }} </template
+          ><template #filter="{ filterModel }" v-if="adminView">
+            <InputText
+              type="text"
+              v-model="filterModel.value"
+              class="p-column-filter"
+              placeholder="Search by First Name"
+            /> </template
+        ></PrimeColumn>
+
         <PrimeColumn field="firstname" header="First Name" key="firstname">
           <template #body="{ data }"> {{ data.firstname }} </template
           ><template #filter="{ filterModel }" v-if="adminView">
@@ -889,6 +901,10 @@ export default {
           organization:
             lookup("organizations", each.organization) || each.organization,
         };
+        const registrar = {
+          registrar: each.registration.primarycontact,
+        };
+
         const dietary = {
           dietary: lookupLoop("dietaryoptions", each.dietary),
         };
@@ -900,6 +916,7 @@ export default {
         };
         each = Object.assign(
           each,
+          registrar,
           organization,
           attendancetype,
           dietary,
