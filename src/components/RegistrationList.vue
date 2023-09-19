@@ -282,7 +282,7 @@
         :modal="true"
         class="p-fluid guests-dialog"
         @hide="() => loadLazyData()"
-        ><GuestList :registrationID="registration.guid" :adminView="adminView"
+        ><GuestList :registrationID="registration.guid" :adminView="adminView" :ministryView="ministryView"
       /></PrimeDialog>
       <PrimeDialog
         v-model:visible="deleteRegistrationDialog"

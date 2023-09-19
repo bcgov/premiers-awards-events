@@ -422,6 +422,7 @@
           v-if="
             (!isSubmitted() && settingsStore.getIsSalesOpen) ||
             adminView ||
+            ministryView ||
             tableID
           "
           :exportable="false"
@@ -755,6 +756,7 @@ import router from "../router";
 export default {
   props: {
     adminView: Boolean,
+    ministryView: Boolean,
     registrationID: String,
     tableID: String,
   },
