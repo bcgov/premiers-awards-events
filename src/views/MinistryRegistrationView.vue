@@ -49,7 +49,8 @@ userStore.login();
       >Current approximate table count across all registrations:
       {{ tableCountAll() }}
     </PrimeDialog>
-    <NavMenu :title="''" :menuitems="navItems" />
+
+    
     <RegistrationList :adminView="true" :ministryView="true"/>
   </main>
 </template>
