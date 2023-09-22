@@ -65,8 +65,12 @@ export default {
     };
 
     const isAdmin = () => {
-      return userStore.isAdmin || userStore.user.username === getRegistrar() || userStore.user.organization === getMinistry();
+      return userStore.isAdmin || userStore.user.username === getRegistrar() || userStore.user.organization === getMinistry()
     };
+
+    const isMinistryContact = () => {
+      return userStore.user.organization === getMinistry();
+    }
 
     const toggleRegistration = async () => {
       let submitStatus = isSubmitted() ? false : true;
@@ -147,6 +151,8 @@ export default {
       getRegistrar,
       isSubmitted,
       isAdmin,
+      isMinistryContact,
+      getMinistry,
       toggleRegistration,
       addGuestDialog,
       tableInfoDialog,
@@ -243,7 +249,7 @@ export default {
         :registrationID="id"
         :detailsView="false"
         :adminView="false || isAdmin()"
-        :ministryView="false"
+        :ministryView="false || isMinistryContact()"
         :key="keyCountRegistration"
       />
       <div>
@@ -492,6 +498,7 @@ export default {
       <GuestList
         id="personal-registration-guests-table"
         :adminView="false || isAdmin()"
+        :ministryView="false || isMinistryContact()"
         :registrationID="id"
         :key="keyCount"
       />
@@ -508,7 +515,7 @@ export default {
         />
 
         <PrimeButton
-          v-if="isSubmitted() && isAdmin()"
+          v-if="(isSubmitted() && isAdmin() && !ministryView) || (isMinistryContact() && settingsStore.getIsSalesOpen)"
           type="button"
           label="Unsubmit Registration"
           icon="pi pi-undo"

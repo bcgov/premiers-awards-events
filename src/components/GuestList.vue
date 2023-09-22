@@ -421,8 +421,8 @@
         <PrimeColumn
           v-if="
             (!isSubmitted() && settingsStore.getIsSalesOpen) ||
-            adminView ||
-            ministryView ||
+            (adminView && !ministryView) ||
+            (!isSubmitted() && ministryView) ||
             tableID
           "
           :exportable="false"
