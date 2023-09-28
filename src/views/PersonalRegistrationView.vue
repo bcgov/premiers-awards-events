@@ -384,8 +384,7 @@ export default {
         </div>
         <div v-else-if="!isSubmitted() && !activeMessage">
           <p>
-            <b>Are you sure you wish to submit your event registration?</b> You
-            will not be able to revise your submission once completed.
+            <b>Are you sure you wish to submit your event registration?</b>
           </p>
           <ul>
             <li>
@@ -393,16 +392,10 @@ export default {
               remaining planning requirements.
             </li>
             <li>
-              Any request for changes after submission must be sent via email to
-              <a href="mailto: PremiersAwards@gov.bc.ca"
-                >PremiersAwards@gov.bc.ca</a
-              >.
-            </li>
-            <li>
-              Please ensure to submit change requests with complete contact
-              information to avoid oversights of important information, and to
-              ensure attendee name tags for entry into the ceremony are
-              accurate.
+              The Premier’s Awards team will reach out after table sales close 
+              with specific instructions on how to communicate changes or 
+              updates to your submissions. Please hold your changes and 
+              questions until that time. 
             </li>
           </ul>
           <p>
