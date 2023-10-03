@@ -276,7 +276,6 @@ export default {
 
     //filters organizations on drop-down
     const searchOrganization = (event) => {
-      console.log(!event.query.trim().length);
       setTimeout(() => {
         if (!event.query.trim().length) {
           filteredOrganizations.value = organizations.value;

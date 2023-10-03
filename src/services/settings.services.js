@@ -71,12 +71,12 @@ const schemaData = {
     },
     {
       value: "org-4",
-      text: "Ministry of Advanced Education and Skills Training",
+      text: "Ministry of Post-Secondary Education and Future Skills",
     },
     { value: "org-5", text: "Ministry of Agriculture and Food" },
     {
       value: "org-6",
-      text: "Ministry of Attorney General and Responsible for Housing",
+      text: "Ministry of Attorney General",
     },
     { value: "org-7", text: "Ministry of Children and Family Development" },
     { value: "org-8", text: "Ministry of Citizens’ Services" },
@@ -101,18 +101,18 @@ const schemaData = {
     },
     {
       value: "org-16",
-      text: "Ministry of Jobs, Economic Recovery and Innovation",
+      text: "Ministry of Ministry of Jobs, Economic Development and Innovation",
     },
     { value: "org-17", text: "Ministry of Labour" },
     {
       value: "org-18",
-      text: "Ministry of Land, Water and Resource Stewardship",
+      text: "Land, Water and Resource Stewardship",
     },
     { value: "org-19", text: "Ministry of Mental Health and Addictions" },
     { value: "org-20", text: "Ministry of Municipal Affairs" },
     {
       value: "org-21",
-      text: "Ministry of Public Safety and Solicitor General and Emergency B.C.",
+      text: "Ministry of Public Safety and Solicitor General",
     },
     {
       value: "org-22",
@@ -121,6 +121,14 @@ const schemaData = {
     { value: "org-23", text: "Ministry of Tourism, Arts, Culture and Sport" },
     { value: "org-24", text: "Ministry of Transportation & Infrastructure" },
     { value: "org-25", text: "Office of the Premier" },
+    {
+      value: "org-26",
+      text: "Ministry of Emergency Management and Climate Readiness",
+    },
+    {
+      value: "org-27",
+      text: "Ministry of Housing",
+    },
   ],
   attendancetypes: [
     { value: "minister", text: "Minister" },
