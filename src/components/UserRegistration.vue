@@ -22,7 +22,7 @@
         registrar, please contact
         <a href="mailto: PremiersAwards@gov.bc.ca">PremiersAwards@gov.bc.ca</a>.
       </p>
-      <p v-else-if="isRegistered()">
+      <p v-else-if="isRegistered() && !user.roles.includes('inactive')">
         You are eligible to submit an event registration.
       </p>
     </PrimeMessage>
