@@ -65,7 +65,7 @@ export default {
     };
 
     const isAdmin = () => {
-      return userStore.isAdmin || userStore.user.username === getRegistrar() || userStore.user.organization === getMinistry()
+      return userStore.isAdmin
     };
 
     const isMinistryContact = () => {
@@ -249,7 +249,7 @@ export default {
         :registrationID="id"
         :detailsView="false"
         :adminView="false || isAdmin()"
-        :ministryView="false || isMinistryContact()"
+        :ministryView="false"
         :key="keyCountRegistration"
       />
       <div>

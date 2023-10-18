@@ -422,7 +422,7 @@
           v-if="
             (!isSubmitted() && settingsStore.getIsSalesOpen) ||
             (adminView && !ministryView) ||
-            (!isSubmitted() && ministryView) ||
+            (!isSubmitted() && ministryView && settingsStore.getIsSalesOpen) ||
             tableID
           "
           :exportable="false"

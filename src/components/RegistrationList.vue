@@ -219,7 +219,7 @@
             /> </template
         ></PrimeColumn>
         <PrimeColumn
-          v-if="(!isSubmitted() && settingsStore.getIsSalesOpen) || adminView || ministryView"
+          v-if="(!isSubmitted() && settingsStore.getIsSalesOpen) || (ministryView && settingsStore.getIsSalesOpen) || adminView"
           :exportable="false"
           style="min-width: 8rem"
           header="Options:"
