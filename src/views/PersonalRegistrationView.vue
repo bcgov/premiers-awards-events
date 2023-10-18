@@ -420,7 +420,7 @@ export default {
             >
           </div>
         </div>
-        <div v-else-if="isSubmitted() && isAdmin() && !activeMessage">
+        <div v-else-if="isSubmitted() && (isAdmin() || settingsStore.getIsSalesOpen) && !activeMessage">
           <p>
             Are you sure you wish to reverse submission of this
             event-registration?<br />
@@ -441,7 +441,7 @@ export default {
           badgeClass="p-badge-danger"
         />
         <PrimeButton
-          v-if="isSubmitted() && isAdmin() && !activeMessage"
+          v-if="isSubmitted() && (isAdmin() || settingsStore.getIsSalesOpen) && !activeMessage"
           type="button"
           label="Re-open registration"
           icon="pi pi-undo"
@@ -508,7 +508,9 @@ export default {
         />
 
         <PrimeButton
-          v-if="(isSubmitted() && isAdmin() && !ministryView) || (isMinistryContact() && settingsStore.getIsSalesOpen)"
+          v-if="(isSubmitted() && isAdmin() && !ministryView) || 
+          (!ministryView && isSubmitted() && settingsStore.getIsSalesOpen) ||
+          (ministryView && isMinistryContact() && isSubmitted() && settingsStore.getIsSalesOpen)"
           type="button"
           label="Unsubmit Registration"
           icon="pi pi-undo"
