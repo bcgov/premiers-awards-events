@@ -158,6 +158,7 @@
             >Finalist attendee is supporting:</label
           >
           <DropDown
+            v-bind:class="{ 'p-invalid': v$.supportingfinalist.$error }"
             id="supportingfinalist"
             v-model="guest.supportingfinalist"
             :options="supportingfinalist"
@@ -165,12 +166,12 @@
             optionValue="value"
             placeholder="Select the finalist attendee is supporting:"
           />
-          <!-- <small
+          <small
             v-if="v$.supportingfinalist.$error"
             class="p-error"
             id="supportingfinalist-help"
             >Please select the finalist attendee is supporting.</small
-          > -->
+          >
         </div>
 
         <label for="accessibility">Accessibility Requirements:</label>
@@ -241,6 +242,7 @@ export default {
       firstname: { required },
       lastname: { required },
       attendancetype: { required },
+      supportingfinalist: { required },
     };
     const hascustompronouns = ref(false);
     const custompronouns = ref("");
