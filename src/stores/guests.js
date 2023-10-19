@@ -20,10 +20,10 @@ export const useGuestsStore = defineStore({
         organization: "",
         accessibility: [],
         dietary: [],
-        supportingfinalist: "",
         notes: "",
       },
       guests: [],
+      primarycontact: "",
     };
   },
   getters: {
@@ -71,7 +71,6 @@ export const useGuestsStore = defineStore({
         organization = "",
         accessibility = [],
         dietary = [],
-        supportingfinalist = "",
       } = this.guest || {};
 
       await this.guests.push({
@@ -87,7 +86,6 @@ export const useGuestsStore = defineStore({
         organization,
         accessibility,
         dietary,
-        supportingfinalist,
       });
     },
     async updateGuest(id, guestData) {

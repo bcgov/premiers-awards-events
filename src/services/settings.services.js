@@ -444,7 +444,6 @@ const schemaData = {
     },
   },
 };
-
 export default {
   /**
    * get enumerated data by key

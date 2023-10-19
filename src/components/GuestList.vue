@@ -848,6 +848,7 @@ export default {
           })
           .then(() => {
             guests.value.forEach((guest) => {
+              console.log(guest);
               guest.createdAt = new Date(guest.createdAt);
               guest.updatedAt = new Date(guest.updatedAt);
               guest.assignedTable = guest.table ? true : false;
