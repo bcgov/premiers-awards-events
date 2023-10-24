@@ -129,6 +129,10 @@ const schemaData = {
       value: "org-27",
       text: "Ministry of Housing",
     },
+    {
+      value: "org-28",
+      text: "Declaration Act Secretariat",
+    },
   ],
   attendancetypes: [
     { value: "minister", text: "Minister" },
