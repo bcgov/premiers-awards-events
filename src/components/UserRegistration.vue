@@ -173,6 +173,7 @@ export default {
         });
         // handle data submission
         await apiRoutesUsers.registerUser(user.value).then(() => {
+          userStore.login();
           messageStore.setMessage({
             text: "Successfully registered user!",
             type: "success",
