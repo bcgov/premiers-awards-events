@@ -165,6 +165,7 @@ export default {
 
     const register = async function () {
       try {
+        activeMessage.value = false; // reset active messages
         activeMessage.value = true;
         messageStore.setMessage({
           text: "Registering user...",
@@ -173,12 +174,13 @@ export default {
         });
         // handle data submission
         await apiRoutesUsers.registerUser(user.value).then(() => {
-          userStore.login();
           messageStore.setMessage({
             text: "Successfully registered user!",
             type: "success",
           });
         });
+        await userStore.login();
+        router.push({ path: '/' });
       } catch (err) {
         console.error(err);
         activeMessage.value = true;
