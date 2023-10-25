@@ -165,6 +165,7 @@ export default {
 
     const register = async function () {
       try {
+        activeMessage.value = false; // reset active messages
         activeMessage.value = true;
         messageStore.setMessage({
           text: "Registering user...",
@@ -178,6 +179,8 @@ export default {
             type: "success",
           });
         });
+        await userStore.login();
+        router.push({ path: '/' });
       } catch (err) {
         console.error(err);
         activeMessage.value = true;
