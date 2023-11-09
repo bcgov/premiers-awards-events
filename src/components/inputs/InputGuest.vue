@@ -257,8 +257,7 @@ export default {
         opt.value !== "judge" &&
         opt.value !== "adjudicator" &&
         opt.value !== "volunteer" &&
-        opt.value !== "guest" &&
-        opt.value !== "presenter"
+        opt.value !== "guest"
           ? false
           : true,
     }));
