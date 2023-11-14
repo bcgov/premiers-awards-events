@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { useAuthUserStore } from "./stores/users";
 import { useSettingsStore } from "./stores/settings";
+import router from "./router";
 
 export default {
   setup() {
@@ -18,7 +19,9 @@ export default {
     const siteNav = ref([
       {
         label: "Home",
-        to: "/",
+        command: () => {
+          router.push('/');
+        },
       },
       {
         label: "About",
@@ -32,69 +35,88 @@ export default {
         items: [
           {
             label: "Create Account",
-            to: "/register/",
+            command: () => {
+              router.push('/register/');
+            },
             visible: () => !userStore.isAuthenticated || !userStore.isRegistrar,
             class: "dropdown-account-item",
           },
           {
             label: "My Registration",
-            to: "/create/registration/",
+            command: () => {
+              router.push('/create/registration/');
+            },
             visible: () => userStore.isRegistrar,
             class: "dropdown-account-item",
           },
           {
             label: "View Profile",
-            to: "/user/update/",
+            command: () => {
+              router.push('/user/update/');
+            },
             visible: () => userStore.isRegistrar,
             class: "dropdown-account-item",
           },
           {
             label: "Manage Users Local",
             //url: "https://premiersawards.gww.gov.bc.ca/app/users",
-            to: "/admin/user/list",
+            command: () => {
+              router.push('/admin/user/list');
+            },
             visible: () => userStore.isAdmin && devMode,
             class: "dropdown-account-item",
           },
           {
             label: "Manage Users",
             url: import.meta.env.PA_APPS_ADMIN_URL,
-            // to: "/admin/user/list",
             visible: () => userStore.isAdmin,
             class: "dropdown-account-item",
           },
           {
             label: "View Registrations",
-            to: "/admin/",
+            command: () => {
+              router.push('/admin/');
+            },
             visible: () => userStore.isAdmin,
             class: "dropdown-account-item",
           },
           {
             label: "View My Ministry Registrations",
-            to: "/ministry-admin/",
+            command: () => {
+              router.push('/ministry-admin/');
+            },
             visible: () => !userStore.isAdmin,
             class: "dropdown-account-item",
           },
           {
             label: "View Guests",
-            to: "/admin/guests",
+            command: () => {
+              router.push('/admin/guests');
+            },
             visible: () => userStore.isAdmin,
             class: "dropdown-account-item",
           },
           {
             label: "View Tables",
-            to: "/admin/tables",
+            command: () => {
+              router.push('/admin/tables');
+            },
             visible: () => userStore.isAdmin,
             class: "dropdown-account-item",
           },
           {
             label: "Event Planner",
-            to: "/admin/tables/event/planning",
+            command: () => {
+              router.push('/admin/tables/event/planning');
+            },
             visible: () => userStore.isAdmin,
             class: "dropdown-account-item",
           },
           {
             label: "Event Settings",
-            to: "/admin/settings",
+            command: () => {
+              router.push('/admin/settings');
+            },
             visible: () => userStore.isAdmin,
             class: "dropdown-account-item",
           },
