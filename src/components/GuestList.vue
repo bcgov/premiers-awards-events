@@ -1022,7 +1022,7 @@ export default {
       loading.value = true;
       try {
         guestStore
-          .deleteGuest(guest.value["_id"], guest.value["registration"])
+          .deleteGuest(guest.value["_id"], guest.value["registration"]._id)
           .then(fillList())
           .then(() => {
             loading.value = false;
