@@ -133,7 +133,7 @@ const schemaData = {
     { value: "associateminister", text: "Associate Deputy Minister" },
     { value: "finalist", text: "Finalist" },
     { value: "finalistguest", text: "Finalist Guest" },
-    { value: "generalattendee", text: "General Attendee" },
+    { value: "generalattendee", text: "General Guest" },
     { value: "partner", text: "Partner" },
     { value: "volunteer", text: "Volunteer" },
     { value: "guest", text: "Guest" },

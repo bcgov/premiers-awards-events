@@ -205,7 +205,7 @@
               >
               <PrimeColumn
                 field="attendancetype"
-                header="Attendee Type"
+                header="Guest Type"
                 sortable
               >
                 <template #body="{ data }">{{

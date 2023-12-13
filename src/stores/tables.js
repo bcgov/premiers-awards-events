@@ -57,7 +57,7 @@ export const useTablesStore = defineStore({
       await tableRoutes.createDefaultArrangment();
     },
 
-    //Fully generates a seating plan based on organization and attendee role.
+    //Fully generates a seating plan based on organization and guest's role.
     // Attempts to combine as many individuals to tables as possible.
 
     async fillEventTables() {

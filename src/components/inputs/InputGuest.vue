@@ -48,7 +48,7 @@
             @change="guest.organization = ''"
           />
           <label for="hasexternalorganization"
-            >Attendee is from an external organization
+            >Guest is from an external organization
           </label>
         </div>
 
@@ -155,7 +155,7 @@
 
         <div class="dropdown">
           <label for="supportingfinalist"
-            >Finalist attendee is supporting:</label
+            >Finalist guest is supporting:</label
           >
           <DropDown
             v-bind:class="{ 'p-invalid': v$.supportingfinalist.$error }"
@@ -164,13 +164,13 @@
             :options="supportingfinalist"
             optionLabel="text"
             optionValue="value"
-            placeholder="Select the finalist attendee is supporting:"
+            placeholder="Select the finalist guest is supporting:"
           />
           <small
             v-if="v$.supportingfinalist.$error"
             class="p-error"
             id="supportingfinalist-help"
-            >Please select the finalist attendee is supporting.</small
+            >Please select the finalist guest is supporting.</small
           >
         </div>
 

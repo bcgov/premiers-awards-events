@@ -508,7 +508,7 @@
             @change="guest.organization = ''"
           />
           <label for="hasexternalorganization"
-            >Attendee is from an external organization
+            >Guest is from an external organization
           </label>
         </div>
 
@@ -658,7 +658,7 @@
             optionValue="value"
             name="supportingfinalist"
             title="Supporting Finalist"
-            placeholder="Select the finalist attendee is supporting:"
+            placeholder="Select the finalist guest is supporting:"
           />
           <!-- <small
             v-if="v$.attendancetype.$error"

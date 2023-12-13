@@ -28,7 +28,7 @@
             </p>
             <router-link to="/register/">
               <PrimeButton block variant="info">
-                Create a profile to register attendees for the Premier's Awards
+                Create a profile to register guests for the Premier's Awards
                 {{ settings.year }} Event.
               </PrimeButton>
             </router-link>

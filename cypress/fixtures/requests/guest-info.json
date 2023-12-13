@@ -3,7 +3,7 @@
     "organization": "Ministry of Ministry of Post-Secondary Education and Future Skills",
     "firstname": "John",
     "lastname": "Doe",
-    "attendancetype": "General Attendee",
+    "attendancetype": "General Guest",
     "accessibility": ["Wheelchair Required"],
     "dietary": ["Vegan"],
     "notes": "Testing of Notes"
