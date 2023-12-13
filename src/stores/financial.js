@@ -85,8 +85,16 @@ export const useFinancialStore = defineStore({
     async fill(guid) {
       try {
         const registrationData = await apiRoutes.getRegistration(guid);
+
+        const validatedGuests = await apiRoutes.getGuestsByRegistration(
+          registrationData.data[0]._id
+        );
+        //Overwrite retrieved guests with real guests from guests schema:
+        registrationData.data[0].guests = validatedGuests.data[0].guests;
+
         this.registration = registrationData.data[0];
         this.registrations = [registrationData.data[0]];
+
         return registrationData.data[0];
       } catch (error) {
         return error;
