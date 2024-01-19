@@ -219,7 +219,11 @@
             /> </template
         ></PrimeColumn>
         <PrimeColumn
-          v-if="(!isSubmitted() && settingsStore.getIsSalesOpen) || (ministryView && settingsStore.getIsSalesOpen) || adminView"
+          v-if="
+            (!isSubmitted() && settingsStore.getIsSalesOpen) ||
+            (ministryView && settingsStore.getIsSalesOpen) ||
+            adminView
+          "
           :exportable="false"
           style="min-width: 8rem"
           header="Options:"
@@ -282,7 +286,10 @@
         :modal="true"
         class="p-fluid guests-dialog"
         @hide="() => loadLazyData()"
-        ><GuestList :registrationID="registration.guid" :adminView="adminView" :ministryView="ministryView"
+        ><GuestList
+          :registrationID="registration.guid"
+          :adminView="adminView"
+          :ministryView="ministryView"
       /></PrimeDialog>
       <PrimeDialog
         v-model:visible="deleteRegistrationDialog"
@@ -454,9 +461,16 @@ export default {
               registration.details[guest] = guests.value.filter(
                 (each) => each._id === guest
               )[0];
-              registration.details[guest]["tabledetails"] = tables.value.filter(
-                (each) => each._id === registration.details[guest]["table"]
-              )[0];
+              // check if guest has table assigned
+              if (
+                registration.details[guest] !== undefined &&
+                Object.hasOwn(registration.details[guest], "tabledetails")
+              ) {
+                registration.details[guest]["tabledetails"] =
+                  tables.value.filter(
+                    (each) => each._id === registration.details[guest]["table"]
+                  )[0];
+              }
             });
           });
         })

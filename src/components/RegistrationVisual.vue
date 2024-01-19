@@ -203,11 +203,7 @@
                   >{{ data.firstname }} {{ data.lastname }}</template
                 ></PrimeColumn
               >
-              <PrimeColumn
-                field="attendancetype"
-                header="Guest Type"
-                sortable
-              >
+              <PrimeColumn field="attendancetype" header="Guest Type" sortable>
                 <template #body="{ data }">{{
                   lookup("attendancetypes", data.attendancetype)
                 }}</template>
