@@ -55,7 +55,7 @@ app.component("ConfirmDialog", ConfirmDialog);
 app.component("DynamicDialog", DynamicDialog);
 app.component("PrimeMessage", Message);
 app.component("TabMenu", TabMenu);
-app.component("MenuBar", Menubar);
+app.component("Menubar", Menubar);
 app.component("ProgressSpinner", ProgressSpinner);
 app.directive("tooltip", Tooltip);
 app.component("PrimeChip", Chip);
