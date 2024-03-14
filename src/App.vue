@@ -17,6 +17,14 @@ export default {
     settingsStore.fillSettings();
     userStore.login();
 
+    const nodeENV = process.env.NODE_ENV;
+
+    // Check if the URL contains the dev site url
+    const currentUrl = window.location.href;
+    const isDevSite =
+      currentUrl.includes('https://pa-test-4015f5-test.apps.silver.devops.gov.bc.ca/events/') ||
+      currentUrl.includes("localhost");
+
     const siteNav = ref([
       {
         icon: "pi pi-home",
@@ -136,7 +144,7 @@ export default {
       },
     ]);
 
-    return { siteNav, username, menu, logoSrc };
+    return { siteNav, username, menu, logoSrc, isDevSite, nodeENV };
   },
 };
 </script>
@@ -153,6 +161,9 @@ export default {
 
 
   <RouterView />
+  <div v-if="nodeENV === 'development' || isDevSite" className="testing-banner w-screen bg-orange-500 fixed top-0 m-0 text-center">
+    Test Environment
+  </div>
 </template>
 
 <style>
@@ -191,7 +202,7 @@ main {
 
 .page-title {
   color: black !important;
-  z-index: 9999 !important;
+  z-index: 1200 !important;
   display: inline-block;
   padding-top: 0.3125rem;
   padding-bottom: 0.3125rem;
@@ -205,7 +216,7 @@ main {
 
 .dropdown-account {
   position: relative !important;
-  z-index: 9999 !important;
+  z-index: 1200 !important;
   background-color: #3F51B5;
   border-radius: 4px;
   .p-menuitem-icon {
@@ -226,12 +237,12 @@ main {
 
 .p-submenu-list {
   right: 0px;
-  z-index: 9999 !important;
+  z-index: 1200 !important;
 }
 
 .dropdown-account-item .p-menuitem-text {
   color: #343a40 !important;
-  z-index: 9999 !important;
+  z-index: 1200 !important;
 }
 @media only screen and (min-width: 960px) {
   .dropdown-account{
@@ -267,6 +278,10 @@ main {
 .p-datatable-table {
   white-space: break-spaces !important;
 } 
+
+.testing-banner{
+  z-index: 9999;
+}
 </style>
 <style lang="scss">
 @import "@/assets/base.css";
