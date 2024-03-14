@@ -2,100 +2,70 @@
 <template>
   <div>
     <ProgressSpinner v-if="loading" />
-    <PrimeMessage
-      v-else-if="message"
-      :severity="messageText.severity"
-      :closable="false"
-      >{{ messageText.text }}</PrimeMessage
-    >
+    <PrimeMessage v-else-if="message" :severity="messageText.severity" :closable="false">{{ messageText.text }}
+    </PrimeMessage>
     <div v-else>
-      <DataTable
-        class="p-datatable-sm"
-        :value="registrations"
-        responsiveLayout="stack"
-        :key="dataTableRender"
-        :paginator="adminView && !registrationID"
-        :rows="10"
-        ref="dt"
-        stripedRows
-        exportFilename="Registration List"
-        v-model:filters="filters"
-        filterDisplay="menu"
-        :globalFilterFields="[
-          'organization',
-          'branch',
-          'primarycontact',
-          'primaryemail',
-          'financialcontact',
-          'clientministry',
-          'resp',
-          'serviceline',
-          'project',
-          'guid',
-        ]"
-        :loading="loading"
-        showGridlines
+      <DataTable class="p-datatable-sm" :value="registrations" responsiveLayout="stack" :key="dataTableRender"
+        :paginator="adminView && !registrationID" :rows="10" ref="dt" stripedRows exportFilename="Registration List"
+        v-model:filters="filters" filterDisplay="menu" :globalFilterFields="[
+      'organization',
+      'branch',
+      'primarycontact',
+      'primaryemail',
+      'financialcontact',
+      'clientministry',
+      'resp',
+      'serviceline',
+      'project',
+      'guid',
+    ]" :loading="loading" showGridlines
         paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
-        :rowsPerPageOptions="[10, 20, 50]"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
-      >
+        :rowsPerPageOptions="[10, 20, 50]" currentPageReportTemplate="Showing {first} to {last} of {totalRecords}">
         <template v-if="adminView && !ministryView && !registrationID" #header>
           <div style="text-align: left" class="header-buttons">
-            <PrimeButton
-              icon="pi pi-external-link"
-              label="Export"
-              @click="exportCSV($event)"
-            />
-            <PrimeButton
-              type="button"
-              icon="pi pi-filter-slash"
-              label="Clear"
-              class="p-button-outlined"
-              @click="clearFilters()"
-            />
+            <PrimeButton icon="pi pi-external-link" label="Export" @click="exportCSV($event)" />
+            <PrimeButton type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-outlined"
+              @click="clearFilters()" />
             <span class="p-input-icon-left">
               <i class="pi pi-search" />
-              <InputText
-                title="Search all by keyword"
-                v-model="filters['global'].value"
-                placeholder="Keyword Search"
-              />
+              <InputText title="Search all by keyword" v-model="filters['global'].value" placeholder="Keyword Search" />
+            </span>
+            <span v-if="adminView">
+              <div style="text-align:left">
+                <FloatLabel class="w-full md:w-20rem">
+                  <MultiSelect :modelValue="selectedColumns" :options="columns" optionLabel="text"
+                    @update:modelValue="onToggle" display="chip" placeholder="Select Columns" :maxSelectedLabels="2"
+                    class="w-full md:w-20rem" id="registrations-column-selection"> <template #option="slotProps">
+                      <div class="flex align-items-center">
+                        <div>{{ slotProps.option.text }}</div>
+                      </div>
+                    </template> <template #footer>
+                      <div class="py-2 px-3">
+                        <b>{{ selectedColumns ? selectedColumns.length : 0 }}</b> item{{ (selectedColumns ?
+      selectedColumns.length : 0) > 1 ? 's' : '' }} selected.
+                      </div>
+                    </template></MultiSelect><label for="registrations-column-selection">Select Table Columns</label>
+                </FloatLabel>
+              </div>
             </span>
           </div>
         </template>
         <template #empty> No registrations found. </template>
         <template #loading> Loading registration data. Please wait. </template>
-        <PrimeColumn
-          v-if="adminView"
-          field="_id"
-          header="ID#"
-          key="_id"
-          class="_id"
-        >
+        <PrimeColumn v-if="adminView" field="_id" header="ID#" key="_id" class="_id">
           <template #body="{ data }">
             <router-link :to="`/admin/edit/${data._id}`">{{
-              data.registrar
-            }}</router-link>
-          </template></PrimeColumn
-        >
-        <PrimeColumn
-          field="organization"
-          filterField="organization"
-          header="Organization"
-          key="organization"
-        >
+      data.registrar
+    }}</router-link>
+          </template>
+        </PrimeColumn>
+        <PrimeColumn field="organization" filterField="organization" header="Organization" key="organization">
           <template #body="{ data }">
             {{ lookup("organizations", data.organization) }}
           </template>
           <template #filter="{ filterModel }" v-if="adminView">
-            <DropDown
-              v-model="filterModel.value"
-              :options="organizations"
-              optionLabel="text"
-              placeholder="Any"
-              class="p-column-filter"
-              :showClear="true"
-            >
+            <DropDown v-model="filterModel.value" :options="organizations" optionLabel="text" placeholder="Any"
+              class="p-column-filter" :showClear="true">
               <template #value="slotProps">
                 <div v-if="slotProps.value">
                   <div>{{ lookup("organizations", slotProps.value) }}</div>
@@ -110,231 +80,115 @@
                 </div>
               </template>
             </DropDown>
-          </template></PrimeColumn
-        >
-        <PrimeColumn
-          v-for="col of filter(columns)"
-          :field="col.field"
-          :header="col.text"
-          :key="col.field"
-        >
-          <template #filter="{ filterModel }" v-if="adminView">
-            <InputText
-              type="text"
-              v-model="filterModel.value"
-              class="p-column-filter"
-              :placeholder="`Search by ${col.field}`"
-            />
           </template>
         </PrimeColumn>
-        <PrimeColumn
-          v-if="adminView && !registrationID"
-          field="guestCount"
-          dataType="numeric"
-          header="Guest Count:"
-          key="guestCount"
-          :sortable="true"
-        >
+        <PrimeColumn v-for="col of filter(selectedColumns)" :field="col.field" :header="col.text" :key="col.field">
+          <template #filter="{ filterModel }" v-if="adminView">
+            <InputText type="text" v-model="filterModel.value" class="p-column-filter"
+              :placeholder="`Search by ${col.field}`" />
+          </template>
+        </PrimeColumn>
+        <PrimeColumn v-if="adminView && !registrationID" field="guestCount" dataType="numeric" header="Guest Count:"
+          key="guestCount" :sortable="true">
           <template #body="{ data }">
             <span>{{ data.guestCount }}</span>
           </template>
           <template #filter="{ filterModel }">
-            <InputNumber
-              v-model="filterModel.value"
-              showButtons
-              buttonLayout="horizontal"
-              :step="1"
-              decrementButtonClass="p-button-danger"
-              incrementButtonClass="p-button-success"
-              incrementButtonIcon="pi pi-plus"
-              decrementButtonIcon="pi pi-minus"
-            />
+            <InputNumber v-model="filterModel.value" showButtons buttonLayout="horizontal" :step="1"
+              decrementButtonClass="p-button-danger" incrementButtonClass="p-button-success"
+              incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" />
           </template>
         </PrimeColumn>
         <PrimeColumn :hidden="true" field="tables" header="Tables" key="tables">
         </PrimeColumn>
-        <PrimeColumn
-          v-if="adminView"
-          field="submitted"
-          header="Submitted?"
-          key="submitted"
-          dataType="boolean"
-        >
-          <template #body="{ data }"
-            ><span>
-              <i
-                class="pi pi-check-circle"
-                :class="{
-                  'true-icon pi-check-circle': data.submitted,
-                  'false-icon pi-times-circle': !data.submitted,
-                }"
-                style="font-size: 2rem"
-              ></i
-              ><br />{{ data.submitted ? " Submitted" : " Pending" }}</span
-            >
+        <PrimeColumn v-if="adminView" field="submitted" header="Submitted?" key="submitted" dataType="boolean">
+          <template #body="{ data }"><span>
+              <i class="pi pi-check-circle" :class="{
+      'true-icon pi-check-circle': data.submitted,
+      'false-icon pi-times-circle': !data.submitted,
+    }" style="font-size: 2rem"></i><br />{{ data.submitted ? " Submitted" : " Pending" }}</span>
           </template>
           <template #filter="{ filterModel }">
             <TriStateCheckbox v-model="filterModel.value" /> Registration
-            Submitted?</template
-          ></PrimeColumn
-        >
-        <PrimeColumn
-          v-if="adminView"
-          field="createdAt"
-          header="Created:"
-          key="createdAt"
-          :sortable="true"
-          dataType="date"
-        >
+            Submitted?
+          </template>
+        </PrimeColumn>
+        <PrimeColumn v-if="adminView" field="createdAt" header="Created:" key="createdAt" :sortable="true"
+          dataType="date">
           <template #body="{ data }">
             {{ formatDate(data.createdAt) }},<br />{{
-              formatTime(data.createdAt)
-            }}
+      formatTime(data.createdAt)
+    }}
           </template>
           <template #filter="{ filterModel }">
-            <PrimeCalendar
-              v-model="filterModel.value"
-              dateFormat="mm/dd/yy"
-              placeholder="mm/dd/yyyy"
-            /> </template
-        ></PrimeColumn>
+            <PrimeCalendar v-model="filterModel.value" dateFormat="mm/dd/yy" placeholder="mm/dd/yyyy" />
+          </template>
+        </PrimeColumn>
 
-        <PrimeColumn
-          v-if="adminView"
-          field="updatedAt"
-          header="Updated:"
-          key="updatedAt"
-          :sortable="true"
-          dataType="date"
-        >
+        <PrimeColumn v-if="adminView" field="updatedAt" header="Updated:" key="updatedAt" :sortable="true"
+          dataType="date">
           <template #body="{ data }">
             {{ formatDate(data.updatedAt) }},<br />
             {{ formatTime(data.updatedAt) }}
           </template>
           <template #filter="{ filterModel }">
-            <PrimeCalendar
-              v-model="filterModel.value"
-              dateFormat="mm/dd/yy"
-              placeholder="mm/dd/yyyy"
-            /> </template
-        ></PrimeColumn>
-        <PrimeColumn
-          v-if="
-            (!isSubmitted() && settingsStore.getIsSalesOpen) ||
-            (ministryView && settingsStore.getIsSalesOpen) ||
-            adminView
-          "
-          :exportable="false"
-          style="min-width: 8rem"
-          header="Options:"
-        >
+            <PrimeCalendar v-model="filterModel.value" dateFormat="mm/dd/yy" placeholder="mm/dd/yyyy" />
+          </template>
+        </PrimeColumn>
+        <PrimeColumn v-if="(!isSubmitted() && settingsStore.getIsSalesOpen) ||
+      (ministryView && settingsStore.getIsSalesOpen) ||
+      adminView
+      " :exportable="false" style="min-width: 8rem" header="Options:">
           <template #body="slotProps">
             <div class="options-buttons">
-              <PrimeButton
-                v-if="!slotProps.data.submitted"
-                label="Edit"
-                icon="pi pi-pencil"
-                class="p-button-rounded p-button-success mr-2 edit-button"
-                @click="editRegistration(slotProps.data)"
-              />
-              <PrimeButton
-                v-if="!slotProps.data.submitted && ministryView"
-                label="Edit Guests"
-                icon="pi pi-pencil"
-                class="p-button-rounded p-button-success mr-2 edit-button"
-                @click="editGuests(slotProps.data)"
-              />
-              <PrimeButton
-                v-if="
-                  !slotProps.data.submitted &&
-                  (!adminView || (adminView && registrationID))
-                "
-                icon="pi pi-trash"
-                label="Delete"
-                class="p-button-rounded p-button-warning delete-button"
-                @click="confirmDeleteRegistration(slotProps.data)"
-              />
-              <PrimeButton
-                v-if="(adminView || ministryView) && !registrationID"
-                icon="pi pi-arrow-up-right"
-                label="View"
-                class="p-button-rounded p-button-info info-button"
-                @click="router.push(`/admin/edit/${slotProps.data.guid}`)"
-              />
+              <PrimeButton v-if="!slotProps.data.submitted" label="Edit" icon="pi pi-pencil"
+                class="p-button-rounded p-button-success mr-2 edit-button" @click="editRegistration(slotProps.data)" />
+              <PrimeButton v-if="!slotProps.data.submitted && ministryView" label="Edit Guests" icon="pi pi-pencil"
+                class="p-button-rounded p-button-success mr-2 edit-button" @click="editGuests(slotProps.data)" />
+              <PrimeButton v-if="!slotProps.data.submitted &&
+      (!adminView || (adminView && registrationID))
+      " icon="pi pi-trash" label="Delete" class="p-button-rounded p-button-warning delete-button"
+                @click="confirmDeleteRegistration(slotProps.data)" />
+              <PrimeButton v-if="(adminView || ministryView) && !registrationID" icon="pi pi-arrow-up-right"
+                label="View" class="p-button-rounded p-button-info info-button"
+                @click="router.push(`/admin/edit/${slotProps.data.guid}`)" />
             </div>
           </template>
         </PrimeColumn>
       </DataTable>
     </div>
     <div>
-      <PrimeDialog
-        v-model:visible="registrationDialog"
-        :style="{ width: '50rem', margin: '5rem' }"
-        header="Registration Details"
-        :modal="true"
-        class="p-fluid registration-dialog"
-        @hide="() => loadLazyData()"
-        ><InputFinancial
-          :registrationID="registration.guid"
-          :adminView="adminView"
-          :detailsView="detailsView"
-      /></PrimeDialog>
-      <PrimeDialog
-        v-model:visible="guestsDialog"
-        :style="{ width: '150rem', margin: '5rem' }"
-        header="Guest List Details"
-        :modal="true"
-        class="p-fluid guests-dialog"
-        @hide="() => loadLazyData()"
-        ><GuestList
-          :registrationID="registration.guid"
-          :adminView="adminView"
-          :ministryView="ministryView"
-      /></PrimeDialog>
-      <PrimeDialog
-        v-model:visible="deleteRegistrationDialog"
-        :style="{ width: '450px' }"
-        header="Confirm"
-        :modal="true"
-      >
+      <PrimeDialog v-model:visible="registrationDialog" :style="{ width: '50rem', margin: '5rem' }"
+        header="Registration Details" :modal="true" class="p-fluid registration-dialog" @hide="() => loadLazyData()">
+        <InputFinancial :registrationID="registration.guid" :adminView="adminView" :detailsView="detailsView" />
+      </PrimeDialog>
+      <PrimeDialog v-model:visible="guestsDialog" :style="{ width: '150rem', margin: '5rem' }"
+        header="Guest List Details" :modal="true" class="p-fluid guests-dialog" @hide="() => loadLazyData()">
+        <GuestList :registrationID="registration.guid" :adminView="adminView" :ministryView="ministryView" />
+      </PrimeDialog>
+      <PrimeDialog v-model:visible="deleteRegistrationDialog" :style="{ width: '450px' }" header="Confirm"
+        :modal="true">
         <div class="confirmation-content">
           <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
           <p v-if="guests.some((each) => each.tabledetails !== undefined)">
-            <b
-              >All guests must be unseated before this registration may be
-              deleted.<br />Please remove all guests from their tables.</b
-            >
+            <b>All guests must be unseated before this registration may be
+              deleted.<br />Please remove all guests from their tables.</b>
           </p>
           <p v-else-if="registration">
             Are you sure you want to delete {{ registration.primarycontact }}'s
             registration?<br />
-            This will delete all associated guests.<br /><b
-              >This action cannot be undone.</b
-            >
+            This will delete all associated guests.<br /><b>This action cannot be undone.</b>
           </p>
         </div>
         <template #footer>
           <div v-if="guests.some((each) => each.tabledetails !== undefined)">
-            <PrimeButton
-              label="Okay"
-              icon="pi pi-check"
-              class="p-button-text"
-              @click="deleteRegistrationDialog = false"
-            />
+            <PrimeButton label="Okay" icon="pi pi-check" class="p-button-text"
+              @click="deleteRegistrationDialog = false" />
           </div>
           <div v-else>
-            <PrimeButton
-              label="No"
-              icon="pi pi-times"
-              class="p-button-text"
-              @click="deleteRegistrationDialog = false"
-            />
-            <PrimeButton
-              label="Yes"
-              icon="pi pi-check"
-              class="p-button-text"
-              @click="deleteRegistration"
-            />
+            <PrimeButton label="No" icon="pi pi-times" class="p-button-text"
+              @click="deleteRegistrationDialog = false" />
+            <PrimeButton label="Yes" icon="pi pi-check" class="p-button-text" @click="deleteRegistration" />
           </div>
         </template>
       </PrimeDialog>
@@ -368,7 +222,9 @@ export default {
     const { registrations } = storeToRefs(useFinancialStore());
     const { guests } = storeToRefs(useGuestsStore());
     const { tables } = storeToRefs(useTablesStore());
-    const columns = ref(formServices.get("registrationSelection") || []);
+    const columns = ref(formServices.get("registrationSelection").filter((option) => option.field !== 'organization') || []);
+    const selectedColumns = ref(columns.value);
+
     const organizations = ref(
       (formServices.get("organizations") || []).map((each) => each.value)
     );
@@ -389,6 +245,11 @@ export default {
     };
     const filter = function (data) {
       return data.filter((item) => item.field !== "organization");
+    };
+
+    //conditional column display
+    const onToggle = (val) => {
+      selectedColumns.value = columns.value.filter(col => val.includes(col));
     };
 
     const loading = ref(false);
@@ -628,6 +489,8 @@ export default {
       loadLazyData,
       tableCount,
       router,
+      selectedColumns,
+      onToggle
     };
   },
   components: { InputFinancial, GuestList },
@@ -639,19 +502,23 @@ export default {
   .p-button {
     margin-left: 1em;
     margin-right: 1em;
+
     .edit-button {
       margin: 2em;
     }
+
     .delete-button {
       margin: none;
     }
   }
+
   .header-buttons {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
     gap: 1em;
   }
+
   .options-buttons {
     display: flex;
     flex-wrap: wrap;

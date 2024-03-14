@@ -21,6 +21,7 @@ import AccordionTab from "primevue/accordiontab";
 import Fieldset from "primevue/fieldset";
 import Tooltip from "primevue/tooltip";
 import Chip from "primevue/chip";
+import FloatLabel from "primevue/floatlabel";
 
 //Form Component imports
 import Checkbox from "primevue/checkbox";
@@ -29,6 +30,7 @@ import InputMask from "primevue/inputmask";
 import InputNumber from "primevue/inputnumber";
 import InputText from "primevue/inputtext";
 import PickList from "primevue/picklist";
+import MultiSelect from "primevue/multiselect";
 
 //DataTable Component Imports
 import DataTable from "primevue/datatable";
@@ -59,6 +61,7 @@ app.component("Menubar", Menubar);
 app.component("ProgressSpinner", ProgressSpinner);
 app.directive("tooltip", Tooltip);
 app.component("PrimeChip", Chip);
+app.component("FloatLabel", FloatLabel);
 
 app.component("DropDown", Dropdown);
 app.component("CheckBox", Checkbox);
@@ -66,6 +69,7 @@ app.component("InputMask", InputMask);
 app.component("InputNumber", InputNumber);
 app.component("InputText", InputText);
 app.component("PickList", PickList);
+app.component("MultiSelect", MultiSelect);
 app.component("PrimeAccordion", Accordion);
 app.component("AccordionTab", AccordionTab);
 app.component("FieldSet", Fieldset);
