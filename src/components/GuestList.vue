@@ -21,6 +21,7 @@
         ref="dt"
         stripedRows
         v-model:filters="filters"
+        @rowReorder="onRowReorder"
         filterDisplay="menu"
         :globalFilterFields="[
           'firstname',
@@ -63,6 +64,10 @@
         </template>
         <template #empty> No guests found. </template>
         <template #loading> Loading guest data. Please wait. </template>
+        <PrimeColumn
+          v-if="tableID && userStore.isAdmin"
+          rowReorder headerStyle="width: 3rem"
+          >Testing</PrimeColumn>
         <PrimeColumn
           v-if="userStore.getUser.role === 'super-administrator'"
           field="registration"
@@ -1084,6 +1089,15 @@ export default {
         });
       }
     };
+
+
+    const onRowReorder = (event) => {
+      const { table, updateTable } = storeToRefs(useTablesStore());
+      const tableID = table.value._id;
+      guests.value = event.value;
+      const newTableData = {...table.value, guests: event.value, }
+      tableStore.updateTable(tableID, newTableData)
+    };
     return {
       columns,
       settingsStore,
@@ -1131,6 +1145,7 @@ export default {
       searchOrganization,
       dropdownSelected,
       formServices,
+      onRowReorder
     };
   },
 };

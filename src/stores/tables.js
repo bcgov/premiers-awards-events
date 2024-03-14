@@ -107,16 +107,7 @@ export const useTablesStore = defineStore({
             guests.value.filter((each) => each._id === guest)[0]
           );
         });
-        registration.details.map(
-          (guest) =>
-            (guest["order"] = roles.value.findIndex(
-              (each) => each === guest["attendancetype"]
-            ))
-        );
 
-        registration.details.sort((a, b) =>
-          a.order > b.order ? 1 : b.order > a.order ? -1 : 0
-        );
         registration.details.forEach((guest) => {
           this.tables.forEach((table) => {
             // const orgMap = table.organizations.map(
