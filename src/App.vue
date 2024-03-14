@@ -42,14 +42,14 @@ export default {
       },
       {
         icon: "pi pi-ticket",
-            label: "My Registration",
-            command: () => {
-              router.push('/create/registration/');
-            },
-            visible: () => userStore.isRegistrar,
-            class: "dropdown-account-item",
-          },
-          {
+        label: "My Registration",
+        command: () => {
+          router.push('/create/registration/');
+        },
+        visible: () => userStore.isRegistrar,
+        class: "dropdown-account-item",
+      },
+      {
         label: () => userStore.isAdmin ? "Event Administration" : "Ministry Registrations",
         class: "dropdown-calendar",
         icon: "pi pi-calendar",
@@ -151,26 +151,28 @@ export default {
 
 <template>
 
-      <Menubar class="navbar-fixed flex align-items-center gap-2" :model="siteNav">
-        <template #start>
-          <div id="titlenav">
+  <Menubar class="navbar-fixed flex align-items-center gap-2" :model="siteNav">
+    <template #start>
+      <div id="titlenav">
         <img alt="Government of British Columbia" :src="logoSrc" height="60" class="mr-2">
-          </div>
-        </template>
-      </Menubar>
+      </div>
+    </template>
+  </Menubar>
 
 
   <RouterView />
-  <div v-if="nodeENV === 'development' || isDevSite" className="testing-banner w-screen bg-orange-500 fixed top-0 m-0 text-center">
+  <div v-if="nodeENV === 'development' || isDevSite"
+    className="testing-banner w-screen bg-orange-500 fixed top-0 m-0 text-center">
     Test Environment
   </div>
 </template>
 
 <style>
-  @import "primevue/resources/primevue.min.css";
-  @import "primevue/resources/themes/mdc-light-indigo/theme.css";
-  @import "primeicons/primeicons.css";
-  @import "/node_modules/primeflex/primeflex.css";
+@import "primevue/resources/primevue.min.css";
+@import "primevue/resources/themes/mdc-light-indigo/theme.css";
+@import "primeicons/primeicons.css";
+@import "/node_modules/primeflex/primeflex.css";
+
 html {
   font-size: 12px;
 }
@@ -187,10 +189,10 @@ main {
 
 .navbar-fixed {
 
-  position: sticky; 
-  top: 0; 
+  position: sticky;
+  top: 0;
   z-index: 1100 !important;
-  width: 100%; 
+  width: 100%;
   /* height: auto; */
 }
 
@@ -219,13 +221,16 @@ main {
   z-index: 1200 !important;
   background-color: #3F51B5;
   border-radius: 4px;
+
   .p-menuitem-icon {
     color: white;
   }
+
   .p-menuitem-text {
     color: white;
   }
-  .p-submenu-icon{
+
+  .p-submenu-icon {
     color: white;
   }
 }
@@ -244,8 +249,9 @@ main {
   color: #343a40 !important;
   z-index: 1200 !important;
 }
+
 @media only screen and (min-width: 960px) {
-  .dropdown-account{
+  .dropdown-account {
     position: absolute !important;
     right: 2vw;
   }
@@ -255,10 +261,12 @@ main {
   .about-option {
     display: none;
   }
+
   .p-menubar-button {
     position: absolute;
     right: 1vw;
   }
+
   .p-menubar-button i {
     color: white;
   }
@@ -277,9 +285,9 @@ main {
 
 .p-datatable-table {
   white-space: break-spaces !important;
-} 
+}
 
-.testing-banner{
+.testing-banner {
   z-index: 9999;
 }
 </style>
