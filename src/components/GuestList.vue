@@ -834,7 +834,6 @@ export default {
       exportName += `Table ${table.value.tablename ? table.value.tablename : props.tableID}`;
     } else if (props.registrationID) {
       const { registration } = storeToRefs(useFinancialStore());
-      console.log(registration)
       exportName += `${registration.value.primarycontact ? registration.value.primarycontact : props.registrationID}`;
     } else {
       exportName += ' All Guests';
