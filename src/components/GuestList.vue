@@ -34,7 +34,7 @@
         <template #loading> Loading guest data. Please wait. </template>
         <!-- <PrimeColumn v-if="tableID && userStore.isAdmin" rowReorder headerStyle="width: 3rem"></PrimeColumn> -->
         <PrimeColumn
-          v-if="currentUrl.includes('/admin/table/') || currentUrl.includes('/admin/edit/') || currentUrl.includes('/registration/')"
+          v-if="currentUrl.includes('/admin/table/') || currentUrl.includes('/admin/edit/') || (currentUrl.includes('/registration/') && !isSubmitted() && (settingsStore.getIsSalesOpen || userStore.getUser.roles.includes('super-administrator')))"
           rowReorder headerStyle="width: 3rem"></PrimeColumn>
         <PrimeColumn v-if="currentUrl.includes('/admin/table/') || currentUrl.includes('/admin/guests')"
           headerStyle="width: 3rem" field="seat" header="Assigned Seat" key="seats" class="seats">
@@ -58,7 +58,7 @@
         <PrimeColumn v-if="userStore.getUser.role === 'super-administrator'" field="registration" header="Registration"
           key="registration" class="guid">
           <template #body="{ data }">
-            <router-link :to="`/admin/edit/${data.registration}`" class="registration-link">{{ data.registration
+            <router-link :to="`/admin/edit/${data.registration}`" class="registration-link">{{ data.registration._id
               }}</router-link> </template><template #filter="{ filterModel }">
             <InputText type="text" v-model="filterModel.value" class="p-column-filter"
               placeholder="Search by registration" />
