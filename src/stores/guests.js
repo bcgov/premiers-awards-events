@@ -21,6 +21,7 @@ export const useGuestsStore = defineStore({
         accessibility: [],
         dietary: [],
         notes: "",
+        seat: "",
       },
       guests: [],
       primarycontact: "",
@@ -94,7 +95,7 @@ export const useGuestsStore = defineStore({
 
     async removeGuestFromTable(id, guestData, table) {
       const tableStore = useTablesStore();
-      await apiRoutes.updateGuest(id, guestData).then(() => {
+      await apiRoutes.updateGuest(id, { ...guestData, seat: "" }).then(() => {
         tableStore.pullTableDetails(table._id, {
           guests: id,
           organizations: {
