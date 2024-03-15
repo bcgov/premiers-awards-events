@@ -49,7 +49,8 @@
           headerStyle="width: 3rem" field="index" header="Seat Request" key="seats" class="seats">
 
           <template #body="{ data }">
-            {{ !tableID && data.index ? `${Math.ceil(data.index / 10)} -` : null }} {{ data.index || `N/A` }}
+            {{ !tableID && data.index ? `${Math.ceil(data.index / 10)} -` : null }} {{ data.index ? (data.index % 10 ||
+      10) : `N/A` }}
           </template>
 
         </PrimeColumn>
