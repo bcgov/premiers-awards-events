@@ -154,7 +154,7 @@ const schemaData = {
   ],
   pronounsoptions: [
     { value: "he/him/his", text: "He / Him / His" },
-    { value: "she/he/hers", text: "She / Her / Hers" },
+    { value: "she/her/hers", text: "She / Her / Hers" },
     { value: "they/them/theirs", text: "They / Them / Theirs" },
   ],
   supportingfinalistoptions: [
