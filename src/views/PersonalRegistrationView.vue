@@ -239,8 +239,8 @@ export default {
         <PrimeCard id="guest-seating-info">
           <template #content>
             <div class="registration-guest-info">
-              <span id="guest-registration-info">Please note that guests will automatically be sorted to tables
-                first by attendance type, and then in the order that they are
+              <span id="guest-registration-info">Please order guests by requested seating arrangement. By
+                default, guests will be assigned to tables in the order they are
                 added.</span>
               <div class="registration-buttons">
                 <PrimeButton type="button" label="Table Information" icon="pi pi-ticket" class="p-button-warning"
@@ -249,8 +249,8 @@ export default {
                   :badge="guestCount()" @click="guestInfo()" badgeClass="p-badge-danger" />
                 <PrimeButton v-if="!isSubmitted() &&
       (settingsStore.getIsSalesOpen || isAdmin())
-      " label="Add Guests" icon="pi pi-user-plus" class="p-button-rounded p-button-success mr-2"
-                  @click="addGuest()" />
+      " label="Add Guests" icon="pi pi-user-plus" class="p-button-rounded p-button-success mr-2" @click="addGuest()"
+                  :disabled="guestCount() >= 60 && !isAdmin()" />
               </div>
             </div>
           </template>
