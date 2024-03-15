@@ -298,7 +298,7 @@
       " class="p-button-rounded p-button-warning delete-button" @click="confirmDeleteGuest(slotProps.data)" />
               <PrimeButton v-if="adminView && !registrationID" icon="pi pi-arrow-up-right" label="View"
                 class="p-button-rounded p-button-info info-button" @click="
-      router.push(`/admin/edit/${slotProps.data.registration}`)
+      router.push(`/admin/edit/${slotProps.data.registration._id}`)
       " />
             </div>
           </template>
