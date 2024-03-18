@@ -5,7 +5,7 @@
     <PrimeMessage v-else-if="message" :severity="messageText.severity" :closable="false">{{ messageText.text }}
     </PrimeMessage>
     <div v-else>
-      <DataTable class="p-datatable-sm guests-datatable" :value="guests" :exportFilename="exportName"
+      <DataTable class="p-datatable-sm guests-datatable" :value="guests" :exportFilename="exportNameFunction()"
         responsiveLayout="stack" :paginator="adminView" :rows="10" ref="dt" stripedRows v-model:filters="filters"
         @rowReorder="onRowReorder" filterDisplay="menu" :globalFilterFields="[
       'firstname',
@@ -830,14 +830,28 @@ export default {
     //  Export Information
     const currentDate = new Date().toISOString().split('T')[0];
     let exportName = `Guest List-${currentDate} - `
+
     if (props.tableID) {
-      const { table } = storeToRefs(useTablesStore());
-      exportName += `Table ${table.value.tablename ? table.value.tablename : props.tableID}`;
+      async function getTableDetails() {
+        await tableStore.fillOnlyTable(props.tableID)
+        const exportTableName = tableStore.getTableName.toString();
+        exportName += `Table ${exportTableName}`;
+      }
+      getTableDetails();
+
     } else if (props.registrationID) {
-      const { registration } = storeToRefs(useFinancialStore());
-      exportName += `${registration.value.primarycontact ? registration.value.primarycontact : props.registrationID}`;
+      async function getRegistrationDetails() {
+        await financialStore.fillOnlyRegistration(props.registrationID)
+        const exportRegistrar = financialStore.getRegistrar.toString();
+        exportName += `${exportRegistrar} - ${props.registrationID}`;
+      }
+      getRegistrationDetails();
     } else {
       exportName += ' All Guests';
+    }
+
+    const exportNameFunction = () => {
+      return exportName;
     }
 
     return {
@@ -889,7 +903,7 @@ export default {
       formServices,
       onRowReorder,
       currentUrl,
-      exportName
+      exportNameFunction
     };
   },
 };

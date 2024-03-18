@@ -24,6 +24,9 @@ export const useTablesStore = defineStore({
     getGuestCount() {
       return this.table.guests.length;
     },
+    getTableName() {
+      return this.table.tablename;
+    },
     getIsFull() {
       return this.table.guests.length >= this.table.tablecapacity
         ? true
