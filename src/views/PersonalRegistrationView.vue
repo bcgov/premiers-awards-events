@@ -210,7 +210,7 @@ export default {
         <PrimeCard id="registration-info">
           <template #content>
             Your registration has been submitted. Any request for changes after
-            submission and any other questions should be sent via email to
+            submissions close, and any other questions, should be sent via email to
             <a href="mailto: PremiersAwards@gov.bc.ca">PremiersAwards@gov.bc.ca</a>.
           </template>
         </PrimeCard>
