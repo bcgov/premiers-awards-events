@@ -94,7 +94,7 @@ export default {
           type="button"
           label="Total Guests"
           icon="pi pi-users"
-          class="p-button-warning"
+          class="p-button-info"
           :badge="guestCount()"
           @click="guestInfo()"
           badgeClass="p-badge-danger"

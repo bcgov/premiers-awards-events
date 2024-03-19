@@ -147,7 +147,7 @@
                 class="p-button-rounded p-button-success mr-2 edit-button" @click="editGuests(slotProps.data)" />
               <PrimeButton v-if="!slotProps.data.submitted &&
       (!adminView || (adminView && registrationID))
-      " icon="pi pi-trash" label="Delete" class="p-button-rounded p-button-warning delete-button"
+      " icon="pi pi-trash" label="Delete" class="p-button-rounded p-button-danger delete-button"
                 @click="confirmDeleteRegistration(slotProps.data)" />
               <PrimeButton v-if="(adminView || ministryView) && !registrationID" icon="pi pi-arrow-up-right"
                 label="View" class="p-button-rounded p-button-info info-button"

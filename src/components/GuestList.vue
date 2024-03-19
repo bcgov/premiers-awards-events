@@ -295,7 +295,7 @@
               <PrimeButton icon="pi pi-trash" :label="slotProps.data.table || tableID
       ? 'Remove from Table'
       : 'Delete'
-      " class="p-button-rounded p-button-warning delete-button" @click="confirmDeleteGuest(slotProps.data)" />
+      " class="p-button-rounded p-button-danger delete-button" @click="confirmDeleteGuest(slotProps.data)" />
               <PrimeButton v-if="adminView && !registrationID" icon="pi pi-arrow-up-right" label="View"
                 class="p-button-rounded p-button-info info-button" @click="
       router.push(`/admin/edit/${slotProps.data.registration._id}`)

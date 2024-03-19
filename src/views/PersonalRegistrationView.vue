@@ -230,7 +230,7 @@ export default {
     <ProgressSpinner v-if="loading" />
     <div v-else class="page-body">
       <div id="multiregistration-dropdown">
-        <PrimeButton type="button" label="Registration Options" icon="pi pi-ticket" class="p-button-warning"
+        <PrimeButton type="button" label="Registration Options" icon="pi pi-ticket" class="p-button-info"
           @click="registrationSelect()" badgeClass="p-badge-danger" />
       </div>
       <RegistrationList id="personal-registration-table" :registrationID="id" :detailsView="false"
@@ -243,9 +243,9 @@ export default {
                 default, guests will be assigned to tables in the order they are
                 added.</span>
               <div class="registration-buttons">
-                <PrimeButton type="button" label="Table Information" icon="pi pi-ticket" class="p-button-warning"
+                <PrimeButton type="button" label="Table Information" icon="pi pi-ticket" class="p-button-info"
                   :badge="tableCount()" @click="tableInfo()" badgeClass="p-badge-danger" />
-                <PrimeButton type="button" label="Guest Information" icon="pi pi-users" class="p-button-warning"
+                <PrimeButton type="button" label="Guest Information" icon="pi pi-users" class="p-button-info"
                   :badge="guestCount()" @click="guestInfo()" badgeClass="p-badge-danger" />
                 <PrimeButton v-if="!isSubmitted() &&
       (settingsStore.getIsSalesOpen || isAdmin())

@@ -39,7 +39,7 @@ userStore.login();
     <PageHeader title="Event Planning" subtitle="Visually Organize PA Event" />
     <ProgressSpinner v-if="loading" />
     <div v-else>
-      <PrimeButton label="Table Count: " type="button" icon="pi pi-ticket" class="p-button-warning"
+      <PrimeButton label="Table Count: " type="button" icon="pi pi-ticket" class="p-button-info"
         :badge="tableCountAll()" @click="tableInfo()" badgeClass="p-badge-danger" />
       <NavMenu :title="''" :menuitems="navItems" />
 

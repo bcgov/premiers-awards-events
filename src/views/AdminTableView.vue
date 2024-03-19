@@ -63,7 +63,7 @@ userStore.login();
         label="Table Count: "
         type="button"
         icon="pi pi-ticket"
-        class="p-button-warning"
+        class="p-button-info"
         :badge="tableCountAll()"
         @click="tableInfo()"
         badgeClass="p-badge-danger"
