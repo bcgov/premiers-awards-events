@@ -9,6 +9,7 @@ import formServices from "../services/settings.services";
 import RegistrationVisual from "../components/RegistrationVisual.vue";
 
 const userStore = useAuthUserStore();
+const loading = ref(false)
 
 const tableVisualLoaded = ref(false);
 const tableVisualLoad = () => (tableVisualLoaded.value = true);
@@ -36,24 +37,16 @@ userStore.login();
 <template>
   <main>
     <PageHeader title="Event Planning" subtitle="Visually Organize PA Event" />
-    <PrimeButton
-      label="Table Count: "
-      type="button"
-      icon="pi pi-ticket"
-      class="p-button-warning"
-      :badge="tableCountAll()"
-      @click="tableInfo()"
-      badgeClass="p-badge-danger"
-    />
-    <NavMenu :title="''" :menuitems="navItems" />
+    <ProgressSpinner v-if="loading" />
+    <div v-else>
+      <PrimeButton label="Table Count: " type="button" icon="pi pi-ticket" class="p-button-warning"
+        :badge="tableCountAll()" @click="tableInfo()" badgeClass="p-badge-danger" />
+      <NavMenu :title="''" :menuitems="navItems" />
 
-    <TableVisual v-on:loadedTables="tableVisualLoad" :key="keyCount" />
+      <TableVisual v-on:loadedTables="tableVisualLoad" :key="keyCount" />
 
-    <RegistrationVisual
-      v-if="tableVisualLoaded"
-      v-on:addGuest="keyAdd"
-      class="registrations-visual-box"
-    />
+      <RegistrationVisual v-if="tableVisualLoaded" v-on:addGuest="keyAdd" class="registrations-visual-box" />
+    </div>
   </main>
 </template>
 
