@@ -95,15 +95,25 @@ export const useGuestsStore = defineStore({
 
     async removeGuestFromTable(id, guestData, table) {
       const tableStore = useTablesStore();
-      await apiRoutes.updateGuest(id, { ...guestData, seat: "" }).then(() => {
-        tableStore.pullTableDetails(table._id, {
-          guests: id,
-          organizations: {
-            organization: guestData.organization,
-            guestID: id,
-          },
+      await apiRoutes
+        .updateGuest(id, { ...guestData, seat: "" })
+        .then(() => {
+          const tableUpdate = { guests: id };
+          if (guestData.organization) {
+            tableUpdate = {
+              ...tableUpdate,
+              organizations: {
+                organization: guestData.organization,
+                guestID: id,
+              },
+            };
+          }
+          tableStore.pullTableDetails(table._id, tableUpdate);
+        })
+        .then(() => {
+          if (table.organizations.length === 0)
+            tableStore.updateTable(table._id, table);
         });
-      });
     },
 
     async addGuestToTable(id, guestData, table) {

@@ -280,10 +280,18 @@
               class="p-button-rounded p-button-success mr-2 edit-button"
               @click="editTable(slotProps.data)"
             />
+            <ConfirmDialog></ConfirmDialog>
+            <PrimeButton
+              v-if="detailsView"
+              label="Reset"
+              icon="pi pi-refresh"
+              class="p-button-rounded p-button-warning mr-2 reset-button"
+              @click="resetTable(slotProps.data)"
+            />
             <PrimeButton
               icon="pi pi-trash"
               label="Delete"
-              class="p-button-rounded p-button-warning delete-button"
+              class="p-button-rounded p-button-danger delete-button"
               @click="confirmDeleteTable(slotProps.data)"
             />
           </template>
@@ -342,7 +350,9 @@ import { ref, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useFinancialStore } from "../stores/financial";
 import { useTablesStore } from "../stores/tables";
+import { useConfirm } from "primevue/useconfirm";
 import router from "../router";
+import { useGuestsStore } from "../stores/guests";
 
 export default {
   props: {
@@ -351,7 +361,9 @@ export default {
     tableID: String,
   },
   setup(props) {
+    const confirm = useConfirm();
     const financialStore = useFinancialStore();
+    const guestStore = useGuestsStore();
 
     const tableStore = useTablesStore();
     const { tables } = storeToRefs(useTablesStore());
@@ -487,6 +499,57 @@ export default {
     };
 
     //Table Information Controls
+    const resetTable = (event) => {
+      confirm.require({
+        target: event.currentTarget,
+        message: 'Are you sure you want to reset the guest list for this table?',
+        icon: 'pi pi-exclamation-triangle',
+        rejectClass: 'p-button-secondary p-button-outlined p-button-sm',
+        acceptClass: 'p-button-sm',
+        rejectLabel: 'Cancel',
+        acceptLabel: 'Save',
+        accept: async () => {
+
+          const guestLoop = new Promise(async (resolve) => {
+            for (const guest of event.guests) {
+              await guestStore.updateGuest(guest, { table: null, seat: "" });
+            }
+            resolve();
+          });
+
+          loading.value = true;
+          if (event._id && event.guestCount > 0) {
+            guestLoop
+              .then(async () => {
+                await tableStore.updateTable(event._id, { guests: [], organizations: [] })
+              })
+              .catch((error) => {
+                loading.value = false;
+                console.warn(error);
+                message.value = true;
+                messageText.value = {
+                  severity: "error",
+                  text: "Guests and table could not be updated.",
+                };
+              }).finally(() => {
+                new Promise((resolve) => setTimeout(resolve, 1500))
+                  .then(() => {
+                    message.value = false;
+                  })
+                  .then(() => {
+                    loading.value = false;
+                    location.reload();
+                  });
+              })
+          } else {
+            loading.value = false;
+          }
+        },
+        reject: () => {
+        }
+      });
+
+    };
 
     const deleteTable = async function () {
       loading.value = true;
@@ -547,6 +610,7 @@ export default {
       filteredOrganizations,
       searchOrganization,
       organizationsFilter,
+      resetTable
     };
   },
   components: { InputTable },
