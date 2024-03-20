@@ -140,17 +140,17 @@
       adminView
       " :exportable="false" style="min-width: 8rem" header="Options:">
           <template #body="slotProps">
-            <div class="options-buttons">
-              <PrimeButton v-if="!slotProps.data.submitted" label="Edit" icon="pi pi-pencil"
-                class="p-button-rounded p-button-success mr-2 edit-button" @click="editRegistration(slotProps.data)" />
-              <PrimeButton v-if="!slotProps.data.submitted && ministryView" label="Edit Guests" icon="pi pi-pencil"
-                class="p-button-rounded p-button-success mr-2 edit-button" @click="editGuests(slotProps.data)" />
+            <div class="p-buttonset">
+              <PrimeButton v-if="!slotProps.data.submitted" label="" v-tooltip.top="'Edit'" icon="pi pi-pencil"
+                class="p-button-rounded p-button-success m-0 p-0 edit-button" @click="editRegistration(slotProps.data)" />
+              <PrimeButton v-if="!slotProps.data.submitted && ministryView" v-tooltip.top="'Edit Guests'" label="" icon="pi pi-pencil"
+                class="p-button-rounded p-button-success m-0 p-0 edit-button" @click="editGuests(slotProps.data)" />
               <PrimeButton v-if="!slotProps.data.submitted &&
       (!adminView || (adminView && registrationID))
-      " icon="pi pi-trash" label="Delete" class="p-button-rounded p-button-danger delete-button"
+      " icon="pi pi-trash" v-tooltip.top="'Delete'" label="" class="p-button-rounded p-button-danger p-0 m-0 delete-button"
                 @click="confirmDeleteRegistration(slotProps.data)" />
               <PrimeButton v-if="(adminView || ministryView) && !registrationID" icon="pi pi-arrow-up-right"
-                label="View" class="p-button-rounded p-button-info info-button"
+                v-tooltip.top="'View'" label="" class="p-button-rounded p-button-info m-0 p-0 info-button"
                 @click="router.push(`/admin/edit/${slotProps.data.guid}`)" />
             </div>
           </template>

@@ -230,8 +230,8 @@ export default {
     <ProgressSpinner v-if="loading" />
     <div v-else class="page-body">
       <div id="multiregistration-dropdown">
-        <PrimeButton type="button" label="Registration Options" icon="pi pi-ticket" class="p-button-info"
-          @click="registrationSelect()" badgeClass="p-badge-danger" />
+        <PrimeButton type="button" label="Registration Options" icon="pi pi-question-circle" class="p-button-info"
+          @click="registrationSelect()" badgeClass="p-badge-danger" v-tooltip="'Switch registrations or create a new registration.'" ><span>Registration Options</span><i class="pi pi-question-circle pl-1"></i></PrimeButton>
       </div>
       <RegistrationList id="personal-registration-table" :registrationID="id" :detailsView="false"
         :adminView="false || isAdmin()" :ministryView="false" :key="keyCountRegistration" />

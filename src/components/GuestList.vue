@@ -289,15 +289,16 @@
       tableID
       " :exportable="false" style="min-width: 8rem" header="Options:">
           <template #body="slotProps">
-            <div class="options-buttons">
-              <PrimeButton icon="pi pi-pencil" label="Edit" class="p-button-rounded p-button-success mr-2 edit-button"
+              <div class="p-buttonset">
+              <PrimeButton icon="pi pi-pencil" label="" v-tooltip.top="'Edit'" class="p-button-rounded p-button-success m-0 p-0 edit-button"
                 @click="editGuest(slotProps.data)" />
-              <PrimeButton icon="pi pi-trash" :label="slotProps.data.table || tableID
+              <PrimeButton :icon="slotProps.data.table || tableID
+      ? 'pi pi-eject' : 'pi pi-trash'" v-tooltip.top="slotProps.data.table || tableID
       ? 'Remove from Table'
       : 'Delete'
-      " class="p-button-rounded p-button-danger delete-button" @click="confirmDeleteGuest(slotProps.data)" />
-              <PrimeButton v-if="adminView && !registrationID" icon="pi pi-arrow-up-right" label="View"
-                class="p-button-rounded p-button-info info-button" @click="
+      " label="" class="p-button-rounded p-button-danger delete-button m-0 p-0" @click="confirmDeleteGuest(slotProps.data)" />
+              <PrimeButton v-if="adminView && !registrationID" icon="pi pi-arrow-up-right" label="" v-tooltip.top="'View'"
+                class="p-button-rounded p-button-info info-button m-0 p-0" @click="
       router.push(`/admin/edit/${slotProps.data.registration._id}`)
       " />
             </div>
@@ -925,12 +926,12 @@ export default {
     gap: 1em;
   }
 
-  .options-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.25em;
-  }
+  // .options-buttons {
+  //   display: flex;
+  //   flex-wrap: wrap;
+  //   justify-content: center;
+  //   gap: 0.25em;
+  // }
 
   .guid {
     line-break: anywhere;

@@ -274,26 +274,31 @@
         ></PrimeColumn>
         <PrimeColumn :exportable="false" style="min-width: 8rem">
           <template #body="slotProps">
+            <div class="p-buttonset">
             <PrimeButton
-              label="Edit"
+              label=""
+              v-tooltip.top="'Edit'"
               icon="pi pi-pencil"
-              class="p-button-rounded p-button-success mr-2 edit-button"
+              class="p-button-rounded p-button-success m-0 p-0 edit-button"
               @click="editTable(slotProps.data)"
             />
             <ConfirmDialog></ConfirmDialog>
             <PrimeButton
               v-if="detailsView"
-              label="Reset"
-              icon="pi pi-refresh"
-              class="p-button-rounded p-button-warning mr-2 reset-button"
+              label=""
+              v-tooltip.top="'Reset Table'"
+              icon="pi pi-replay"
+              class="p-button-rounded p-button-warning m-0 p-0 reset-button"
               @click="resetTable(slotProps.data)"
             />
             <PrimeButton
               icon="pi pi-trash"
-              label="Delete"
-              class="p-button-rounded p-button-danger delete-button"
+              label=""
+              v-tooltip.top="'Delete Table'"
+              class="p-button-rounded p-button-danger m-0 p-0 delete-button"
               @click="confirmDeleteTable(slotProps.data)"
             />
+          </div>
           </template>
         </PrimeColumn>
       </DataTable>
@@ -625,17 +630,6 @@ export default {
     div {
       display: flex;
       flex-wrap: wrap;
-    }
-  }
-
-  .p-button {
-    margin-left: 1em;
-    margin-right: 1em;
-    .edit-button {
-      margin: 2em;
-    }
-    .delete-button {
-      margin: none;
     }
   }
 
