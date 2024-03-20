@@ -547,7 +547,12 @@ export default {
                   });
               })
           } else {
-            loading.value = false;
+            await tableStore.updateTable(event._id, { guests: [], organizations: [] }).then(() => {
+              loading.value = false;
+              location.reload();
+            })
+            
+
           }
         },
         reject: () => {
