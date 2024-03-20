@@ -86,10 +86,14 @@
             <br />
             Registration:
             <router-link
-              :to="`/admin/edit/${data.registration}`"
+              :to="`/admin/edit/${data.registration._id}`"
               class="registration-link"
-              >{{ data.registration }}</router-link
+              >{{ data.registration._id }}</router-link
             >
+            <br/>
+            Registrar: {{ data.registration.registrar }}
+            <br/>
+            {{ data.registration.submitted ? 'Registration Submitted' : "Pending Registration Submission" }}
           </template></PrimeColumn
         >
 
