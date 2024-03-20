@@ -58,7 +58,7 @@ export default {
                   guid
                 )
                 .then((newData) => {
-                  if (newData) router.push(`/edit/${newData.guid}`);
+                  if (newData) router.push(`/registration/${newData.guid}`);
                 });
             });
           } else if (data) {
