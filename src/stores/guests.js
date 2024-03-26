@@ -98,7 +98,7 @@ export const useGuestsStore = defineStore({
       await apiRoutes
         .updateGuest(id, { ...guestData, seat: "" })
         .then(() => {
-          const tableUpdate = { guests: id };
+          let tableUpdate = { guests: id };
           if (guestData.organization) {
             tableUpdate = {
               ...tableUpdate,
