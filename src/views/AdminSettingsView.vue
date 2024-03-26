@@ -237,7 +237,7 @@ settingsStore.fillSettings().then(() => {
           </ol>
         </template>
       </PrimeCard>
-      <PrimeCard id="eventDateSettings" v-if="userStore.isSuperAdmin">
+      <PrimeCard id="eventDateSettings" v-if="userStore.isAdmin">
         <template #subtitle>
           <h1>Event Date Settings</h1>
         </template>
