@@ -22,6 +22,7 @@ import Fieldset from "primevue/fieldset";
 import Tooltip from "primevue/tooltip";
 import Chip from "primevue/chip";
 import FloatLabel from "primevue/floatlabel";
+import SpeedDial from "primevue/speeddial";
 
 //Form Component imports
 import Checkbox from "primevue/checkbox";
@@ -62,6 +63,7 @@ app.component("ProgressSpinner", ProgressSpinner);
 app.directive("tooltip", Tooltip);
 app.component("PrimeChip", Chip);
 app.component("FloatLabel", FloatLabel);
+app.component("SpeedDial", SpeedDial);
 
 app.component("DropDown", Dropdown);
 app.component("CheckBox", Checkbox);

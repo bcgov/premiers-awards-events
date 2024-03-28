@@ -1,22 +1,31 @@
 <!-- Table Icon Common Component -->
 <template>
   <div class="table-icon">
-    <i :class="tableClass"></i>
+    <div class="p-1">
+      <SpeedDial :model="tableGuests" :radius="90" type="circle" :buttonClass="tableClass" @click="getGuests()"
+        :tooltipOptions="{ position: 'top' }" :showIcon="tableGuests.length > 0 ? 'pi pi-users' : 'pi'"
+        hideIcon="pi pi-times" :disabled="tableGuests.length <= 0" />
+    </div>
+
   </div>
 </template>
 
 <script>
-import { computed } from "vue";
+import { computed, ref } from "vue";
+import apiRoutesTables from "../../services/api-routes.tables";
+import router from "../../router";
 
 export default {
   props: {
     table: Object,
   },
   setup(props) {
-    const fullIcon = "pi pi-circle-fill full-table";
-    const halfIcon = "pi pi-circle-fill half-table";
-    const emptyIcon = "pi pi-circle empty-table";
-    const defaultIcon = "pi pi-circle-fill default-table";
+    const defaultButton = "p-button-raised"
+    const fullIcon = `${defaultButton} full-table`;
+    const halfIcon = `${defaultButton} half-table`;
+    const emptyIcon = `${defaultButton} empty-table`;
+    const defaultIcon = `${defaultButton} default-table`;
+
 
     //Apply conditional styling based on table status
     const tableClass = computed(() => {
@@ -32,8 +41,27 @@ export default {
       return defaultIcon;
     });
 
+    // Load guest data to each table icon on request
+    let tableGuests = ref(props.table.guests);
+    const getGuests = async () => {
+      const newGuests = (await apiRoutesTables.getGuestsByTable(props.table.guid));
+      const newGuestData = newGuests.data[0].guests || null;
+      if (newGuests) {
+        tableGuests.value = newGuestData.map(each => ({
+          ...each,
+          label: `${each.seat}\n${each.firstname}\n${each.lastname}`,
+          icon: 'pi pi-user',
+          command: () => {
+            router.push(`/admin/edit/${each.registration}`);
+          }
+        }));
+      }
+    }
+
     return {
       tableClass,
+      tableGuests,
+      getGuests,
     };
   },
 };
@@ -45,27 +73,40 @@ export default {
   $emptyColor: green;
   $defaultColor: purple;
   $tableSize: 4rem;
+
   .full-table {
-    color: $fullColor;
-    font-size: $tableSize;
+    background-color: $fullColor;
   }
+
   .half-table {
-    background: -moz-linear-gradient(right, $fullColor 50%, $emptyColor 51%);
-    background: -webkit-linear-gradient(right, $fullColor 50%, $emptyColor 51%);
-    background: linear-gradient(to right, $fullColor 50%, $emptyColor 51%);
-    -webkit-background-clip: text;
-    -moz-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-size: $tableSize;
+    /* For modern browsers */
+    background: linear-gradient(to right, red 0%, red 50%, green 50%, green 100%);
+
+    /* For older browsers */
+    background: -webkit-linear-gradient(left, red 0%, red 50%, green 50%, green 100%);
+    background: -moz-linear-gradient(left, red 0%, red 50%, green 50%, green 100%);
+    background: -o-linear-gradient(left, red 0%, red 50%, green 50%, green 100%);
+    background: -ms-linear-gradient(left, red 0%, red 50%, green 50%, green 100%);
+
   }
+
   .empty-table {
-    color: $emptyColor;
-    font-size: $tableSize;
+    background-color: $emptyColor;
+
   }
+
   .default-table {
-    color: $defaultColor;
-    font-size: $tableSize;
+    background-color: $defaultColor;
+
+  }
+
+  .p-speeddial {
+    position: relative !important;
+
+    .p-button:disabled {
+      border: solid;
+      border-color: $emptyColor;
+    }
   }
 }
 </style>

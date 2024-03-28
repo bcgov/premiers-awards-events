@@ -111,7 +111,7 @@ export const useGuestsStore = defineStore({
           tableStore.pullTableDetails(table._id, tableUpdate);
         })
         .then(() => {
-          if (table.organizations.length === 0)
+          if (table.organizations && table.organizations.length === 0)
             tableStore.updateTable(table._id, table);
         });
     },

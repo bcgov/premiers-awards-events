@@ -1,27 +1,23 @@
 <!-- Use an object array of tables to generate an icon layout -->
 <template>
-  <div class="table-display">
+  <div class="table-display px-5">
     <div class="table-details" v-for="table of tables" :key="table">
-      <TableIcon
-        :table="table"
-        v-tooltip.top.hover="
-          `${
-            table.registrationOrganizations
-              ? table.registrationOrganizations
-              : ''
-          }`
-        "
-      />
-      <div class="table-name">
+      <TableIcon :table="table" />
+      <div class="table-name" v-tooltip.top.hover="`${table.registrationOrganizations
+      ? table.registrationOrganizations
+      : ''
+      }`
+      ">
         <router-link :to="`/admin/table/${table.guid}`">{{
-          table.tablename
-        }}</router-link>
+      table.tablename
+    }}</router-link>
       </div>
       <div class="table-seats-taken">
-        {{ table.guests.length }} / {{ table.tablecapacity }} Seats Taken
+        {{ table.guests.length }} / {{ table.tablecapacity }} Guests
       </div>
       <div class="table-free-seats">
-        {{ table.tablecapacity - table.guests.length }} Seats Free
+        {{ table.tablecapacity - table.guests.length }} Seat{{ table.tablecapacity - table.guests.length === 1 ? '' :
+      's' }} Free
       </div>
     </div>
   </div>
@@ -43,7 +39,7 @@ export default {
 <style lang="scss" scoped>
 .table-display {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: repeat(8, 1fr);
 
   .table-details {
     display: flex;
@@ -51,9 +47,16 @@ export default {
     align-items: center;
   }
 }
+
 @media only screen and (max-width: 960px) {
   .table-display {
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .table-display {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 </style>
