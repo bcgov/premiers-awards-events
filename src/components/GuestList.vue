@@ -24,9 +24,13 @@
             <PrimeButton type="button" icon="pi pi-filter-slash" label="Clear" class="p-button-outlined"
               @click="clearFilters()" />
             <span v-if="adminView" class="p-input-icon-left">
-              <i class="pi pi-search" />
-              <InputText title="Search all by keyword." v-model="filters['global'].value"
-                placeholder="Keyword Search" />
+              <FloatLabel>
+              <InputText
+              id="keyword-search-guests"
+                v-model="filters['global'].value"
+              />
+              <label for="keyword-search-guests"><i class="pi pi-search" />{{"  "}}Keyword Search</label>
+            </FloatLabel>
             </span>
           </div>
         </template>

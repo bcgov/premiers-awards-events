@@ -47,12 +47,14 @@
               class="p-button-outlined"
               @click="clearFilters()"
             />
-            <span class="p-input-icon-left">
-              <i class="pi pi-search" />
+             <span class="p-input-icon-left">
+              <FloatLabel>
               <InputText
+              id="keyword-search-tables"
                 v-model="filters['global'].value"
-                placeholder="Keyword Search"
               />
+              <label for="keyword-search-tables"><i class="pi pi-search" />{{"  "}}Keyword Search</label>
+            </FloatLabel>
             </span>
           </div>
         </template>
