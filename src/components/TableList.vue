@@ -33,6 +33,7 @@
         :rowsPerPageOptions="[10, 20, 50]"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
         :exportFilename="exportNameFunction()"
+        @rowReorder="onRowReorder"
       >
         <template #header v-if="!detailsView">
           <div style="text-align: left">
@@ -61,6 +62,9 @@
         </template>
         <template #empty> No tables found. </template>
         <template #loading> Loading table data. Please wait. </template>
+        <!-- <PrimeColumn
+          v-if="currentUrl.includes('/admin/tables')"
+          rowReorder headerStyle="width: 3rem" field="tableindex" key="tableindex" class="tableindex"></PrimeColumn> -->
         <PrimeColumn
           field="tablename"
           header="Table Name"
@@ -632,6 +636,28 @@ export default {
       return exportName;
     }
 
+    const currentUrl = window.location.href;
+       //Manage row reordering function
+       const onRowReorder = (event) => {
+      // Check if the URL contains the tables page
+
+      const tableSeating = currentUrl.includes('/admin/tables');
+      if (tableSeating) {
+        tables.value = event.value;
+        event.value.forEach((item, index) => {
+          // console.log(event.value[index], 'this is the loop before')
+          event.value[index] = { ...item, tableindex: ref(index + 1) }; // Updating reactive index key-value pair
+          // console.log(event.value[index], 'this is the loop after')
+        });
+
+        tables.value.forEach((data) => {
+          const newTableIndex = data.tableindex;
+          console.log(newTableIndex, 'this is table index and id', data._id, data.tableindex, 'this is data')
+          tableStore.updateTable(data._id, { ...data, tableindex: newTableIndex })
+        })
+      }
+    };
+
     return {
       columns,
       organizations,
@@ -659,7 +685,9 @@ export default {
       searchOrganization,
       organizationsFilter,
       resetTable,
-      exportNameFunction
+      exportNameFunction,
+      currentUrl,
+      onRowReorder
     };
   },
   components: { InputTable },

@@ -2,20 +2,20 @@
 <template>
   <div>
     <ProgressSpinner v-if="loading" />
-    <PrimeMessage
-      v-else-if="message"
-      :severity="messageText.severity"
-      :closable="false"
-      >{{ messageText.text }}</PrimeMessage
-    >
+    <PrimeMessage v-else-if="message" :severity="messageText.severity" :closable="false">{{ messageText.text }}
+    </PrimeMessage>
     <div v-else id="visual-table-list">
+      <span class="flex justify-content-end pt-2">
+        <PrimeButton :icon="`pi ${draggable ? 'pi-times' : 'pi-table'}`" label="Arrange Tables" class="min-w-min w-auto"
+          @click="toggleDraggable" />
+      </span>
       <div v-if="specialTables.length > 0" id="special-tables-section">
         <h4>Named/Specialty Tables</h4>
-        <TableDisplay :tables="specialTables" :key="key" />
+        <TableDisplay :tables="specialTables" :key="key" :draggable="draggable" />
       </div>
       <div id="standard-tables-section">
         <h4>Standard Table Layout</h4>
-        <TableDisplay :tables="standardTables" :key="key" />
+        <TableDisplay :tables="standardTables" :key="key" :draggable="draggable" />
       </div>
     </div>
   </div>
@@ -142,6 +142,12 @@ export default {
       loadLazyData();
     });
 
+    // Manage draggable status of tables
+    let draggable = ref(false);
+    const toggleDraggable = () => {
+      draggable.value = !draggable.value;
+    }
+
     return {
       fillList,
       loadLazyData,
@@ -156,6 +162,8 @@ export default {
       tableStore,
       columns,
       computedTables,
+      draggable,
+      toggleDraggable
     };
   },
   components: {
@@ -170,6 +178,7 @@ export default {
   justify-content: center;
   gap: 0.5em;
 }
+
 #special-tables-section {
   .table-display {
     display: flex;
