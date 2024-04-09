@@ -2,9 +2,10 @@
 <template>
   <div class="table-icon">
     <div class="p-1">
-      <SpeedDial :model="tableGuests" :radius="90" type="circle" :buttonClass="tableClass" @click="getGuests()"
-        :tooltipOptions="{ position: 'top' }" :showIcon="tableGuests.length > 0 ? 'pi pi-users' : 'pi'"
-        hideIcon="pi pi-times" :disabled="tableGuests.length <= 0" />
+      <SpeedDial :model="tableGuests" :radius="radiusCalc()" type="circle" :buttonClass="tableClass"
+        @click="getGuests()" :tooltipOptions="{ position: 'top' }"
+        :showIcon="tableGuests.length > 0 ? 'pi pi-users' : 'pi'" hideIcon="pi pi-times"
+        :disabled="tableGuests.length <= 0" />
     </div>
 
   </div>
@@ -58,10 +59,21 @@ export default {
       }
     }
 
+    //Adjust radius when more than 10 guests seated at a table
+    const radiusCalc = () => {
+      let radius = 90;
+      const guestCount = tableGuests.value.length;
+      if (guestCount > 10) {
+        radius += ((guestCount - 10) * 4)
+      }
+      return radius
+    }
+
     return {
       tableClass,
       tableGuests,
       getGuests,
+      radiusCalc
     };
   },
 };
