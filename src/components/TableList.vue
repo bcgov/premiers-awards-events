@@ -32,6 +32,7 @@
         paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
         :rowsPerPageOptions="[10, 20, 50]"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
+        :exportFilename="exportNameFunction()"
       >
         <template #header v-if="!detailsView">
           <div style="text-align: left">
@@ -200,7 +201,7 @@
           filterField="orgList"
         >
           <template #body="{ data }">
-            {{
+            {{ data.organizations ? 
               [
                 ...new Set(
                   data.organizations.map(
@@ -208,7 +209,7 @@
                       (each = lookup("organizations", each.organization))
                   )
                 ),
-              ].join("\r\n")
+              ].filter(Boolean).join("\r\n") : null
             }}
           </template>
           <template #filter="{ filterModel }">
@@ -448,6 +449,7 @@ export default {
             table.guests.length < table.tablecapacity ? true : false;
           table["orgList"] = table.organizations
             .map((each) => each.organization)
+            .filter(Boolean)
             .join("\r\n");
         });
       });
@@ -464,7 +466,32 @@ export default {
     };
 
     const exportCSV = () => {
-      dt.value.exportCSV();
+      dt.value.value.map((each) => {
+        const organizations = {
+          
+          organizations: each.organizations ?
+          [
+                ...new Set(
+                  each.organizations.map(
+                    (each) =>
+                      (each = lookup("organizations", each.organization))
+                  )
+                ),
+              ].filter(Boolean).join("\r\n") : null
+        };
+
+        const tableStatus = {
+          tableStatus: each.tableStatus ? "Space Available" : "Full Table"
+        }
+
+        each = Object.assign(
+          each,
+          organizations,
+          tableStatus
+        );
+      });
+      dt.value.exportCSV()
+      loadLazyData();
     };
 
     const formatDate = (value) => {
@@ -596,6 +623,15 @@ export default {
       }
     };
 
+    const exportNameFunction = () => {
+      const date = new Date();
+      const currentDay = String(date.getDate()).padStart(2, '0');
+      const currentMonth = String(date.getMonth()+1).padStart(2,"0");
+      const currentYear = date.getFullYear();
+      const exportName = `Tables - ${currentDay}-${currentMonth}-${currentYear}`
+      return exportName;
+    }
+
     return {
       columns,
       organizations,
@@ -622,7 +658,8 @@ export default {
       filteredOrganizations,
       searchOrganization,
       organizationsFilter,
-      resetTable
+      resetTable,
+      exportNameFunction
     };
   },
   components: { InputTable },
