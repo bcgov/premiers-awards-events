@@ -110,6 +110,7 @@ export default {
         })
         .then(() => {
           tables.value.sort((a, b) => {
+            if (typeof a.tableindex === 'undefined' || typeof b.tableindex === 'undefined') return 0;
             if (a.tableindex < b.tableindex) return -1;
             if (a.tableindex > b.tableindex) return 1;
             return 0;
