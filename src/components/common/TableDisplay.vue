@@ -1,6 +1,6 @@
 <!-- Use an object array of tables to generate an icon layout -->
 <template>
-  <div class="table-display px-5">
+  <div class="table-display px-5" :style="{ '--custom-grid': gridwidth }">
     <div
       :class="`${draggable ? 'wiggle' : ''} ${draggedItem === index ? 'dragging' : ''} ${dragOverIndex === index ? 'dragover' : ''} table-details`"
       v-for="(table, index) in sortedTables" :key="table._id" @dragstart="draggable ? dragStart(index) : null"
@@ -36,6 +36,7 @@ export default {
   props: {
     tables: Array,
     draggable: Boolean,
+    gridwidth: Number,
   },
 
   components: {
@@ -97,7 +98,6 @@ export default {
       return [...reactiveTables].sort((a, b) => a.tableindex - b.tableindex);
     });
 
-
     return {
       draggedItem,
       dragOverIndex,
@@ -114,7 +114,7 @@ export default {
 <style lang="scss" scoped>
 .table-display {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(var(--custom-grid), 1fr);
 
   .table-details {
     display: flex;

@@ -5,12 +5,21 @@
     <PrimeMessage v-else-if="message" :severity="messageText.severity" :closable="false">{{ messageText.text }}
     </PrimeMessage>
     <div v-else id="visual-table-list">
-      <span class="flex justify-content-end pt-2">
+      <span class="flex justify-content-end pt-4 gap-1">
+        <div class="flex flex-column">
+          <FloatLabel>
+            <label for="table-grid-input">Table Columns</label>
+            <InputNumber :inputStyle="{ width: '40px' }" id="table-grid-input" v-model="gridwidth" showButtons
+              buttonLayout="horizontal" :step="1" :min="1" :max="20" decrementButtonClass="p-button-danger"
+              incrementButtonClass="p-button-success" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+              class="table-grid-width-customize" />
+          </FloatLabel>
+        </div>
         <PrimeButton :icon="`pi ${draggable ? 'pi-times' : 'pi-table'}`" label="Arrange Tables" class="min-w-min w-auto"
           @click="toggleDraggable" />
       </span>
       <div v-if="specialTables.length > 0" id="special-tables-section" class="py-5">
-        <TableDisplay :tables="specialTables" :key="key" :draggable="draggable" />
+        <TableDisplay :tables="specialTables" :key="key" :draggable="draggable" :gridwidth="gridwidth" />
       </div>
     </div>
   </div>
@@ -31,6 +40,7 @@ export default {
   emits: ["loadedTables"],
   setup(props, { emit }) {
     const financialStore = useFinancialStore();
+    const gridwidth = ref(8);
     const { registrations } = storeToRefs(useFinancialStore());
 
     const lookupKey = function (key, value) {
@@ -146,7 +156,8 @@ export default {
       columns,
       computedTables,
       draggable,
-      toggleDraggable
+      toggleDraggable,
+      gridwidth
     };
   },
   components: {
