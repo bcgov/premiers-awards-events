@@ -83,11 +83,12 @@ export default {
 
     const drop = (index) => {
       const currentItem = tables[draggedItem.value];
-      tables.splice(index, 0, currentItem);
+      tables.splice(draggedItem.value, 1); // Remove the item from its original position
+      tables.splice(index, 0, currentItem); // Insert the item at the new position
       updateTableIndex();
       draggedItem.value = null;
-
     }
+
 
     const sortedTables = computed(() => {
       return [...tables].sort((a, b) => a.tableindex - b.tableindex);
