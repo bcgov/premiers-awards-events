@@ -29,7 +29,7 @@
 
 <script>
 import TableIcon from "../icons/TableIcon.vue";
-import { ref, computed } from "vue";
+import { ref, computed, reactive } from "vue";
 import { useTablesStore } from "../../stores/tables";
 
 export default {
@@ -45,6 +45,10 @@ export default {
   setup({ tables }) {
     const tableStore = useTablesStore();
     const currentUrl = window.location.href;
+    // create a reactive reference of the tables array
+    const reactiveTables = reactive([...tables]);
+    console.log(tables, reactiveTables, 'tihis is both forms of tables')
+
 
     //Manage table reordering function
     const updateTableIndex = () => {
@@ -52,16 +56,18 @@ export default {
 
       const tableSeating = currentUrl.includes('/admin/tables/event/planning');
       if (tableSeating) {
-        tables.forEach((item, index) => {
-          tables[index] = { ...item, tableindex: ref(index + 1) }; // Updating reactive index key-value pair
+        reactiveTables.forEach((item, index) => {
+          reactiveTables[index] = { ...item, tableindex: ref(index + 1) }; // Updating reactive index key-value pair
         });
 
-        tables.forEach((data) => {
+        reactiveTables.forEach((data) => {
           const newTableIndex = data.tableindex;
           tableStore.updateTable(data._id, { ...data, tableindex: newTableIndex })
         })
       }
     };
+
+    // Manage drag and drop rearrangment
 
     let draggedItem = ref(null);
     let dragOverIndex = ref(null);
@@ -82,16 +88,15 @@ export default {
     }
 
     const drop = (index) => {
-      const currentItem = tables[draggedItem.value];
-      tables.splice(draggedItem.value, 1); // Remove the item from its original position
-      tables.splice(index, 0, currentItem); // Insert the item at the new position
+      const currentItem = reactiveTables[draggedItem.value];
+      reactiveTables.splice(draggedItem.value, 1);
+      reactiveTables.splice(index, 0, currentItem);
       updateTableIndex();
       draggedItem.value = null;
     }
 
-
     const sortedTables = computed(() => {
-      return [...tables].sort((a, b) => a.tableindex - b.tableindex);
+      return [...reactiveTables].sort((a, b) => a.tableindex - b.tableindex);
     });
 
 
@@ -102,7 +107,8 @@ export default {
       dragEnd,
       dragOver,
       drop,
-      sortedTables
+      sortedTables,
+      reactiveTables
     }
   }
 };
@@ -134,39 +140,39 @@ export default {
     }
 
     10% {
-      transform: rotate(-5deg);
+      transform: rotate(-1deg);
     }
 
     20% {
-      transform: rotate(5deg);
+      transform: rotate(1deg);
     }
 
     30% {
-      transform: rotate(-5deg);
+      transform: rotate(-1deg);
     }
 
     40% {
-      transform: rotate(5deg);
+      transform: rotate(1deg);
     }
 
     50% {
-      transform: rotate(-5deg);
+      transform: rotate(-1deg);
     }
 
     60% {
-      transform: rotate(5deg);
+      transform: rotate(1deg);
     }
 
     70% {
-      transform: rotate(-5deg);
+      transform: rotate(-1deg);
     }
 
     80% {
-      transform: rotate(5deg);
+      transform: rotate(1deg);
     }
 
     90% {
-      transform: rotate(-5deg);
+      transform: rotate(-1deg);
     }
 
     100% {
@@ -176,6 +182,9 @@ export default {
 
   .wiggle {
     animation: wiggle 2s linear infinite;
+    border: 2px solid #999;
+    border-radius: 10px;
+    box-shadow: 0 0 5px #999;
   }
 }
 

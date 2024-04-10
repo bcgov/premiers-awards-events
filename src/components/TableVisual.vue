@@ -9,13 +9,8 @@
         <PrimeButton :icon="`pi ${draggable ? 'pi-times' : 'pi-table'}`" label="Arrange Tables" class="min-w-min w-auto"
           @click="toggleDraggable" />
       </span>
-      <div v-if="specialTables.length > 0" id="special-tables-section">
-        <h4>Named/Specialty Tables</h4>
+      <div v-if="specialTables.length > 0" id="special-tables-section" class="py-5">
         <TableDisplay :tables="specialTables" :key="key" :draggable="draggable" />
-      </div>
-      <div id="standard-tables-section">
-        <h4>Standard Table Layout</h4>
-        <TableDisplay :tables="standardTables" :key="key" :draggable="draggable" />
       </div>
     </div>
   </div>
@@ -115,25 +110,12 @@ export default {
         })
         .then(() => {
           tables.value.sort((a, b) => {
-            const nameA = a.tablename[0];
-            const numberA = a.tablename[1];
-            const nameB = b.tablename[0];
-            const numberB = b.tablename[1];
-
-            if (numberA === numberB && nameA >= nameB) {
-              return 1;
-            }
-            if (nameA > nameB && numberA < numberB) {
-              return -1;
-            }
+            if (a.tableindex < b.tableindex) return -1;
+            if (a.tableindex > b.tableindex) return 1;
             return 0;
           });
           tables.value.forEach((table) => {
-            if (table.tablename.length > 2) {
-              specialTables.value.push(table);
-            } else {
-              standardTables.value.push(table);
-            }
+            specialTables.value.push(table);
           });
         });
     };
@@ -177,13 +159,5 @@ export default {
   flex-direction: column;
   justify-content: center;
   gap: 0.5em;
-}
-
-#special-tables-section {
-  .table-display {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-  }
 }
 </style>
