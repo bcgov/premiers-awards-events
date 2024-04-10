@@ -14,7 +14,7 @@
         ">
         <router-link :to="`/admin/table/${table.guid}`">{{
           table.tablename
-        }}</router-link>
+          }}</router-link>
       </div>
       <div class="table-seats-taken">
         {{ table.guests.length }} / {{ table.tablecapacity }} Guests
@@ -47,8 +47,6 @@ export default {
     const currentUrl = window.location.href;
     // create a reactive reference of the tables array
     const reactiveTables = reactive([...tables]);
-    console.log(tables, reactiveTables, 'tihis is both forms of tables')
-
 
     //Manage table reordering function
     const updateTableIndex = () => {
@@ -185,6 +183,17 @@ export default {
     border: 2px solid #999;
     border-radius: 10px;
     box-shadow: 0 0 5px #999;
+    cursor: move;
+    /* fallback if grab cursor is unsupported */
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+  }
+
+  .wiggle:active {
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
   }
 }
 

@@ -20,32 +20,28 @@ export default {
   props: {
     table: Object,
   },
-  setup(props) {
-    const defaultButton = "p-button-raised"
-    const fullIcon = `${defaultButton} full-table`;
-    const halfIcon = `${defaultButton} half-table`;
-    const emptyIcon = `${defaultButton} empty-table`;
-    const defaultIcon = `${defaultButton} default-table`;
+  setup({ table }) {
+    const defaultButton = "p-button-raised";
+    const classMap = {
+      "full-table": `${defaultButton} full-table`,
+      "half-table": `${defaultButton} half-table`,
+      "empty-table": `${defaultButton} empty-table`,
+      default: `${defaultButton} default-table`
+    };
 
-
-    //Apply conditional styling based on table status
     const tableClass = computed(() => {
-      if (props.table.status === "full-table") {
-        return fullIcon;
+      const statusClass = classMap[table.status] || classMap.default;
+      if (table.tabletype === "Reserved") {
+        return `${statusClass} reserved-table`;
       }
-      if (props.table.status === "half-table") {
-        return halfIcon;
-      }
-      if (props.table.status === "empty-table") {
-        return emptyIcon;
-      }
-      return defaultIcon;
+      return statusClass;
     });
 
+
     // Load guest data to each table icon on request
-    let tableGuests = ref(props.table.guests);
+    let tableGuests = ref(table.guests);
     const getGuests = async () => {
-      const newGuests = (await apiRoutesTables.getGuestsByTable(props.table.guid));
+      const newGuests = (await apiRoutesTables.getGuestsByTable(table.guid));
       const newGuestData = newGuests.data[0].guests || null;
       if (newGuests) {
         tableGuests.value = newGuestData.map(each => ({
@@ -84,6 +80,7 @@ export default {
   $fullColor: red;
   $emptyColor: green;
   $defaultColor: purple;
+  $reservedColor: purple;
   $tableSize: 4rem;
 
   .full-table {
@@ -99,7 +96,6 @@ export default {
     background: -moz-linear-gradient(left, red 0%, red 50%, green 50%, green 100%);
     background: -o-linear-gradient(left, red 0%, red 50%, green 50%, green 100%);
     background: -ms-linear-gradient(left, red 0%, red 50%, green 50%, green 100%);
-
   }
 
   .empty-table {
@@ -114,6 +110,12 @@ export default {
 
   .p-speeddial {
     position: relative !important;
+
+    .reserved-table {
+      border: solid;
+      border-color: $reservedColor !important;
+
+    }
 
     .p-button:disabled {
       border: solid;
