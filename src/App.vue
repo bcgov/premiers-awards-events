@@ -196,7 +196,7 @@ main {
   /* height: auto; */
 }
 
-@media screen and (max-width: 960px) {
+@media screen and (max-width: 1115px) {
   .navbar-fixed {
     overflow: visible;
   }
@@ -250,14 +250,14 @@ main {
   z-index: 1200 !important;
 }
 
-@media only screen and (min-width: 960px) {
+@media only screen and (min-width: 1115px) {
   .dropdown-account {
     position: absolute !important;
     right: 2vw;
   }
 }
 
-@media only screen and (max-width: 960px) {
+@media only screen and (max-width: 1115px) {
   .about-option {
     display: none;
   }
