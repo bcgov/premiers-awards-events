@@ -229,7 +229,7 @@ export default {
     </div>
     <ProgressSpinner v-if="loading" />
     <div v-else class="page-body">
-      <div id="multiregistration-dropdown">
+      <div id="multiregistration-dropdown" class="pt-1">
         <PrimeButton type="button" label="Registration Options" icon="pi pi-question-circle" class="p-button-info"
           @click="registrationSelect()" badgeClass="p-badge-danger" v-tooltip="'Switch registrations or create a new registration.'" ><span>Registration Options</span><i class="pi pi-question-circle pl-1"></i></PrimeButton>
       </div>
@@ -398,7 +398,7 @@ export default {
         </h3>
         <RegistrationSelector />
         <div v-if="isAdmin()">
-          <h3>Add/Remove Users on Registration</h3>
+          <h3>Add/Remove Registrar Access to Registration <i class="pi pi-question-circle pl-1" v-tooltip.top="'Users must be in the system as a registrar.'"></i></h3>
           <RegistrationUserSelector />
         </div>
       </PrimeDialog>

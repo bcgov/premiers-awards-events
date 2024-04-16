@@ -15,7 +15,7 @@
     <div v-else>
       <div>
         <PrimeCard id="add-users-card">
-          <template #header> Add New Users: </template>
+          <template #header> Add new users to read/edit access on registration by entering their IDIR: </template>
           <template #content>
             <div class="form-item text-field">
               <label for="user" id="user-help">Add IDIR:</label>
