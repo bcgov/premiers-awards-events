@@ -18,6 +18,8 @@ const getSingleRegistration = (file) => {
     ? `${registrationsFixtures}get-one/${file}`
     : `${registrationsFixtures}get-one/0-registration-blank`;
 
+  console.log(registrationList, "this is file name");
+
   cy.intercept("GET", registrationSingleUrl, {
     fixture: registrationList,
   }).as("getSingleRegistration");

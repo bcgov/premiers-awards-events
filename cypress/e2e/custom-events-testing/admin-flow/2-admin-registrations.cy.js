@@ -136,7 +136,7 @@ describe("Admin Registrations Page", () => {
         cy.wait(["@getRegistrations"]);
       });
       it("displays edit buttons with functional popups", () => {
-        cy.get(".options-buttons").contains("Edit").first().click();
+        cy.get(".edit-button").first().click();
         cy.wait(["@getSingleRegistration"]);
 
         cy.get(".registration-dialog").should("exist");
@@ -150,8 +150,7 @@ describe("Admin Registrations Page", () => {
       });
 
       it("displays view button with functional redirection", () => {
-        cy.get(".info-button").contains("View").should("exist");
-        cy.get(".info-button").contains("View").first().click();
+        cy.get(".info-button").first().click();
         cy.wait(["@getSingleRegistration"]);
         cy.location("pathname").should("include", "admin/edit");
       });

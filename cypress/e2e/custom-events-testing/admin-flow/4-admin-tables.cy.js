@@ -19,10 +19,10 @@ describe("Admin Tables Page", () => {
   });
   context("Table page shows all admin navigation features", () => {
     it("displays admin nav bar with all items", () => {
-      cy.get(".admin-nav").contains("Registrations").should("exist");
-      cy.get(".admin-nav").contains("Guests").should("exist");
-      cy.get(".admin-nav").contains("Tables").should("exist");
-      cy.get(".admin-nav").contains("Event Planning").should("exist");
+      cy.get(".dropdown-calendar").contains("Registrations").should("exist");
+      cy.get(".dropdown-calendar").contains("Guests").should("exist");
+      cy.get(".dropdown-calendar").contains("Tables").should("exist");
+      cy.get(".dropdown-calendar").contains("Event Planner").should("exist");
     });
   });
 
@@ -114,7 +114,7 @@ describe("Admin Tables Page", () => {
       it("displays edit buttons with functional popups", () => {
         getSingleTable("1-table-origin");
         postSingleTable("1-table-origin");
-        cy.get(".edit-button").contains("Edit").first().click();
+        cy.get(".edit-button").first().click();
         cy.wait(["@getSingleTable"]);
         cy.get(".p-dialog-header").contains("Table Details").should("exist");
         cy.get("button").contains("Submit").click();

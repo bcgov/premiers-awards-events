@@ -5,6 +5,7 @@
     "registrations": [],
     "guests": [],
     "tablename": "4567-testing",
+    "tableindex": 4,
     "tablecapacity": 1,
     "tabletype": "Standard",
     "organizations": [],

@@ -2,6 +2,7 @@
   {
     "_id": "hOXGqfpI6PQd8Fvs015Z0001",
     "guid": "123456789ABCDEFGHIJKLMNOPQRSTU01",
+    "users": [{"guid":"123456789ABCDEFGHIJKLMNOPQRSTU01", "username": "01testuser"}],
     "guests": [
       "zm8QiMfBU3XkctyEFwFQ0001",
       "zm8QiMfBU3XkctyEFwFQ0002",
@@ -28,6 +29,7 @@
   {
     "_id": "hOXGqfpI6PQd8Fvs015Z0002",
     "guid": "123456789ABCDEFGHIJKLMNOPQRSTU02",
+    "users": [{"guid":"123456789ABCDEFGHIJKLMNOPQRSTU02", "username": "02testuser"}],
     "organization": "org-8",
     "branch": "Environment",
     "primarycontact": "jeremiah",
@@ -48,6 +50,7 @@
   {
     "_id": "hOXGqfpI6PQd8Fvs015Z0003",
     "guid": "123456789ABCDEFGHIJKLMNOPQRSTU03",
+    "users": [{"guid":"123456789ABCDEFGHIJKLMNOPQRSTU03", "username": "03testuser"}],
     "registrar": "03testuser",
     "organization": "org-5",
     "branch": "Hydro",
@@ -68,6 +71,7 @@
   {
     "_id": "hOXGqfpI6PQd8Fvs015Z0004",
     "guid": "123456789ABCDEFGHIJKLMNOPQRSTU04",
+    "users": [{"guid":"123456789ABCDEFGHIJKLMNOPQRSTU04", "username": "04testuser"}],
     "registrar": "04testuser",
     "guests": [],
     "organization": "org-14",
