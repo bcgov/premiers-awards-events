@@ -2,6 +2,7 @@
   {
     "_id": "hOXGqfpI6PQd8Fvs015Z0001",
     "guid": "123456789ABCDEFGHIJKLMNOPQRSTU01",
+    "users": [{"guid":"123456789ABCDEFGHIJKLMNOPQRSTU01", "username": "01testuser"}],
     "guests": [
       "zm8QiMfBU3XkctyEFwFQ0001",
       "zm8QiMfBU3XkctyEFwFQ0002",

@@ -22,10 +22,10 @@ describe("Admin Guests Page", () => {
   });
   context("Guests page shows all admin navigation features", () => {
     it("displays admin nav bar with all items", () => {
-      cy.get(".admin-nav").contains("Registrations").should("exist");
-      cy.get(".admin-nav").contains("Guests").should("exist");
-      cy.get(".admin-nav").contains("Tables").should("exist");
-      cy.get(".admin-nav").contains("Event Planning").should("exist");
+      cy.get(".dropdown-calendar").contains("Registrations").should("exist");
+      cy.get(".dropdown-calendar").contains("Guests").should("exist");
+      cy.get(".dropdown-calendar").contains("Tables").should("exist");
+      cy.get(".dropdown-calendar").contains("Event Planner").should("exist");
     });
   });
 
@@ -100,7 +100,7 @@ describe("Admin Guests Page", () => {
       cy.get(".p-datatable-tbody > tr")
         .first()
         .children()
-        .should("have.length", 11);
+        .should("have.length", 15);
     });
   });
 
@@ -109,7 +109,7 @@ describe("Admin Guests Page", () => {
     () => {
       it("displays edit buttons with functional popups", () => {
         postSingleGuest();
-        cy.get(".options-buttons").contains("Edit").first().click();
+        cy.get(".edit-button").first().click();
         cy.get(".p-dialog-header").contains("Guest Details").should("exist");
         cy.get(".p-dialog-footer button").contains("Save").click();
         cy.wait(["@postSingleGuest"]);
@@ -127,8 +127,8 @@ describe("Admin Guests Page", () => {
       });
 
       it("displays view button with functional redirection", () => {
-        cy.get(".info-button").contains("View").should("exist");
-        cy.get(".info-button").contains("View").first().click();
+        cy.get(".info-button").should("exist");
+        cy.get(".info-button").first().click();
         cy.location("pathname").should("include", "admin/edit");
       });
     }

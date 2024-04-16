@@ -78,7 +78,9 @@ describe("Registration Process", () => {
       cy.get(".dropdown-account")
         .contains("Create Account")
         .should("not.exist");
-      cy.get(".dropdown-account").contains("My Registration").should("exist");
+      cy.get(".dropdown-account")
+        .contains("My Registration")
+        .should("not.exist");
       cy.get(".dropdown-account").contains("View Profile").should("exist");
       cy.get(".dropdown-account").contains("Manage Users").should("not.exist");
       cy.get(".dropdown-account")
@@ -102,16 +104,20 @@ describe("Registration Process", () => {
       cy.get(".dropdown-account")
         .contains("Create Account")
         .should("not.exist");
-      cy.get(".dropdown-account").contains("My Registration").should("exist");
+      cy.get(".dropdown-account")
+        .contains("My Registration")
+        .should("not.exist");
       cy.get(".dropdown-account").contains("View Profile").should("exist");
       cy.get(".dropdown-account").contains("Manage Users").should("exist");
       cy.get(".dropdown-account")
         .contains("View Registrations")
-        .should("exist");
-      cy.get(".dropdown-account").contains("View Guests").should("exist");
-      cy.get(".dropdown-account").contains("View Tables").should("exist");
-      cy.get(".dropdown-account").contains("Event Planner").should("exist");
-      cy.get(".dropdown-account").contains("Event Settings").should("exist");
+        .should("not.exist");
+      cy.get(".dropdown-account").contains("View Guests").should("not.exist");
+      cy.get(".dropdown-account").contains("View Tables").should("not.exist");
+      cy.get(".dropdown-account").contains("Event Planner").should("not.exist");
+      cy.get(".dropdown-account")
+        .contains("Event Settings")
+        .should("not.exist");
     });
 
     it("shows registered message and correct access for super-administrator user", () => {
@@ -124,16 +130,20 @@ describe("Registration Process", () => {
       cy.get(".dropdown-account")
         .contains("Create Account")
         .should("not.exist");
-      cy.get(".dropdown-account").contains("My Registration").should("exist");
+      cy.get(".dropdown-account")
+        .contains("My Registration")
+        .should("not.exist");
       cy.get(".dropdown-account").contains("View Profile").should("exist");
       cy.get(".dropdown-account").contains("Manage Users").should("exist");
       cy.get(".dropdown-account")
         .contains("View Registrations")
-        .should("exist");
-      cy.get(".dropdown-account").contains("View Guests").should("exist");
-      cy.get(".dropdown-account").contains("View Tables").should("exist");
-      cy.get(".dropdown-account").contains("Event Planner").should("exist");
-      cy.get(".dropdown-account").contains("Event Settings").should("exist");
+        .should("not.exist");
+      cy.get(".dropdown-account").contains("View Guests").should("not.exist");
+      cy.get(".dropdown-account").contains("View Tables").should("not.exist");
+      cy.get(".dropdown-account").contains("Event Planner").should("not.exist");
+      cy.get(".dropdown-account")
+        .contains("Event Settings")
+        .should("not.exist");
     });
   });
 });

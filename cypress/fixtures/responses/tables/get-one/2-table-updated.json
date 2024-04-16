@@ -6,6 +6,7 @@
     "guests": [],
     "tablename": "0123-testing",
     "tablecapacity": 99,
+    "tableindex": 4,
     "tabletype": "Reserved",
     "organizations": [],
     "createdAt": "2022-09-15T15:50:29.055Z",

@@ -1,6 +1,7 @@
 {
   "_id": "EanMdqL5qeEzmTj4wmQ80005",
   "guid": "123456789ABCDEFGHIJKLMNOPQRSTU05",
+  "users": [{"guid":"123456789ABCDEFGHIJKLMNOPQRSTU01", "username": "01testuser"}],
   "guests": [],
   "organization": "org-14",
   "branch": "Mental Health",

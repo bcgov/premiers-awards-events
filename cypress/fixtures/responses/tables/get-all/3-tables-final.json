@@ -10,6 +10,7 @@
       "zm8QiMfBU3XkctyEFwFQ0004"
     ],
     "tablename": "A1",
+    "tableindex": 1,
     "tablecapacity": 10,
     "tabletype": "Reserved",
     "organizations": [
@@ -28,6 +29,7 @@
     "registrations": [],
     "guests": [],
     "tablename": "G1",
+    "tableindex": 2,
     "tablecapacity": 10,
     "tabletype": "Standard",
     "organizations": [],
@@ -41,6 +43,7 @@
     "registrations": [],
     "guests": ["zm8QiMfBU3XkctyEFwFQ0005"],
     "tablename": "B1",
+    "tableindex": 3,
     "tablecapacity": 10,
     "tabletype": "Standard",
     "organizations": [
@@ -56,6 +59,7 @@
     "registrations": [],
     "guests": [],
     "tablename": "4567-testing",
+    "tableindex": 4,
     "tablecapacity": 1,
     "tabletype": "Standard",
     "organizations": [],
