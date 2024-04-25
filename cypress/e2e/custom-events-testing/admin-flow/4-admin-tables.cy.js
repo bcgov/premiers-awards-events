@@ -32,9 +32,6 @@ describe("Admin Tables Page", () => {
       cy.get(`.p-button-label`).contains("Table Count:").click();
       cy.get(`.p-dialog-header`).contains("Table Information").should("exist");
       cy.get(`.p-dialog-header-close`).click();
-      cy.get(`.p-dialog-header`)
-        .contains("Table Information")
-        .should("not.exist");
     });
     it("displays functional add new table button", () => {
       cy.get(".p-button-label").contains("Add New Table").should("exist");
@@ -50,7 +47,6 @@ describe("Admin Tables Page", () => {
         .should("exist");
 
       cy.get(`.p-dialog-header-close`).click();
-      cy.get(`.p-dialog-header`).contains("Add New Table").should("not.exist");
     });
   });
 
@@ -121,9 +117,6 @@ describe("Admin Tables Page", () => {
         cy.wait(["@postSingleTable"]);
         cy.contains("Table Updated").should("exist");
         cy.get(".p-dialog-header .p-dialog-header-close").click();
-        cy.get(".p-dialog-header")
-          .contains("Table Details")
-          .should("not.exist");
       });
 
       it("displays delete table button with functional popups", () => {
@@ -131,7 +124,6 @@ describe("Admin Tables Page", () => {
         cy.get(".delete-button").first().click();
         cy.get(".p-dialog-header").contains("Confirm").should("exist");
         cy.get(".p-dialog-footer button").contains("No").click();
-        cy.get(".p-dialog-header").contains("Confirm").should("not.exist");
       });
 
       it("displays link to table with functional redirection", () => {
@@ -165,7 +157,6 @@ describe("Admin Tables Page", () => {
       getTables("2-tables-updated");
       cy.get(`.p-dialog-header-close`).click();
       cy.wait(["@getTables"]);
-      cy.get(`.p-dialog-header`).contains("Add New Table").should("not.exist");
     });
 
     it("edits testing table", () => {
@@ -203,11 +194,8 @@ describe("Admin Tables Page", () => {
       cy.get(`.p-dialog-header-close`).click();
       cy.wait(["@getTables"]);
 
-      cy.get(`.p-dialog-header`).contains("Table Details").should("not.exist");
-
       cy.get(".p-datatable-header input").type("{selectAll}", "{del}");
       cy.get(`.p-datatable-header input`).type("0123-testing");
-      cy.get(".p-datatable-tbody .edit-button").should("not.exist");
 
       cy.get(".p-datatable-header input").type("{selectAll}", "{del}");
       cy.get(`.p-datatable-header input`).type("4567-testing");

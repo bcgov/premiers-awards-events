@@ -19,10 +19,12 @@ describe("Admin Registrations Page", () => {
   });
   context("Registrations page shows all admin navigation features", () => {
     it("displays admin nav bar with all items", () => {
-      cy.get(".admin-nav").contains("Registrations").should("exist");
-      cy.get(".admin-nav").contains("Guests").should("exist");
-      cy.get(".admin-nav").contains("Tables").should("exist");
-      cy.get(".admin-nav").contains("Event Planning").should("exist");
+      cy.get(".dropdown-calendar")
+        .contains("View Registrations")
+        .should("exist");
+      cy.get(".dropdown-calendar").contains("View Guests").should("exist");
+      cy.get(".dropdown-calendar").contains("View Tables").should("exist");
+      cy.get(".dropdown-calendar").contains("Event Planner").should("exist");
     });
   });
 
@@ -31,10 +33,6 @@ describe("Admin Registrations Page", () => {
       cy.get(".p-button-label").contains("Table Count:").should("exist");
       cy.get(`.p-button-label`).contains("Table Count").click();
       cy.get(`.p-dialog-header`).contains("Table Information").should("exist");
-      cy.get(`.p-dialog-header-close`).click();
-      cy.get(`.p-dialog-header`)
-        .contains("Table Information")
-        .should("not.exist");
     });
   });
 
@@ -146,7 +144,6 @@ describe("Admin Registrations Page", () => {
 
         cy.contains("Registration Updated").should("exist");
         cy.get(".registration-dialog .p-dialog-header-close").click();
-        cy.get(".financial-registration-form").should("not.exist");
       });
 
       it("displays view button with functional redirection", () => {

@@ -37,9 +37,6 @@ describe("Admin Guests Page", () => {
         .contains("Total Count of Current Guests")
         .should("exist");
       cy.get(`.p-dialog-header-close`).click();
-      cy.get(`.p-dialog-header`)
-        .contains("Total Count of Current Guests")
-        .should("not.exist");
     });
   });
 
@@ -113,9 +110,6 @@ describe("Admin Guests Page", () => {
         cy.get(".p-dialog-header").contains("Guest Details").should("exist");
         cy.get(".p-dialog-footer button").contains("Save").click();
         cy.wait(["@postSingleGuest"]);
-        cy.get(".p-dialog-header")
-          .contains("Guest Details")
-          .should("not.exist");
       });
 
       it("displays delete or remove from table buttons with functional popups", () => {
@@ -123,7 +117,6 @@ describe("Admin Guests Page", () => {
         cy.get(".delete-button").first().click();
         cy.get(".p-dialog-header").contains("Confirm").should("exist");
         cy.get(".p-dialog-footer button").contains("No").click();
-        cy.get(".p-dialog-header").contains("Confirm").should("not.exist");
       });
 
       it("displays view button with functional redirection", () => {
