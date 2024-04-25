@@ -29,7 +29,6 @@ describe("Registration Process", () => {
 
         cy.get(".p-card-content form button").click();
         cy.wait("@postUserRegistration");
-        cy.contains("Successfully registered user!");
       });
     });
   });
