@@ -17,6 +17,7 @@
         </div>
         <PrimeButton :icon="`pi ${draggable ? 'pi-times' : 'pi-table'}`" label="Arrange Tables" class="min-w-min w-auto"
           @click="toggleDraggable" />
+        <PrimeButton label="Download PDF" class="min-w-min w-auto" @click="downloadPdf" />
       </span>
       <div v-if="specialTables.length > 0" id="special-tables-section" class="py-5">
         <TableDisplay :tables="specialTables" :key="key" :draggable="draggable" :gridwidth="gridwidth" />
@@ -32,6 +33,9 @@ import TableDisplay from "./common/TableDisplay.vue";
 import { storeToRefs } from "pinia";
 import { ref, onMounted, computed } from "vue";
 import formServices from "../services/settings.services";
+
+import tableRoutes from "../services/api-routes.tables.js";
+
 
 export default {
   props: {
@@ -141,6 +145,17 @@ export default {
       draggable.value = !draggable.value;
     }
 
+    const downloadPdf = async () => {
+
+      const res = await tableRoutes.getPdfLayout(gridwidth.value, "base64");
+     
+      const downloadLink = document.createElement("a");
+      downloadLink.download = `Table layout x ${gridwidth.value}.pdf`;
+      downloadLink.href = res.data;
+      downloadLink.click();
+      downloadLink.remove();
+    }
+
     return {
       fillList,
       loadLazyData,
@@ -157,6 +172,7 @@ export default {
       computedTables,
       draggable,
       toggleDraggable,
+      downloadPdf,
       gridwidth
     };
   },

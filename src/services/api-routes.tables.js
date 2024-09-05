@@ -35,5 +35,8 @@ class SeatingDataService {
   deleteAll() {
     return api.post(`/tables/seating/deleteall`);
   }
+  getPdfLayout(layout, format) {
+    return api.get(`/tables/seating/pdf?format=${format}&layout=${layout}`);
+  }
 }
 export default new SeatingDataService();
