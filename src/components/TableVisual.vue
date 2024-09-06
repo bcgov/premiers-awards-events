@@ -36,6 +36,8 @@ import formServices from "../services/settings.services";
 
 import tableRoutes from "../services/api-routes.tables.js";
 
+import {saveAs} from "file-saver";
+
 
 export default {
   props: {
@@ -149,11 +151,7 @@ export default {
 
       const res = await tableRoutes.getPdfLayout(gridwidth.value, "base64");
      
-      const downloadLink = document.createElement("a");
-      downloadLink.download = `Table layout x ${gridwidth.value}.pdf`;
-      downloadLink.href = res.data;
-      downloadLink.click();
-      downloadLink.remove();
+      saveAs(res.data, `Table layout x ${gridwidth.value}.pdf`);
     }
 
     return {
