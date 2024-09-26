@@ -151,6 +151,7 @@ export default {
 
 <template>
 
+  <Toast position="bottom-right" />
   <Menubar class="navbar-fixed flex align-items-center gap-2" :model="siteNav">
     <template #start>
       <div id="titlenav">

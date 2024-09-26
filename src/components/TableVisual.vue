@@ -38,6 +38,7 @@ import tableRoutes from "../services/api-routes.tables.js";
 
 import {saveAs} from "file-saver";
 
+import {useToast} from "primevue/usetoast";
 
 export default {
   props: {
@@ -45,8 +46,11 @@ export default {
   },
   emits: ["loadedTables"],
   setup(props, { emit }) {
+
+    const toast = useToast();
+
     const financialStore = useFinancialStore();
-    const gridwidth = ref(8);
+    const gridwidth = ref(12);
     const { registrations } = storeToRefs(useFinancialStore());
 
     const lookupKey = function (key, value) {
@@ -149,9 +153,18 @@ export default {
 
     const downloadPdf = async () => {
 
-      const res = await tableRoutes.getPdfLayout(gridwidth.value, "base64");
-     
-      saveAs(res.data, `Table layout x ${gridwidth.value}.pdf`);
+      try
+      {
+        const res = await tableRoutes.getPdfLayout(gridwidth.value, "base64");
+        
+        saveAs(res.data, `Table layout x ${gridwidth.value}.pdf`);
+
+
+      } catch (e) {
+       
+        toast.add({severity: "error", summary: "Download error", detail: "Could not download PDF layout.", life: 3000})
+        console.log("Download failed"); 
+      }
     }
 
     return {
