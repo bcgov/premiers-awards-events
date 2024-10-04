@@ -159,89 +159,98 @@ const schemaData = {
     { value: "undisclosed", text: "Prefer not to disclose" }, // PA-168 - Added additional option. This has to be added in Mongo as well.
   ],
   supportingfinalistoptions: [
-    { value: "Thyren Jacobs", text: "Thyren Jacobs - Emerging Leader" },
-    { value: "Connie Chapman", text: "Connie Chapman - Emerging Leader" },
-    { value: "Zak Zawaduk", text: "Zak Zawaduk - Emerging Leader" },
+    { value: "Andrew Sharp", text: "Andrew Sharp - Emerging Leader" },
+    { value: "Katie Olthuis", text: "Katie Olthuis - Emerging Leader" },
+    { value: "Kaylee Tower", text: "Kaylee Tower - Emerging Leader" },
+    { value: "Leah Wilcock", text: "Leah Wilcock - Emerging Leader" },
     {
-      value: "Foundry: Work and Education Program",
-      text: "Foundry: Work and Education Program - Evidence-Based Design",
+      value: "Community Risk Reduction Dashboard",
+      text: "Community Risk Reduction Dashboard - Evidence-Based Design",
     },
     {
-      value: "Northern Spotten Owl Breeding and Release Program",
-      text: "Northern Spotten Owl Breeding and Release Program - Evidence-Based Design",
+      value: "International Credentials Recognition Act",
+      text: "International Credentials Recognition Act - Evidence-Based Design",
     },
     {
-      value: "Clean Transportation",
-      text: "Clean Transportation - Evidence-Based Design",
+      value: "Provincial Court Family Rules",
+      text: "Provincial Court Family Rules - Evidence-Based Design",
     },
     {
-      value: "Strengthening British Columbia’s Evacuee Emergency Supports",
-      text: "Strengthening British Columbia’s Evacuee Emergency Supports - Innovation",
+      value: "Nancy Carter, KC",
+      text: "Nancy Carter, KC - Hall of Excellence",
     },
     {
-      value: "Declaration Act Action Plan: The Way Forward",
-      text: "Declaration Act Action Plan: The Way Forward - Innovation",
+      value: "Susan Kelly",
+      text: "Susan Kelly - Hall of Excellence",
     },
     {
-      value: "Diagnostic Services",
-      text: "Diagnostic Services - Innovation",
+      value: "Hospital at Home Program",
+      text: "Hospital at Home Program - Innovation",
     },
     {
-      value: "Teresa Butler",
-      text: "Teresa Butler - Leadership",
+      value: "Nurses Respond to B.C.'s Toxic Drug Crisis",
+      text: "Nurses Respond to B.C.'s Toxic Drug Crisis - Innovation",
     },
     {
-      value: "Christie Harvie",
-      text: "Christie Harvie - Leadership",
+      value: "Real-Time Virtual Support",
+      text: "Real-Time Virtual Support - Innovation",
     },
     {
-      value: "Carling Helander",
-      text: "Carling Helander  - Leadership",
+      value: "Cliff Chapman",
+      text: "Cliff Chapman - Leadership",
     },
     {
-      value: "Deborah Schwartz",
-      text: "Deborah Schwartz - Legacy",
+      value: "Daryn Martiniuk",
+      text: "Daryn Martiniuk - Leadership",
     },
     {
-      value: "Marj Hallihan",
-      text: "Marj Hallihan - Legacy",
+      value: "Marie Ty",
+      text: "Marie Ty  - Leadership",
     },
     {
-      value: "BC Corrections: Connections and Healing Through Culture",
-      text: "BC Corrections: Connections and Healing Through Culture - Organizational Excellence",
+      value: "Richard Rogers",
+      text: "Richard Rogers - Legacy",
     },
     {
-      value: "Climate Preparedness and Adaptation Strategy",
-      text: "Climate Preparedness and Adaptation Strategy - Organizational Excellence",
+      value: "Rodney Chapman",
+      text: "Rodney Chapman - Legacy",
     },
     {
-      value: "FireSmart BC: Empowering Citizens in Wildfire Protection",
-      text: "FireSmart BC: Empowering Citizens in Wildfire Protection - Organizational Excellence",
+      value: "BC Pharmacare Minor Ailments and Contraception Services",
+      text: "BC Pharmacare Minor Ailments and Contraception Services - Organizational Excellence",
     },
     {
-      value: "Guardian Shared Compliance and Enforcement Pilot Project",
-      text: "Guardian Shared Compliance and Enforcement Pilot Project - Partnership",
+      value: "Natural Resource Ministry Permitting Transformation",
+      text: "Natural Resource Ministry Permitting Transformation - Organizational Excellence",
     },
     {
-      value: "Indigenous Jurisdiction in Child and Family Services",
-      text: "Indigenous Jurisdiction in Child and Family Services - Partnership",
+      value: "Returning St. Joseph’s Mission Residential School",
+      text: "Returning St. Joseph’s Mission Residential School - Organizational Excellence",
+    },
+    {
+      value: "Canada’s First Cervical Cancer Self-Screening Program",
+      text: "Canada’s First Cervical Cancer Self-Screening Program - Partnership",
+    },
+    {
+      value: "Gender-Based Violence Action Plan",
+      text: "Gender-Based Violence Action Plan - Partnership",
+    },
+    {
+      value: "Indigenous-Focused Graduation Requirement",
+      text: "Indigenous-Focused Graduation Requirement - Partnership",
+    },
+    {
+      value: "Kicking Horse Canyon: More than a Highway",
+      text: "Kicking Horse Canyon: More than a Highway - Regional Impact",
     },
     {
       value:
-        "Welcoming Displaced Ukrainians: A Government-Community Partnership",
-      text: "Welcoming Displaced Ukrainians: A Government-Community Partnership - Partnership",
+        "Building Change: Infrastructure Program Expansion Supports Reconciliation",
+      text: "Building Change: Infrastructure Program Expansion Supports Reconciliation - Regional Impact",
     },
     {
-      value: "First Nations Jurisdiction Over Education",
-      text: "First Nations Jurisdiction Over Education - Regional Impact",
-    },
-    {
-      value: "REMP Capital Region Tsunami Information Portal",
-      text: "REMP Capital Region Tsunami Information Portal - Regional Impact",
-    },
-    {
-      value: "Working Together: Protecting the Great Bear Sea",
-      text: "Working Together: Protecting the Great Bear Sea - Regional Impact",
+      value: "Remote Community Energy Strategy",
+      text: "Remote Community Energy Strategy - Regional Impact",
     },
     {
       value: "Not applicable",
