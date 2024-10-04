@@ -156,6 +156,7 @@ const schemaData = {
     { value: "he/him/his", text: "He / Him / His" },
     { value: "she/her/hers", text: "She / Her / Hers" },
     { value: "they/them/theirs", text: "They / Them / Theirs" },
+    { value: "undisclosed", text: "Prefer not to disclose" }, // PA-168 - Added additional option. This has to be added in Mongo as well.
   ],
   supportingfinalistoptions: [
     { value: "Thyren Jacobs", text: "Thyren Jacobs - Emerging Leader" },
