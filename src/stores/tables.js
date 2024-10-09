@@ -3,7 +3,7 @@ import { ref } from "vue";
 import tableRoutes from "../services/api-routes.tables.js";
 import { useFinancialStore } from "./financial";
 import { useGuestsStore } from "./guests";
-import formServices from "../services/settings.services";
+import { useSettingsStore } from "./settings";
 
 export const useTablesStore = defineStore({
   id: "tablesStore",
@@ -64,6 +64,7 @@ export const useTablesStore = defineStore({
     // Attempts to combine as many individuals to tables as possible.
 
     async fillEventTables() {
+      const settingsStore = useSettingsStore();
       await useFinancialStore().fillAllRegistrations();
       await useGuestsStore().fillGuests();
       const { registrations } = storeToRefs(useFinancialStore());
@@ -71,7 +72,9 @@ export const useTablesStore = defineStore({
       //const tableList = {};
 
       const roles = ref(
-        (formServices.get("attendancetypes") || []).map((each) => each.value)
+        (settingsStore.lookup("attendancetypes") || []).map(
+          (each) => each.value
+        )
       );
 
       //sort registrations alphabetically by organization

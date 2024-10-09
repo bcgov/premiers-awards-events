@@ -46,7 +46,7 @@ export default {
 
     const getMinistry = () => {
       return financialStore.getMinistry;
-    }
+    };
 
     const isSubmitted = () => {
       return financialStore.getRegistration.submitted;
@@ -66,12 +66,12 @@ export default {
     };
 
     const isAdmin = () => {
-      return userStore.isAdmin
+      return userStore.isAdmin;
     };
 
     const isMinistryContact = () => {
       return userStore.user.organization === getMinistry();
-    }
+    };
 
     const toggleRegistration = async () => {
       let submitStatus = isSubmitted() ? false : true;
@@ -189,8 +189,10 @@ export default {
 
 <template>
   <main class="personal-registration">
-    <PageHeader class="pageheader" :footer="`Registration # ${registration._id} `"><span v-if="isSubmitted()">Submitted
-        {{ dateSubmitted() }} by</span>
+    <PageHeader
+      class="pageheader"
+      :footer="`Registration # ${registration._id} `"
+      ><span v-if="isSubmitted()">Submitted {{ dateSubmitted() }} by</span>
       <span v-else>In-progress registration for</span>
       {{ getRegistrar() }}
     </PageHeader>
@@ -210,8 +212,11 @@ export default {
         <PrimeCard id="registration-info">
           <template #content>
             Your registration has been submitted. Any request for changes after
-            submissions close, and any other questions, should be sent via email to
-            <a href="mailto: PremiersAwards@gov.bc.ca">PremiersAwards@gov.bc.ca</a>.
+            submissions close, and any other questions, should be sent via email
+            to
+            <a href="mailto: PremiersAwards@gov.bc.ca"
+              >PremiersAwards@gov.bc.ca</a
+            >.
           </template>
         </PrimeCard>
       </div>
@@ -222,7 +227,9 @@ export default {
             request for changes after submission, inquiries regarding
             outstanding registrations, or any other questions should be sent via
             email to
-            <a href="mailto: PremiersAwards@gov.bc.ca">PremiersAwards@gov.bc.ca</a>.
+            <a href="mailto: PremiersAwards@gov.bc.ca"
+              >PremiersAwards@gov.bc.ca</a
+            >.
           </template>
         </PrimeCard>
       </div>
@@ -230,35 +237,76 @@ export default {
     <ProgressSpinner v-if="loading" />
     <div v-else class="page-body">
       <div id="multiregistration-dropdown" class="pt-1">
-        <PrimeButton type="button" label="Registration Options" icon="pi pi-question-circle" class="p-button-info"
-          @click="registrationSelect()" badgeClass="p-badge-danger" v-tooltip="'Switch registrations or create a new registration.'" ><span>Registration Options</span><i class="pi pi-question-circle pl-1"></i></PrimeButton>
+        <PrimeButton
+          type="button"
+          label="Registration Options"
+          icon="pi pi-question-circle"
+          class="p-button-info"
+          @click="registrationSelect()"
+          badgeClass="p-badge-danger"
+          v-tooltip="'Switch registrations or create a new registration.'"
+          ><span>Registration Options</span
+          ><i class="pi pi-question-circle pl-1"></i
+        ></PrimeButton>
       </div>
-      <RegistrationList id="personal-registration-table" :registrationID="id" :detailsView="false"
-        :adminView="false || isAdmin()" :ministryView="false" :key="keyCountRegistration" />
+      <RegistrationList
+        id="personal-registration-table"
+        :registrationID="id"
+        :detailsView="false"
+        :adminView="false || isAdmin()"
+        :ministryView="false"
+        :key="keyCountRegistration"
+      />
       <div>
         <PrimeCard id="guest-seating-info">
           <template #content>
             <div class="registration-guest-info">
-              <span id="guest-registration-info">Please order guests by requested seating arrangement. By
+              <span id="guest-registration-info"
+                >Please order guests by requested seating arrangement. By
                 default, guests will be assigned to tables in the order they are
-                added.</span>
+                added.</span
+              >
               <div class="registration-buttons">
-                <PrimeButton type="button" label="Table Information" icon="pi pi-ticket" class="p-button-info"
-                  :badge="tableCount()" @click="tableInfo()" badgeClass="p-badge-danger" />
-                <PrimeButton type="button" label="Guest Information" icon="pi pi-users" class="p-button-info"
-                  :badge="guestCount()" @click="guestInfo()" badgeClass="p-badge-danger" />
-                <PrimeButton v-if="!isSubmitted() &&
-      (settingsStore.getIsSalesOpen || isAdmin())
-      " label="Add Guests" icon="pi pi-user-plus" class="p-button-rounded p-button-success mr-2" @click="addGuest()"
-                  :disabled="guestCount() >= 60 && !isAdmin()" />
+                <PrimeButton
+                  type="button"
+                  label="Table Information"
+                  icon="pi pi-ticket"
+                  class="p-button-info"
+                  :badge="tableCount()"
+                  @click="tableInfo()"
+                  badgeClass="p-badge-danger"
+                />
+                <PrimeButton
+                  type="button"
+                  label="Guest Information"
+                  icon="pi pi-users"
+                  class="p-button-info"
+                  :badge="guestCount()"
+                  @click="guestInfo()"
+                  badgeClass="p-badge-danger"
+                />
+                <PrimeButton
+                  v-if="
+                    !isSubmitted() &&
+                    (settingsStore.getIsSalesOpen || isAdmin())
+                  "
+                  label="Add Guests"
+                  icon="pi pi-user-plus"
+                  class="p-button-rounded p-button-success mr-2"
+                  @click="addGuest()"
+                  :disabled="guestCount() >= 60 && !isAdmin()"
+                />
               </div>
             </div>
           </template>
         </PrimeCard>
       </div>
-      <PrimeDialog v-model:visible="tableInfoDialog" header="Table Information" :modal="true" class="p-fluid">The
-        current
-        number of tables required based on your guest list is:
+      <PrimeDialog
+        v-model:visible="tableInfoDialog"
+        header="Table Information"
+        :modal="true"
+        class="p-fluid"
+        >The current number of tables required based on your guest list is:
         {{ tableCount() }}.
         <ul>
           <li>The cost per table is $500, and each table seats 10 people.</li>
@@ -289,9 +337,12 @@ export default {
         <br />
       </PrimeDialog>
 
-      <PrimeDialog v-model:visible="guestInfoDialog" header="Guest Information" :modal="true" class="p-fluid">Total
-        Number
-        of Guests: {{ guestCount() }}.
+      <PrimeDialog
+        v-model:visible="guestInfoDialog"
+        header="Guest Information"
+        :modal="true"
+        class="p-fluid"
+        >Total Number of Guests: {{ guestCount() }}.
 
         <ul>
           <li>
@@ -323,7 +374,12 @@ export default {
         </ul>
       </PrimeDialog>
 
-      <PrimeDialog v-model:visible="submissionDialog" header="Confirm Submission" :modal="true" class="p-fluid">
+      <PrimeDialog
+        v-model:visible="submissionDialog"
+        header="Confirm Submission"
+        :modal="true"
+        class="p-fluid"
+      >
         <div v-if="!isCompleted() && !isAdmin()">
           <p>
             There are currently missing fields on your registration.
@@ -357,13 +413,26 @@ export default {
             Total tables required for this number of guests: {{ tableCount() }}
           </p>
           <div id="minister-approval-checkbox">
-            <CheckBox id="minister-approval" name="minister-approval" value="ministerapproval"
-              v-model="ministerApproval" :binary="true" />
-            <label for="minister-approval">Check this box to confirm approval has been obtained by the
-              ministry's Deputy Minister's office.</label>
+            <CheckBox
+              id="minister-approval"
+              name="minister-approval"
+              value="ministerapproval"
+              v-model="ministerApproval"
+              :binary="true"
+            />
+            <label for="minister-approval"
+              >Check this box to confirm approval has been obtained by the
+              ministry's Deputy Minister's office.</label
+            >
           </div>
         </div>
-        <div v-else-if="isSubmitted() && (isAdmin() || settingsStore.getIsSalesOpen) && !activeMessage">
+        <div
+          v-else-if="
+            isSubmitted() &&
+            (isAdmin() || settingsStore.getIsSalesOpen) &&
+            !activeMessage
+          "
+        >
           <p>
             Are you sure you wish to reverse submission of this
             event-registration?<br />
@@ -371,25 +440,61 @@ export default {
             current submission date.
           </p>
         </div>
-        <PrimeButton v-if="!isSubmitted() && !activeMessage && (isCompleted() || isAdmin())
-      " :disabled="!ministerApproval" type="button" label="Confirm submit registration" icon="pi pi-send"
-          class="p-button-primary" @click="toggleRegistration()" badgeClass="p-badge-danger" />
-        <PrimeButton v-if="isSubmitted() && (isAdmin() || settingsStore.getIsSalesOpen) && !activeMessage" type="button"
-          label="Re-open registration" icon="pi pi-undo" class="p-button-danger" @click="toggleRegistration()"
-          badgeClass="p-badge-danger" />
-        <PrimeMessage show v-if="activeMessage" :variant="message.type" :closable="false">
+        <PrimeButton
+          v-if="
+            !isSubmitted() && !activeMessage && (isCompleted() || isAdmin())
+          "
+          :disabled="!ministerApproval"
+          type="button"
+          label="Confirm submit registration"
+          icon="pi pi-send"
+          class="p-button-primary"
+          @click="toggleRegistration()"
+          badgeClass="p-badge-danger"
+        />
+        <PrimeButton
+          v-if="
+            isSubmitted() &&
+            (isAdmin() || settingsStore.getIsSalesOpen) &&
+            !activeMessage
+          "
+          type="button"
+          label="Re-open registration"
+          icon="pi pi-undo"
+          class="p-button-danger"
+          @click="toggleRegistration()"
+          badgeClass="p-badge-danger"
+        />
+        <PrimeMessage
+          show
+          v-if="activeMessage"
+          :variant="message.type"
+          :closable="false"
+        >
           <p>
             {{ message.text }}
           </p>
         </PrimeMessage>
       </PrimeDialog>
 
-      <PrimeDialog v-model:visible="addGuestDialog" :style="{ width: '50rem', margin: '5rem' }" header="Add a new Guest"
-        @hide="keyAdd()" :modal="true" class="p-fluid">
+      <PrimeDialog
+        v-model:visible="addGuestDialog"
+        :style="{ width: '50rem', margin: '5rem' }"
+        header="Add a new Guest"
+        @hide="keyAdd()"
+        :modal="true"
+        class="p-fluid"
+      >
         <InputGuest :registrationID="id" />
       </PrimeDialog>
-      <PrimeDialog v-model:visible="registrationsDialog" position="top" :style="{ width: '50rem', margin: '5rem' }"
-        @hide="keyAddRegistration()" :modal="true" class="p-fluid">
+      <PrimeDialog
+        v-model:visible="registrationsDialog"
+        position="top"
+        :style="{ width: '50rem', margin: '5rem' }"
+        @hide="keyAddRegistration()"
+        :modal="true"
+        class="p-fluid"
+      >
         <template #header>
           <h2>Registration Management Options</h2>
         </template>
@@ -398,28 +503,62 @@ export default {
         </h3>
         <RegistrationSelector />
         <div v-if="isAdmin()">
-          <h3>Add/Remove Registrar Access to Registration <i class="pi pi-question-circle pl-1" v-tooltip.top="'Users must be in the system as a registrar.'"></i></h3>
+          <h3>
+            Add/Remove Registrar Access to Registration
+            <i
+              class="pi pi-question-circle pl-1"
+              v-tooltip.top="'Users must be in the system as a registrar.'"
+            ></i>
+          </h3>
           <RegistrationUserSelector />
         </div>
       </PrimeDialog>
-      <GuestList id="personal-registration-guests-table" :adminView="false || isAdmin()"
-        :ministryView="false || isMinistryContact()" :registrationID="id" :key="keyCount" />
+      <GuestList
+        id="personal-registration-guests-table"
+        :adminView="false || isAdmin()"
+        :ministryView="false || isMinistryContact()"
+        :registrationID="id"
+        :key="keyCount"
+      />
       <div class="submission-buttons">
-        <PrimeButton v-if="!isSubmitted() && (settingsStore.getIsSalesOpen || isAdmin())"
-          :disabled="guestCount() < 5 && !isAdmin()" type="button" label="Submit Registration" icon="pi pi-send"
-          class="p-button-primary" @click="submitRegistration()" badgeClass="p-badge-danger" />
+        <PrimeButton
+          v-if="!isSubmitted() && (settingsStore.getIsSalesOpen || isAdmin())"
+          :disabled="guestCount() < 5 && !isAdmin()"
+          type="button"
+          label="Submit Registration"
+          icon="pi pi-send"
+          class="p-button-primary"
+          @click="submitRegistration()"
+          badgeClass="p-badge-danger"
+        />
 
-        <PrimeButton v-if="(isSubmitted() && isAdmin() && !ministryView) ||
-      (!ministryView && isSubmitted() && settingsStore.getIsSalesOpen) ||
-      (ministryView && isMinistryContact() && isSubmitted() && settingsStore.getIsSalesOpen)" type="button"
-          label="Unsubmit Registration" icon="pi pi-undo" class="p-button-danger" @click="submitRegistration()"
-          badgeClass="p-badge-danger" />
-        <label v-if="!isSubmitted() &&
-      (settingsStore.getIsSalesOpen || isAdmin()) &&
-      guestCount() < 5 &&
-      !isAdmin()
-      " class="p-error" id="submit-registration-help">The minimum number of guests allowed on a registration is
-          5.</label>
+        <PrimeButton
+          v-if="
+            (isSubmitted() && isAdmin() && !ministryView) ||
+            (!ministryView && isSubmitted() && settingsStore.getIsSalesOpen) ||
+            (ministryView &&
+              isMinistryContact() &&
+              isSubmitted() &&
+              settingsStore.getIsSalesOpen)
+          "
+          type="button"
+          label="Unsubmit Registration"
+          icon="pi pi-undo"
+          class="p-button-danger"
+          @click="submitRegistration()"
+          badgeClass="p-badge-danger"
+        />
+        <label
+          v-if="
+            !isSubmitted() &&
+            (settingsStore.getIsSalesOpen || isAdmin()) &&
+            guestCount() < 5 &&
+            !isAdmin()
+          "
+          class="p-error"
+          id="submit-registration-help"
+          >The minimum number of guests allowed on a registration is 5.</label
+        >
       </div>
     </div>
   </main>

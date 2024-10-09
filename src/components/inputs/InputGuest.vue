@@ -24,12 +24,13 @@
             :suggestions="filteredOrganizations"
             @complete="searchOrganization($event)"
             placeholder="Select an organization or enter manually"
-            optionLabel="text"
-            field="text"
+            optionLabel="label"
+            optionValue="key"
+            field="label"
             :disabled="guest.hasexternalorganization"
           >
             <template #option="slotProps">
-              <div>{{ slotProps.option.text }}</div>
+              <div>{{ slotProps.option.label }}</div>
             </template></AutoComplete
           >
           <small
@@ -102,8 +103,8 @@
             id="attendancetype"
             v-model="guest.attendancetype"
             :options="attendancetypes"
-            optionLabel="text"
-            optionValue="value"
+            optionLabel="label"
+            optionValue="key"
             optionDisabled="disabled"
             placeholder="Select the type of attendance for this guest"
           />
@@ -154,9 +155,7 @@
         </div>
 
         <div class="dropdown">
-          <label for="supportingfinalist"
-            >Finalist guest is supporting:</label
-          >
+          <label for="supportingfinalist">Finalist guest is supporting:</label>
           <DropDown
             v-bind:class="{ 'p-invalid': v$.supportingfinalist.$error }"
             id="supportingfinalist"
@@ -221,7 +220,7 @@
 </template>
 
 <script>
-import formServices from "@/services/settings.services";
+import { useSettingsStore } from "@/stores/settings";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import { ref } from "vue";
@@ -234,6 +233,7 @@ export default {
     registrationID: String,
   },
   setup(props) {
+    const settingsStore = useSettingsStore();
     const guestData = useGuestsStore();
     const registrationData = useFinancialStore();
     const { guest } = storeToRefs(useGuestsStore());
@@ -248,9 +248,9 @@ export default {
     const custompronouns = ref("");
     const hasexternalorganization = ref(false);
     const v$ = useVuelidate(rules, guest);
-    const organizations = ref(formServices.get("organizations") || []);
+    const organizations = ref(settingsStore.lookup("organizations") || []);
     const filteredOrganizations = ref();
-    const attendancetypes = ref(formServices.get("attendancetypes") || []);
+    const attendancetypes = ref(settingsStore.lookup("attendancetypes") || []);
     const trimmedAttendancetypes = attendancetypes.value.map((opt) => ({
       ...opt,
       disabled:
@@ -264,12 +264,14 @@ export default {
 
     attendancetypes.value = trimmedAttendancetypes;
 
-    const accessibility = ref(formServices.get("accessibilityoptions") || []);
-    const supportingfinalist = ref(
-      formServices.get("supportingfinalistoptions") || []
+    const accessibility = ref(
+      settingsStore.lookup("accessibilityoptions") || []
     );
-    const pronouns = ref(formServices.get("pronounsoptions") || []);
-    const dietary = ref(formServices.get("dietaryoptions") || []);
+    const supportingfinalist = ref(
+      settingsStore.lookup("supportingfinalistoptions") || []
+    );
+    const pronouns = ref(settingsStore.lookup("pronounsoptions") || []);
+    const dietary = ref(settingsStore.lookup("dietaryoptions") || []);
 
     if (props.registrationID) {
       registrationData.fill(props.registrationID);
@@ -283,7 +285,7 @@ export default {
         } else {
           filteredOrganizations.value = organizations.value.filter(
             (organization) => {
-              return organization.text
+              return organization.label
                 .toLowerCase()
                 .startsWith(event.query.toLowerCase());
             }

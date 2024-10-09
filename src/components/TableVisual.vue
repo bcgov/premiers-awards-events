@@ -2,25 +2,57 @@
 <template>
   <div>
     <ProgressSpinner v-if="loading" />
-    <PrimeMessage v-else-if="message" :severity="messageText.severity" :closable="false">{{ messageText.text }}
+    <PrimeMessage
+      v-else-if="message"
+      :severity="messageText.severity"
+      :closable="false"
+      >{{ messageText.text }}
     </PrimeMessage>
     <div v-else id="visual-table-list">
       <span class="flex justify-content-end pt-4 gap-1">
         <div class="flex flex-column">
           <FloatLabel>
             <label for="table-grid-input">Table Columns</label>
-            <InputNumber :inputStyle="{ width: '40px' }" id="table-grid-input" v-model="gridwidth" showButtons
-              buttonLayout="horizontal" :step="1" :min="1" :max="20" decrementButtonClass="p-button-danger"
-              incrementButtonClass="p-button-success" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-              class="table-grid-width-customize" />
+            <InputNumber
+              :inputStyle="{ width: '40px' }"
+              id="table-grid-input"
+              v-model="gridwidth"
+              showButtons
+              buttonLayout="horizontal"
+              :step="1"
+              :min="1"
+              :max="20"
+              decrementButtonClass="p-button-danger"
+              incrementButtonClass="p-button-success"
+              incrementButtonIcon="pi pi-plus"
+              decrementButtonIcon="pi pi-minus"
+              class="table-grid-width-customize"
+            />
           </FloatLabel>
         </div>
-        <PrimeButton :icon="`pi ${draggable ? 'pi-times' : 'pi-table'}`" label="Arrange Tables" class="min-w-min w-auto"
-          @click="toggleDraggable" />
-        <PrimeButton label="Download PDF" class="min-w-min w-auto" @click="downloadPdf" />
+        <PrimeButton
+          :icon="`pi ${draggable ? 'pi-times' : 'pi-table'}`"
+          label="Arrange Tables"
+          class="min-w-min w-auto"
+          @click="toggleDraggable"
+        />
+        <PrimeButton
+          label="Download PDF"
+          class="min-w-min w-auto"
+          @click="downloadPdf"
+        />
       </span>
-      <div v-if="specialTables.length > 0" id="special-tables-section" class="py-5">
-        <TableDisplay :tables="specialTables" :key="key" :draggable="draggable" :gridwidth="gridwidth" />
+      <div
+        v-if="specialTables.length > 0"
+        id="special-tables-section"
+        class="py-5"
+      >
+        <TableDisplay
+          :tables="specialTables"
+          :key="key"
+          :draggable="draggable"
+          :gridwidth="gridwidth"
+        />
       </div>
     </div>
   </div>
@@ -29,28 +61,29 @@
 <script>
 import { useFinancialStore } from "../stores/financial";
 import { useTablesStore } from "../stores/tables";
+import { useSettingsStore } from "../stores/settings";
 import TableDisplay from "./common/TableDisplay.vue";
 import { storeToRefs } from "pinia";
 import { ref, onMounted, computed } from "vue";
-import formServices from "../services/settings.services";
 
 import tableRoutes from "../services/api-routes.tables.js";
 
-import {saveAs} from "file-saver";
-
+import { saveAs } from "file-saver";
 
 export default {
   props: {
     key: Number,
   },
   emits: ["loadedTables"],
-  setup(props, { emit }) {
+  async setup(props, { emit }) {
     const financialStore = useFinancialStore();
+    const settingsStore = useSettingsStore();
+    settingsStore.getAll();
     const gridwidth = ref(8);
     const { registrations } = storeToRefs(useFinancialStore());
 
     const lookupKey = function (key, value) {
-      return formServices.lookup(key, value);
+      return settingsStore.lookup(key, value);
     };
 
     const tableStore = useTablesStore();
@@ -62,10 +95,8 @@ export default {
       return tables.value.sort((a, b) => a.tablename - b.tablename);
     });
 
-    const columns = ref(formServices.get("tableSelection") || []);
-    const organizations = ref(
-      (formServices.get("organizations") || []).map((each) => each.value)
-    );
+    const columns = await settingsStore.get("tableSelection");
+    const organizations = await settingsStore.get("organizations");
 
     let message = ref(false);
     const messageText = ref({ severity: null, text: "" });
@@ -98,7 +129,7 @@ export default {
     };
 
     //After table fill, append additional information and sort based on table data
-    const loadLazyData = () => {
+    const loadLazyData = async () => {
       fillList()
         .then(() => {
           tables.value.forEach((table) => {
@@ -126,7 +157,11 @@ export default {
         })
         .then(() => {
           tables.value.sort((a, b) => {
-            if (typeof a.tableindex === 'undefined' || typeof b.tableindex === 'undefined') return 0;
+            if (
+              typeof a.tableindex === "undefined" ||
+              typeof b.tableindex === "undefined"
+            )
+              return 0;
             if (a.tableindex < b.tableindex) return -1;
             if (a.tableindex > b.tableindex) return 1;
             return 0;
@@ -137,22 +172,19 @@ export default {
         });
     };
 
-    onMounted(() => {
-      loadLazyData();
-    });
+    await loadLazyData();
 
     // Manage draggable status of tables
     let draggable = ref(false);
     const toggleDraggable = () => {
       draggable.value = !draggable.value;
-    }
+    };
 
     const downloadPdf = async () => {
-
       const res = await tableRoutes.getPdfLayout(gridwidth.value, "base64");
-     
+
       saveAs(res.data, `Table layout x ${gridwidth.value}.pdf`);
-    }
+    };
 
     return {
       fillList,
@@ -171,7 +203,7 @@ export default {
       draggable,
       toggleDraggable,
       downloadPdf,
-      gridwidth
+      gridwidth,
     };
   },
   components: {

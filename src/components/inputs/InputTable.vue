@@ -66,7 +66,7 @@
 
 <script>
 import { ref } from "vue";
-import formServices from "@/services/settings.services";
+import { useSettingsStore } from "../../stores/settings";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import { storeToRefs } from "pinia";
@@ -80,9 +80,10 @@ export default {
     detailsView: Boolean,
   },
   setup(props) {
+    const settingsStore = useSettingsStore();
     const userStore = useAuthUserStore();
     const tableStore = useTablesStore();
-    const tabletypes = ref(formServices.get("tabletypes") || []);
+    const tabletypes = ref(settingsStore.lookup("tabletypes") || []);
     const { table } = storeToRefs(useTablesStore());
 
     //Vuelidate Form Rules
