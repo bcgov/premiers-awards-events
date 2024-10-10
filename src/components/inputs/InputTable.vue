@@ -26,8 +26,8 @@
           id="tabletype"
           v-model="table.tabletype"
           :options="tabletypes"
-          optionLabel="text"
-          optionValue="value"
+          optionLabel="label"
+          optionValue="key"
           placeholder="Select the type of table."
         />
         <small v-if="v$.tabletype.$error" class="p-error" id="tabletype-help"
