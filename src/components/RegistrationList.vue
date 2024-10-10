@@ -132,7 +132,7 @@
             <DropDown
               v-model="filterModel.value"
               :options="organizations"
-              optionLabel="text"
+              optionLabel="label"
               placeholder="Any"
               class="p-column-filter"
               :showClear="true"
@@ -429,9 +429,10 @@ export default {
 
     const organizations = ref(
       settingsStore.settings.length > 0
-        ? settingsStore.lookup("organizations").map((each) => each.value)
+        ? settingsStore.lookup("organizations").map((each) => each.key)
         : []
     );
+
     const dataTableRender = ref(0);
     const userStore = useAuthUserStore();
     const dt = ref();

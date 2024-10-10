@@ -72,9 +72,9 @@
             currentUrl.includes('/admin/edit/') ||
             (currentUrl.includes('/registration/') &&
               !isSubmitted() &&
-              (settingsStore.get('globalSettings', 'getIsSalesOpen') ||
-                userStore.getUser.roles.includes('super-administrator') ||
-                userStore.getUser.roles.includes('administrator')))
+              settingsStore.getIsSalesOpen) ||
+            userStore.getUser.roles.includes('super-administrator') ||
+            userStore.getUser.roles.includes('administrator')
           "
           rowReorder
           headerStyle="width: 3rem"
@@ -276,7 +276,7 @@
             <DropDown
               v-model="filterModel.value"
               :options="pronounsFilter"
-              optionLabel="text"
+              optionLabel="label"
               placeholder="Any"
               class="p-column-filter"
               :showClear="true"
@@ -294,9 +294,7 @@
               </template>
               <template #option="slotProps">
                 <div class="item">
-                  <div>
-                    {{ lookup("pronounsoptions", slotProps.option) }}
-                  </div>
+                  <div>{{ lookup("pronounsoptions", slotProps.option) }}</div>
                 </div>
               </template>
             </DropDown>
@@ -315,7 +313,7 @@
             <DropDown
               v-model="filterModel.value"
               :options="accessibilityFilter"
-              optionLabel="text"
+              optionLabel="label"
               placeholder="Any"
               class="p-column-filter"
               :showClear="true"
@@ -474,12 +472,9 @@
         </PrimeColumn>
         <PrimeColumn
           v-if="
-            (!isSubmitted() &&
-              settingsStore.get('globalSettings', 'getIsSalesOpen')) ||
+            (!isSubmitted() && settingsStore.getIsSalesOpen) ||
             (adminView && !ministryView) ||
-            (!isSubmitted() &&
-              ministryView &&
-              settingsStore.get('globalSettings', 'getIsSalesOpen')) ||
+            (!isSubmitted() && ministryView && settingsStore.getIsSalesOpen) ||
             tableID
           "
           :exportable="false"
@@ -553,7 +548,7 @@
             :disabled="guest.hasexternalorganization"
           >
             <template #option="slotProps">
-              <div>{{ slotProps.option.text }}</div>
+              <div>{{ slotProps.option.label }}</div>
             </template>
           </AutoComplete>
           <small
@@ -651,10 +646,10 @@
             <CheckBox
               :id="each.key"
               name="pronouns"
-              :value="each.value"
+              :value="each.key"
               v-model="guest.pronouns"
             />
-            <label :for="each.key">{{ each.text }}</label>
+            <label :for="each.key">{{ each.label }}</label>
           </div>
           <div class="field-checkbox">
             <CheckBox
@@ -688,10 +683,10 @@
             <CheckBox
               :id="each.key"
               name="accessibility"
-              :value="each.value"
+              :value="each.key"
               v-model="guest.accessibility"
             />
-            <label :for="each.key">{{ each.text }}</label>
+            <label :for="each.key">{{ each.label }}</label>
           </div>
         </div>
         <label for="dietary">Dietary Requirements:</label>
@@ -705,10 +700,10 @@
             <CheckBox
               :id="each.key"
               name="dietary"
-              :value="each.value"
+              :value="each.key"
               v-model="guest.dietary"
             />
-            <label :for="each.key">{{ each.text }}</label>
+            <label :for="each.key">{{ each.label }}</label>
           </div>
         </div>
 
@@ -840,11 +835,10 @@ export default {
     const attendancetypesFilter = attendanceTypesData.map((each) => each.label);
 
     const accessibilityData = await settingsStore.get("accessibilityoptions");
-    const accessibilityFilter = accessibilityData.map((each) => each.value);
+    const accessibilityFilter = accessibilityData.map((each) => each.key);
 
     const pronounsData = await settingsStore.get("pronounsoptions");
-    console.log(pronounsData);
-    const pronounsFilter = pronounsData.map((each) => each.value);
+    const pronounsFilter = pronounsData.map((each) => each.key);
 
     const supportingfinalistData = await settingsStore.get(
       "supportingfinalistoptions"
@@ -856,12 +850,13 @@ export default {
     const dietaryData = await settingsStore.get("dietaryoptions");
     const dietaryFilter = dietaryData.map((each) => each.value);
 
-    const organizations = await settingsStore.get("organizations");
+    const organizations = ref(organizationsData || {});
+
     const attendancetypes = await settingsStore.get("attendancetypes");
     const supportingfinalist = await settingsStore.get(
       "supportingfinalistoptions"
     );
-    const accessibility = await settingsStore.get("accessibilityoptions");
+    const accessibility = await settingsStore.lookup("accessibilityoptions");
     const pronouns = await settingsStore.get("pronounsoptions");
     const hascustompronouns = ref(false);
     const dietary = await settingsStore.get("dietaryoptions");
@@ -883,7 +878,7 @@ export default {
         } else {
           filteredOrganizations.value = organizations.value.filter(
             (organization) => {
-              return organization.text
+              return organization.label
                 .toLowerCase()
                 .startsWith(event.query.toLowerCase());
             }

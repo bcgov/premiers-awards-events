@@ -104,10 +104,32 @@ export default {
       }
     };
 
+    /*
     const drop = (index) => {
       const currentItem = reactiveTables[draggedItem.value];
       reactiveTables.splice(draggedItem.value, 1);
       reactiveTables.splice(index, 0, currentItem);
+      updateTableIndex();
+      draggedItem.value = null;
+    };
+    */
+
+    /*
+      PA-165 Replaced the drop function to swap the table indices instead of using splice. 
+      So, when table at index 2 is dropped on table at index 4, table @ 2 becomes @ 4, and table @ 4 becomes @ 2
+    */
+    const drop = (index) => {
+      const source = reactiveTables[draggedItem.value],
+        target = reactiveTables[index];
+
+      //console.log(`${source.tableindex} -> ${target.tableindex}`);
+      //console.log(`${draggedItem.value} -> ${index}`);
+      target.tableindex = source.tableindex;
+      source.tableindex = index + 1;
+
+      reactiveTables[target.tableindex - 1] = target;
+      reactiveTables[source.tableindex - 1] = source;
+
       updateTableIndex();
       draggedItem.value = null;
     };

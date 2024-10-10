@@ -45,6 +45,9 @@ import TriStateCheckbox from "primevue/tristatecheckbox";
 import Calendar from "primevue/calendar";
 import AutoComplete from "primevue/autocomplete";
 
+import Toast from "primevue/toast";
+import ToastService from "primevue/toastservice";
+
 const app = createApp(App);
 
 app.use(createPinia());
@@ -52,6 +55,7 @@ app.use(router);
 app.use(PrimeVue, { ripple: true });
 app.use(ConfirmationService);
 app.use(DialogService);
+app.use(ToastService);
 
 //Component Initialization
 app.component("PrimeButton", Button);
@@ -86,6 +90,8 @@ app.component("PrimeDialog", Dialog);
 app.component("TriStateCheckbox", TriStateCheckbox);
 app.component("PrimeCalendar", Calendar);
 app.component("AutoComplete", AutoComplete);
+
+app.component("Toast", Toast);
 (async function () {
   const settings = useSettingsStore();
   await settings.getAll();

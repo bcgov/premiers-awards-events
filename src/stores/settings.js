@@ -35,6 +35,29 @@ export const useSettingsStore = defineStore({
   }),
   getters: {
     getErrors: (state) => state.error,
+    getIsSalesOpen: (state) => {
+      if (state.settings == undefined || state.settings.length == 0) {
+        return false;
+      }
+      const now = new Date();
+      if (
+        now >
+          new Date(
+            state.settings.find(
+              (item) => item.type === "globalSettings"
+            ).value.salesopen
+          ) &&
+        now <
+          new Date(
+            state.settings.find(
+              (item) => item.type === "globalSettings"
+            ).value.salesclose
+          )
+      ) {
+        return true;
+      }
+      return false;
+    },
   },
   actions: {
     // Reset selected item
@@ -113,6 +136,41 @@ export const useSettingsStore = defineStore({
               fullValue
           );
           return "NOT FOUND";
+        }
+      } catch (e) {
+        console.log(
+          "[ERROR] -  Settings.store.js: Cannot find lookup --- Caught error:",
+          e
+        );
+        return "NOT FOUND";
+      }
+    },
+    // Lookup organizations, and also return externals/custom orgs with includeExternal
+    lookupOrg(type, key, includeExternal = false) {
+      try {
+        if (this.settings == undefined || this.settings.length == 0) {
+          this.getAll();
+        }
+        if (key != undefined && this.settings.length > 0) {
+          const setting = this.settings.find((item) => item.type === type);
+          const jsonSetting = setting.value;
+          const keySetting = jsonSetting.find((item) => item.key === key);
+          if (keySetting)
+            return keySetting.label && keySetting.label.length > 0
+              ? keySetting.label
+              : jsonSetting;
+          else if (includeExternal) return key;
+          else return null;
+        } else {
+          console.log(
+            "[ERROR] -  Settings.store.js: Cannot find lookup for params: " +
+              type +
+              ", " +
+              key +
+              ", "
+          );
+          if (includeExternal) return key;
+          else return null;
         }
       } catch (e) {
         console.log(

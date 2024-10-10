@@ -457,7 +457,7 @@ export default {
     //Helper Functions
 
     const lookup = function (key, value) {
-      return settingsStore.lookup(key, value);
+      return settingsStore.lookupOrg(key, value);
     };
 
     const lookupLoop = function (key, data) {
