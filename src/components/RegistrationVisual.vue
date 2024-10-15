@@ -565,7 +565,7 @@ export default {
           .then(() => {
             message.value = false;
             tableDetailsDialog.value = false;
-            emit("addGuest");
+            //emit("addGuest");
           })
           .then(() => {
             loadLazyData();
