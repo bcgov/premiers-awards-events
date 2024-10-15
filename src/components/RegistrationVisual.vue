@@ -568,8 +568,8 @@ export default {
             emit("addGuest");
           })
           .then(() => {
-            //loadLazyData();
-            location.reload();
+            loadLazyData();
+            //location.reload();
           });
       }
     };
