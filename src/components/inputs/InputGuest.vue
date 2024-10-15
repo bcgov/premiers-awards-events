@@ -126,11 +126,11 @@
           >
             <CheckBox
               :id="each.key"
-              :name="each.value"
-              :value="each.value"
+              :name="each.label"
+              :value="each.key"
               v-model="guest.pronouns"
             />
-            <label :for="each.key">{{ each.text }}</label>
+            <label :for="each.key">{{ each.label }}</label>
           </div>
           <div>
             <CheckBox
@@ -183,11 +183,11 @@
           >
             <CheckBox
               :id="each.key"
-              :name="each.value"
-              :value="each.value"
+              :name="each.key"
+              :value="each.key"
               v-model="guest.accessibility"
             />
-            <label :for="each.key">{{ each.text }}</label>
+            <label :for="each.key">{{ each.label }}</label>
           </div>
         </div>
 
@@ -197,10 +197,10 @@
             <CheckBox
               :id="each.key"
               name="each"
-              :value="each.value"
+              :value="each.key"
               v-model="guest.dietary"
             />
-            <label :for="each.key">{{ each.text }}</label>
+            <label :for="each.key">{{ each.label }}</label>
           </div>
         </div>
       </div>
