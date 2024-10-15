@@ -216,8 +216,8 @@ const schemaData = {
       text: "Rodney Chapman - Legacy",
     },
     {
-      value: "BC Pharmacare Minor Ailments and Contraception Services",
-      text: "BC Pharmacare Minor Ailments and Contraception Services - Organizational Excellence",
+      value: "BC Pharmacare Minor Ailments and Contraception Service",
+      text: "BC Pharmacare Minor Ailments and Contraception Service - Organizational Excellence",
     },
     {
       value: "Natural Resource Ministry Permitting Transformation",
