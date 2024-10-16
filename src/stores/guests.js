@@ -72,6 +72,7 @@ export const useGuestsStore = defineStore({
         organization = "",
         accessibility = [],
         dietary = [],
+        notes = "",
       } = this.guest || {};
 
       await this.guests.push({
@@ -87,6 +88,7 @@ export const useGuestsStore = defineStore({
         organization,
         accessibility,
         dietary,
+        notes,
       });
     },
     async updateGuest(id, guestData) {

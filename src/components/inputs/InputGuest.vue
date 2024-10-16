@@ -154,9 +154,7 @@
         </div>
 
         <div class="dropdown">
-          <label for="supportingfinalist"
-            >Finalist guest is supporting:</label
-          >
+          <label for="supportingfinalist">Finalist guest is supporting:</label>
           <DropDown
             v-bind:class="{ 'p-invalid': v$.supportingfinalist.$error }"
             id="supportingfinalist"
@@ -203,6 +201,17 @@
             />
             <label :for="each.key">{{ each.text }}</label>
           </div>
+        </div>
+
+        <div class="field-text">
+          <label for="guest-notes">Notes:</label>
+          <InputText
+            id="guestnotes"
+            v-model.trim="guest.notes"
+            name="guestnotes"
+            title="Notes"
+            autofocus
+          />
         </div>
       </div>
       <div class="buttons">
@@ -324,6 +333,7 @@ export default {
             this.guest.pronouns = [];
             this.guest.hasexternalorganization = false;
             this.guest.supportingfinalist = "";
+            this.guest.notes = "";
             this.$forceUpdate;
             this.v$.$reset();
             loading.value = false;
@@ -358,6 +368,7 @@ export default {
       this.guest.hascustompronouns = false;
       this.guest.hasexternalorganization = false;
       this.guest.supportingfinalist = "";
+      this.guest.notes = "";
     };
     return {
       loading,
