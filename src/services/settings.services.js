@@ -451,6 +451,16 @@ export default {
    * **/
 
   get: function get(key) {
+    if (key == "organizations") {
+      const orgs = schemaData[key];
+      return orgs.sort((a, b) => {
+        const aValue = JSON.stringify(Object.values(a).sort());
+        const bValue = JSON.stringify(Object.values(b).sort());
+        if (aValue < bValue) return -1;
+        if (aValue > bValue) return 1;
+        return 0;
+      });
+    }
     return schemaData[key] !== "undefined" ? schemaData[key] : null;
   },
 
