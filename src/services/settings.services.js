@@ -108,7 +108,7 @@ const schemaData = {
     },
     {
       value: "org-19",
-      text: "Social Development & Poverty Reduction",
+      text: "Social Development and Poverty Reduction",
     },
     { value: "org-20", text: "Tourism, Arts, Culture and Sport" },
     { value: "org-21", text: "Transportation & Infrastructure" },
