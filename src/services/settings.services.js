@@ -120,6 +120,8 @@ const schemaData = {
     { value: "org-24", text: "Office of the Premier" },
     { value: "org-25", text: "Water, Land and Resource Stewardship" },
     { value: "org-26", text: "Housing" },
+    { value: "org-27", text: "Crown Agencies Secretariat" },
+    { value: "org-28", text: "Environmental Assessment Office" }
   ],
   attendancetypes: [
     { value: "minister", text: "Minister" },
