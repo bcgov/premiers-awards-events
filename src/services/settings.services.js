@@ -121,7 +121,8 @@ const schemaData = {
     { value: "org-25", text: "Water, Land and Resource Stewardship" },
     { value: "org-26", text: "Housing" },
     { value: "org-27", text: "Crown Agencies Secretariat" },
-    { value: "org-28", text: "Environmental Assessment Office" }
+    { value: "org-28", text: "Environmental Assessment Office" },
+    { value: "org-29", text: "Declaration Act Secretariat" }
   ],
   attendancetypes: [
     { value: "minister", text: "Minister" },
