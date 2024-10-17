@@ -108,7 +108,7 @@ const schemaData = {
     },
     {
       value: "org-19",
-      text: "Social Development & Poverty Reduction",
+      text: "Social Development and Poverty Reduction",
     },
     { value: "org-20", text: "Tourism, Arts, Culture and Sport" },
     { value: "org-21", text: "Transportation & Infrastructure" },
@@ -120,6 +120,9 @@ const schemaData = {
     { value: "org-24", text: "Office of the Premier" },
     { value: "org-25", text: "Water, Land and Resource Stewardship" },
     { value: "org-26", text: "Housing" },
+    { value: "org-27", text: "Crown Agencies Secretariat" },
+    { value: "org-28", text: "Environmental Assessment Office" },
+    { value: "org-29", text: "Declaration Act Secretariat" }
   ],
   attendancetypes: [
     { value: "minister", text: "Minister" },
