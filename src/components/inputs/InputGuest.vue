@@ -263,10 +263,11 @@ export default {
     const trimmedAttendancetypes = attendancetypes.value.map((opt) => ({
       ...opt,
       disabled:
-        opt.value !== "judge" &&
-        opt.value !== "adjudicator" &&
-        opt.value !== "volunteer" &&
-        opt.value !== "guest"
+        !props.isAdmin ||
+        (opt.value !== "judge" &&
+          opt.value !== "adjudicator" &&
+          opt.value !== "volunteer" &&
+          opt.value !== "guest")
           ? false
           : true,
     }));
