@@ -136,8 +136,8 @@ const schemaData = {
     { value: "volunteer", text: "Volunteer" },
     { value: "guest", text: "Guest" },
     { value: "presenter", text: "Presenter" },
-    { value: "judge", text: "Premiere's Awards Judge" },
-    { value: "adjudicator", text: "Premiere's Awards Adjudicator" },
+    { value: "judge", text: "Premier's Awards Judge" }, // PA-184 Fixed spelling mistakes
+    { value: "adjudicator", text: "Premier's Awards Adjudicator" },
   ],
   dietaryoptions: [
     { value: "dairyfree", text: "Dairy-Free" },
