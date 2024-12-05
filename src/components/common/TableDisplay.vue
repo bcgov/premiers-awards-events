@@ -2,26 +2,41 @@
 <template>
   <div class="table-display px-5" :style="{ '--custom-grid': gridwidth }">
     <div
-      :class="`${draggable ? 'wiggle' : ''} ${draggedItem === index ? 'dragging' : ''} ${dragOverIndex === index ? 'dragover' : ''} table-details`"
-      v-for="(table, index) in sortedTables" :key="table._id" @dragstart="draggable ? dragStart(index) : null"
-      @dragover.prevent @drop="draggable ? drop(index) : null" @dragend="dragEnd" @dragenter="dragOver(index)"
-      :draggable="draggable">
+      :class="`${draggable ? 'wiggle' : ''} ${
+        draggedItem === index ? 'dragging' : ''
+      } ${dragOverIndex === index ? 'dragover' : ''} table-details`"
+      v-for="(table, index) in sortedTables"
+      :key="table._id"
+      @dragstart="draggable ? dragStart(index) : null"
+      @dragover.prevent
+      @drop="draggable ? drop(index) : null"
+      @dragend="dragEnd"
+      @dragenter="dragOver(index)"
+      :draggable="draggable"
+    >
       <TableIcon :table="table" />
-      <div class="table-name" v-tooltip.top.hover="`${table.registrationOrganizations
-        ? table.registrationOrganizations
-        : ''
-        }`
-        ">
+      <div
+        class="table-name"
+        v-tooltip.top.hover="
+          `${
+            table.registrationOrganizations
+              ? table.registrationOrganizations
+              : ''
+          }`
+        "
+      >
         <router-link :to="`/admin/table/${table.guid}`">{{
           table.tablename
-          }}</router-link>
+        }}</router-link>
       </div>
       <div class="table-seats-taken">
         {{ table.guests.length }} / {{ table.tablecapacity }} Guests
       </div>
       <div class="table-free-seats">
-        {{ table.tablecapacity - table.guests.length }} Seat{{ table.tablecapacity - table.guests.length === 1 ? '' :
-          's' }} Free
+        {{ table.tablecapacity - table.guests.length }} Seat{{
+          table.tablecapacity - table.guests.length === 1 ? "" : "s"
+        }}
+        Free
       </div>
     </div>
   </div>
@@ -53,7 +68,7 @@ export default {
     const updateTableIndex = () => {
       // Check if the URL contains the tables page
 
-      const tableSeating = currentUrl.includes('/admin/tables/event/planning');
+      const tableSeating = currentUrl.includes("/admin/tables/event/planning");
       if (tableSeating) {
         reactiveTables.forEach((item, index) => {
           reactiveTables[index] = { ...item, tableindex: ref(index + 1) }; // Updating reactive index key-value pair
@@ -61,8 +76,11 @@ export default {
 
         reactiveTables.forEach((data) => {
           const newTableIndex = data.tableindex;
-          tableStore.updateTable(data._id, { ...data, tableindex: newTableIndex })
-        })
+          tableStore.updateTable(data._id, {
+            ...data,
+            tableindex: newTableIndex,
+          });
+        });
       }
     };
 
@@ -73,18 +91,18 @@ export default {
 
     const dragStart = (index) => {
       draggedItem.value = index;
-    }
+    };
 
     const dragEnd = () => {
       draggedItem.value = null;
       dragOverIndex.value = null;
-    }
+    };
 
     const dragOver = (index) => {
       if (draggedItem.value !== null && draggedItem.value !== index) {
         dragOverIndex.value = index;
       }
-    }
+    };
 
     /*
     const drop = (index) => {
@@ -93,7 +111,7 @@ export default {
       reactiveTables.splice(index, 0, currentItem);
       updateTableIndex();
       draggedItem.value = null;
-    }
+    };
     */
 
     /*
@@ -101,10 +119,9 @@ export default {
       So, when table at index 2 is dropped on table at index 4, table @ 2 becomes @ 4, and table @ 4 becomes @ 2
     */
     const drop = (index) => {
-      
       const source = reactiveTables[draggedItem.value],
         target = reactiveTables[index];
-    
+
       //console.log(`${source.tableindex} -> ${target.tableindex}`);
       //console.log(`${draggedItem.value} -> ${index}`);
       target.tableindex = source.tableindex;
@@ -115,7 +132,7 @@ export default {
 
       updateTableIndex();
       draggedItem.value = null;
-    }
+    };
 
     const sortedTables = computed(() => {
       return [...reactiveTables].sort((a, b) => a.tableindex - b.tableindex);
@@ -129,9 +146,9 @@ export default {
       dragOver,
       drop,
       sortedTables,
-      reactiveTables
-    }
-  }
+      reactiveTables,
+    };
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -152,7 +169,9 @@ export default {
 
   /* Add a class to show the cursor where the item would drop */
   .table-details.dragover {
-    border: 2px dashed black;
+    border-right: 5px dashed black;
+    border-radius: 0px;
+    border-spacing: 3px;
   }
 
   @keyframes wiggle {

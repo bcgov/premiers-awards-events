@@ -90,10 +90,14 @@
               class="registration-link"
               >{{ data.registration._id }}</router-link
             >
-            <br/>
+            <br />
             Registrar: {{ data.registration.registrar }}
-            <br/>
-            {{ data.registration.submitted ? 'Registration Submitted' : "Pending Registration Submission" }}
+            <br />
+            {{
+              data.registration.submitted
+                ? "Registration Submitted"
+                : "Pending Registration Submission"
+            }}
           </template></PrimeColumn
         >
 
@@ -115,22 +119,23 @@
 </template>
 
 <script>
-import formServices from "../../services/settings.services";
 import apiRoutes from "../../services/api-routes.services";
 import { ref, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useGuestsStore } from "../../stores/guests";
 import { useTablesStore } from "../../stores/tables";
+import { useSettingsStore } from "../../stores/settings";
 
 export default {
   props: {
     tableID: String,
   },
   setup(props) {
+    const settingsStore = useSettingsStore();
     const guestStore = useGuestsStore();
     const guests = ref();
-    const columns = ref(formServices.get("guestSelection") || []);
-    const organizations = ref(formServices.get("organizations") || []);
+    const columns = ref(settingsStore.lookup("guestSelection") || []);
+    const organizations = ref(settingsStore.lookup("organizations") || []);
 
     const dt = ref();
     const loading = ref(false);
@@ -170,12 +175,12 @@ export default {
 
     //Sorting Filters for DataList
 
-    const filters = ref(formServices.get("guestFilters") || {});
+    const filters = ref(settingsStore.lookup("guestFilters") || {});
 
     //Helper Functions
 
     const lookup = function (key, value) {
-      return formServices.lookup(key, value);
+      return settingsStore.lookup(key, value);
     };
 
     //PrimeDialog controls

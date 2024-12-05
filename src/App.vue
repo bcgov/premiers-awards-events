@@ -1,20 +1,17 @@
 <script>
 import { ref } from "vue";
 import { useAuthUserStore } from "./stores/users";
-import { useSettingsStore } from "./stores/settings";
 import router from "./router";
-import logoSrc from './assets/BCID_H_rgb_pos.png';
+import logoSrc from "./assets/BCID_H_rgb_pos.png";
 
 export default {
   setup() {
     const userStore = useAuthUserStore();
-    const settingsStore = useSettingsStore();
     const user = userStore.getUser || null;
     const username = user.username;
     const menu = ref();
     const devMode = import.meta.env.DEV;
 
-    settingsStore.fillSettings();
     userStore.login();
 
     const nodeENV = process.env.NODE_ENV;
@@ -22,17 +19,18 @@ export default {
     // Check if the URL contains the dev site url
     const currentUrl = window.location.href;
     const isDevSite =
-      currentUrl.includes('https://pa-test-4015f5-test.apps.silver.devops.gov.bc.ca/events/') ||
-      currentUrl.includes("localhost");
+      currentUrl.includes(
+        "https://pa-test-4015f5-test.apps.silver.devops.gov.bc.ca/events/"
+      ) || currentUrl.includes("localhost");
 
     const siteNav = ref([
       {
         icon: "pi pi-home",
         label: "Premier's Awards: Event Registration",
         command: () => {
-          router.push('/');
+          router.push("/");
         },
-        class: "page-title"
+        class: "page-title",
       },
       {
         icon: "pi pi-external-link",
@@ -44,20 +42,21 @@ export default {
         icon: "pi pi-ticket",
         label: "My Registration",
         command: () => {
-          router.push('/create/registration/');
+          router.push("/create/registration/");
         },
         visible: () => userStore.isRegistrar,
         class: "dropdown-account-item",
       },
       {
-        label: () => userStore.isAdmin ? "Event Administration" : "Ministry Registrations",
+        label: () =>
+          userStore.isAdmin ? "Event Administration" : "Ministry Registrations",
         class: "dropdown-calendar",
         icon: "pi pi-calendar",
         items: [
           {
             label: "View Registrations",
             command: () => {
-              router.push('/admin/');
+              router.push("/admin/");
             },
             visible: () => userStore.isAdmin,
             class: "dropdown-account-item",
@@ -65,7 +64,7 @@ export default {
           {
             label: "View My Ministry Registrations",
             command: () => {
-              router.push('/ministry-admin/');
+              router.push("/ministry-admin/");
             },
             visible: () => !userStore.isAdmin,
             class: "dropdown-account-item",
@@ -73,7 +72,7 @@ export default {
           {
             label: "View Guests",
             command: () => {
-              router.push('/admin/guests');
+              router.push("/admin/guests");
             },
             visible: () => userStore.isAdmin,
             class: "dropdown-account-item",
@@ -81,7 +80,7 @@ export default {
           {
             label: "View Tables",
             command: () => {
-              router.push('/admin/tables');
+              router.push("/admin/tables");
             },
             visible: () => userStore.isAdmin,
             class: "dropdown-account-item",
@@ -89,7 +88,7 @@ export default {
           {
             label: "Event Planner",
             command: () => {
-              router.push('/admin/tables/event/planning');
+              router.push("/admin/tables/event/planning");
             },
             visible: () => userStore.isAdmin,
             class: "dropdown-account-item",
@@ -97,7 +96,7 @@ export default {
           {
             label: "Event Settings",
             command: () => {
-              router.push('/admin/settings');
+              router.push("/admin/settings");
             },
             visible: () => userStore.isAdmin,
             class: "dropdown-account-item",
@@ -112,7 +111,7 @@ export default {
           {
             label: "Create Account",
             command: () => {
-              router.push('/register/');
+              router.push("/register/");
             },
             visible: () => !userStore.isAuthenticated || !userStore.isRegistrar,
             class: "dropdown-account-item",
@@ -120,7 +119,7 @@ export default {
           {
             label: "View Profile",
             command: () => {
-              router.push('/user/update/');
+              router.push("/user/update/");
             },
             visible: () => userStore.isRegistrar,
             class: "dropdown-account-item",
@@ -129,7 +128,7 @@ export default {
             label: "Manage Users Local",
             //url: "https://premiersawards.gww.gov.bc.ca/app/users",
             command: () => {
-              router.push('/admin/user/list');
+              router.push("/admin/user/list");
             },
             visible: () => userStore.isAdmin && devMode,
             class: "dropdown-account-item",
@@ -150,20 +149,27 @@ export default {
 </script>
 
 <template>
-
   <Toast position="bottom-right" />
   <Menubar class="navbar-fixed flex align-items-center gap-2" :model="siteNav">
     <template #start>
       <div id="titlenav">
-        <img alt="Government of British Columbia" :src="logoSrc" height="60" class="mr-2">
+        <img
+          alt="Government of British Columbia"
+          :src="logoSrc"
+          height="60"
+          class="mr-2"
+        />
       </div>
     </template>
   </Menubar>
+  <Suspense>
+    <RouterView />
+  </Suspense>
 
-
-  <RouterView />
-  <div v-if="nodeENV === 'development' || isDevSite"
-    className="testing-banner w-screen bg-orange-500 fixed top-0 m-0 text-center">
+  <div
+    v-if="nodeENV === 'development' || isDevSite"
+    className="testing-banner w-screen bg-orange-500 fixed top-0 m-0 text-center"
+  >
     Test Environment
   </div>
 </template>
@@ -185,11 +191,10 @@ main {
 }
 
 .p-menubar {
-  background-color: #DDD !important;
+  background-color: #ddd !important;
 }
 
 .navbar-fixed {
-
   position: sticky;
   top: 0;
   z-index: 1100 !important;
@@ -220,7 +225,7 @@ main {
 .dropdown-account {
   position: relative !important;
   z-index: 1200 !important;
-  background-color: #3F51B5;
+  background-color: #3f51b5;
   border-radius: 4px;
 
   .p-menuitem-icon {
