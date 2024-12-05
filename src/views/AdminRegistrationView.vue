@@ -4,12 +4,13 @@ import { useFinancialStore } from "../stores/financial";
 import { ref } from "vue";
 import PageHeader from "../components/common/PageHeader.vue";
 import RegistrationList from "../components/RegistrationList.vue";
-import formServices from "../services/settings.services";
+import { useSettingsStore } from "../stores/settings";
 import NavMenu from "../components/common/NavMenu.vue";
 const userStore = useAuthUserStore();
 const financialStore = useFinancialStore();
+const settingsStore = useSettingsStore();
 
-const navItems = ref(formServices.get("navItems") || []);
+const navItems = ref(settingsStore.get("navItems") || []);
 
 const tableInfoDialog = ref(false);
 const tableCountAll = () => {
@@ -47,6 +48,6 @@ userStore.login();
       {{ tableCountAll() }}
     </PrimeDialog>
     <NavMenu :title="''" :menuitems="navItems" />
-    <RegistrationList :adminView="true" :ministryView="false"/>
+    <RegistrationList :adminView="true" :ministryView="false" />
   </main>
 </template>
