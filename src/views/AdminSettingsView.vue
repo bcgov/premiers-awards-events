@@ -31,12 +31,8 @@ const dateRules = {
   salesopen: { required },
   salesclose: { required },
 };
-console.log(settings);
 
-const v$ = useVuelidate(
-  dateRules,
-  settingsStore.lookup("globalSettings", undefined, true)
-);
+const v$ = useVuelidate(dateRules, settings);
 
 const toggleMessage = () => {
   activeMessage.value = false;
@@ -54,10 +50,7 @@ const updateEventDates = async function (event) {
       type: "info",
       spinner: true,
     });
-    settingsStore.selected.value.year = year.value;
-    settingsStore.selected.value.salesopen = salesopen.value;
-    settingsStore.selected.value.salesclose = salesclose.value;
-    settingsStore.update().then(() => {
+    settingsStore.updateSettings(settings).then(() => {
       messageStore.setMessage({
         text: "Successfully Updated Dates!",
         type: "success",
@@ -180,22 +173,11 @@ const fillConfirmation = () => {
 const resetDatabaseConfirmation = () => {
   databaseResetDialog.value = true;
 };
-const selected = ref(settingsStore.selected);
-const year = ref();
-const salesopen = ref();
-const salesclose = ref();
 
 userStore.login();
-settingsStore.getAll().then(() => {
-  const globalSettings = settingsStore.lookup(
-    "globalSettings",
-    undefined,
-    true
-  );
-  settingsStore.select("globalSettings");
-  year.value = globalSettings.year;
-  salesopen.value = new Date(globalSettings.salesopen);
-  salesclose.value = new Date(globalSettings.salesclose);
+settingsStore.fillSettings().then(() => {
+  settings.value.salesopen = new Date(settings.value.salesopen);
+  settings.value.salesclose = new Date(settings.value.salesclose);
 });
 </script>
 
@@ -272,7 +254,7 @@ settingsStore.getAll().then(() => {
                 :max="2100"
                 :allowEmpty="false"
                 aria-describedby="event-year-help"
-                v-model="year"
+                v-model="settings.year"
                 placeholder="Current Event Year"
               />
               <small v-if="v$.year.$error" class="p-error" id="event-year-help"
@@ -283,7 +265,7 @@ settingsStore.getAll().then(() => {
               <label for="salesopen">Sales Open Date:</label>
               <PrimeCalendar
                 id="salesopen"
-                v-model="salesopen"
+                v-model="settings.salesopen"
                 dateFormat="mm/dd/yy"
                 placeholder="mm/dd/yyyy"
                 :showTime="true"
@@ -303,7 +285,7 @@ settingsStore.getAll().then(() => {
               <label for="salesclose">Sales Close Date:</label>
               <PrimeCalendar
                 id="salesclose"
-                v-model="salesclose"
+                v-model="settings.salesclose"
                 dateFormat="mm/dd/yy"
                 placeholder="mm/dd/yyyy"
                 :showTime="true"

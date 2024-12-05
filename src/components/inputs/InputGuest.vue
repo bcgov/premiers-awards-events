@@ -24,13 +24,12 @@
             :suggestions="filteredOrganizations"
             @complete="searchOrganization($event)"
             placeholder="Select an organization or enter manually"
-            optionLabel="label"
-            optionValue="key"
-            field="label"
+            optionLabel="text"
+            field="text"
             :disabled="guest.hasexternalorganization"
           >
             <template #option="slotProps">
-              <div>{{ slotProps.option.label }}</div>
+              <div>{{ slotProps.option.text }}</div>
             </template></AutoComplete
           >
           <small
@@ -103,8 +102,8 @@
             id="attendancetype"
             v-model="guest.attendancetype"
             :options="attendancetypes"
-            optionLabel="label"
-            optionValue="key"
+            optionLabel="text"
+            optionValue="value"
             optionDisabled="disabled"
             placeholder="Select the type of attendance for this guest"
           />
@@ -126,11 +125,11 @@
           >
             <CheckBox
               :id="each.key"
-              :name="each.label"
-              :value="each.key"
+              :name="each.value"
+              :value="each.value"
               v-model="guest.pronouns"
             />
-            <label :for="each.key">{{ each.label }}</label>
+            <label :for="each.key">{{ each.text }}</label>
           </div>
           <div>
             <CheckBox
@@ -183,11 +182,11 @@
           >
             <CheckBox
               :id="each.key"
-              :name="each.key"
-              :value="each.key"
+              :name="each.value"
+              :value="each.value"
               v-model="guest.accessibility"
             />
-            <label :for="each.key">{{ each.label }}</label>
+            <label :for="each.key">{{ each.text }}</label>
           </div>
         </div>
 
@@ -197,10 +196,10 @@
             <CheckBox
               :id="each.key"
               name="each"
-              :value="each.key"
+              :value="each.value"
               v-model="guest.dietary"
             />
-            <label :for="each.key">{{ each.label }}</label>
+            <label :for="each.key">{{ each.text }}</label>
           </div>
         </div>
 
@@ -231,7 +230,7 @@
 </template>
 
 <script>
-import { useSettingsStore } from "@/stores/settings";
+import formServices from "@/services/settings.services";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import { ref } from "vue";
@@ -244,7 +243,6 @@ export default {
     registrationID: String,
   },
   setup(props) {
-    const settingsStore = useSettingsStore();
     const guestData = useGuestsStore();
     const registrationData = useFinancialStore();
     const { guest } = storeToRefs(useGuestsStore());
@@ -259,9 +257,9 @@ export default {
     const custompronouns = ref("");
     const hasexternalorganization = ref(false);
     const v$ = useVuelidate(rules, guest);
-    const organizations = ref(settingsStore.lookup("organizations") || []);
+    const organizations = ref(formServices.get("organizations") || []);
     const filteredOrganizations = ref();
-    const attendancetypes = ref(settingsStore.lookup("attendancetypes") || []);
+    const attendancetypes = ref(formServices.get("attendancetypes") || []);
     const trimmedAttendancetypes = attendancetypes.value.map((opt) => ({
       ...opt,
       disabled:
@@ -276,14 +274,12 @@ export default {
 
     attendancetypes.value = trimmedAttendancetypes;
 
-    const accessibility = ref(
-      settingsStore.lookup("accessibilityoptions") || []
-    );
+    const accessibility = ref(formServices.get("accessibilityoptions") || []);
     const supportingfinalist = ref(
-      settingsStore.lookup("supportingfinalistoptions") || []
+      formServices.get("supportingfinalistoptions") || []
     );
-    const pronouns = ref(settingsStore.lookup("pronounsoptions") || []);
-    const dietary = ref(settingsStore.lookup("dietaryoptions") || []);
+    const pronouns = ref(formServices.get("pronounsoptions") || []);
+    const dietary = ref(formServices.get("dietaryoptions") || []);
 
     if (props.registrationID) {
       registrationData.fill(props.registrationID);
@@ -297,7 +293,7 @@ export default {
         } else {
           filteredOrganizations.value = organizations.value.filter(
             (organization) => {
-              return organization.label
+              return organization.text
                 .toLowerCase()
                 .startsWith(event.query.toLowerCase());
             }

@@ -1,25 +1,20 @@
 <script setup>
 import { useAuthUserStore } from "../stores/users";
 import { useGuestsStore } from "../stores/guests";
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import PageHeader from "../components/common/PageHeader.vue";
 import GuestList from "../components/GuestList.vue";
-import { useSettingsStore } from "../stores/settings";
+import formServices from "../services/settings.services";
 import NavMenu from "../components/common/NavMenu.vue";
 const userStore = useAuthUserStore();
 const guestStore = useGuestsStore();
-const settingsStore = useSettingsStore();
 
-const navItems = ref([]);
+const navItems = ref(formServices.get("navItems") || []);
 
 const guestInfoDialog = ref(false);
 const guestCountAll = () => {
   return String(guestStore.getGuestsCount);
 };
-onMounted(async () => {
-  const getNavItems = await settingsStore.get("navItems");
-  navItems.value = getNavItems;
-});
 
 //PrimeDialog controls
 
@@ -51,11 +46,7 @@ userStore.login();
       >Current guest count across all registrations:
       {{ guestCountAll() }}
     </PrimeDialog>
-    <div v-if="navItems">
-      <NavMenu :title="''" :menuitems="navItems" />
-    </div>
-    <Suspense>
-      <GuestList :adminView="true" />
-    </Suspense>
+    <NavMenu :title="''" :menuitems="navItems" />
+    <GuestList :adminView="true" />
   </main>
 </template>

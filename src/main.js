@@ -5,8 +5,6 @@ import App from "./App.vue";
 import router from "./router";
 import PrimeVue from "primevue/config";
 
-import { useSettingsStore } from "./stores/settings";
-
 //Common component imports
 import Button from "primevue/button";
 import Card from "primevue/card";
@@ -57,6 +55,7 @@ app.use(ConfirmationService);
 app.use(DialogService);
 app.use(ToastService);
 
+
 //Component Initialization
 app.component("PrimeButton", Button);
 app.component("PrimeCard", Card);
@@ -92,9 +91,5 @@ app.component("PrimeCalendar", Calendar);
 app.component("AutoComplete", AutoComplete);
 
 app.component("Toast", Toast);
-(async function () {
-  const settings = useSettingsStore();
-  await settings.getAll();
-  app.use(router);
-  app.mount("#app");
-})();
+
+app.mount("#app");

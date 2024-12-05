@@ -2,23 +2,21 @@
 import { useAuthUserStore } from "../stores/users";
 import { useTablesStore } from "../stores/tables";
 import { useMessageStore } from "../stores/messages";
-import { useSettingsStore } from "../stores/settings";
 import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import PageHeader from "../components/common/PageHeader.vue";
 import NavMenu from "../components/common/NavMenu.vue";
 import TableList from "../components/TableList.vue";
+import formServices from "../services/settings.services";
 import InputTable from "../components/inputs/InputTable.vue";
 
 const userStore = useAuthUserStore();
 const tableStore = useTablesStore();
-const settingsStore = useSettingsStore();
 
 const { message } = storeToRefs(useMessageStore());
 const activeMessage = ref(false);
 
-const getNavItems = await settingsStore.get("navItems");
-const navItems = ref(getNavItems || []);
+const navItems = ref(formServices.get("navItems") || []);
 
 const tableCountAll = () => {
   return String(tableStore.getTablesCount);
@@ -98,12 +96,8 @@ userStore.login();
       >Current approximate table count across all registrations:
       {{ tableCountAll() }}
     </PrimeDialog>
-    <div v-if="navItems">
-      <NavMenu :title="''" :menuitems="navItems" />
-    </div>
-    <Suspense>
-      <TableList :data="tables" :key="keyCount" />
-    </Suspense>
+    <NavMenu :title="''" :menuitems="navItems" />
+    <TableList :data="tables" :key="keyCount" />
   </main>
 </template>
 <style lang="scss" scoped>

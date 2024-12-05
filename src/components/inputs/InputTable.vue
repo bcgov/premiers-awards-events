@@ -26,8 +26,8 @@
           id="tabletype"
           v-model="table.tabletype"
           :options="tabletypes"
-          optionLabel="label"
-          optionValue="key"
+          optionLabel="text"
+          optionValue="value"
           placeholder="Select the type of table."
         />
         <small v-if="v$.tabletype.$error" class="p-error" id="tabletype-help"
@@ -66,7 +66,7 @@
 
 <script>
 import { ref } from "vue";
-import { useSettingsStore } from "../../stores/settings";
+import formServices from "@/services/settings.services";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import { storeToRefs } from "pinia";
@@ -80,10 +80,9 @@ export default {
     detailsView: Boolean,
   },
   setup(props) {
-    const settingsStore = useSettingsStore();
     const userStore = useAuthUserStore();
     const tableStore = useTablesStore();
-    const tabletypes = ref(settingsStore.lookup("tabletypes") || []);
+    const tabletypes = ref(formServices.get("tabletypes") || []);
     const { table } = storeToRefs(useTablesStore());
 
     //Vuelidate Form Rules

@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
 import apiRoutes from "../services/api-routes.services";
 
 export const useFinancialStore = defineStore({
@@ -23,7 +22,6 @@ export const useFinancialStore = defineStore({
         guests: [],
         submitted: false,
       },
-      loading: false,
       registrations: [],
     };
   },
@@ -119,19 +117,16 @@ export const useFinancialStore = defineStore({
       this.registration = registrationData.data[0];
       return registrationData.data[0];
     },
+
     async fillID(id) {
       const registrationData = await apiRoutes.getRegistrationByID(id);
       this.registration = registrationData.data[0];
       this.registrations = [registrationData.data[0]];
       return registrationData.data[0];
     },
+
     async fillAllRegistrations() {
-      // PA-84 Added this flag to try and keep registrations populated when this function is called twice 
-      if ( this.loading ) return Promise.resolve();
-      this.loading = true;
-      const registrations = (await apiRoutes.getAllRegistrations()).data;
-      this.registrations = registrations;
-      this.loading = false;
+      this.registrations = await (await apiRoutes.getAllRegistrations()).data;
     },
 
     async deleteRegistration(id) {

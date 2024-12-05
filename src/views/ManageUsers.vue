@@ -128,9 +128,8 @@
 
         <PrimeColumn field="role" header="Role" key="role">
           <template #body="{ data }">
-            <div v-for="role in data.roles">{{ lookup("roles", role) }}</div>
-          </template>
-          <template #filter="{ filterModel }">
+            {{ lookup("roles", data.role) }} </template
+          ><template #filter="{ filterModel }">
             <DropDown
               v-model="filterModel.value"
               :options="rolesFilter"
@@ -252,8 +251,8 @@
             id="organization"
             v-model="user.role"
             :options="dropdownRoles"
-            optionLabel="label"
-            optionValue="key"
+            optionLabel="text"
+            optionValue="value"
             placeholder="Select a Role"
           />
           <DropDown
@@ -261,8 +260,8 @@
             id="organization"
             v-model="user.role"
             :options="adminRoles"
-            optionLabel="label"
-            optionValue="key"
+            optionLabel="text"
+            optionValue="value"
             placeholder="Select a Role"
           />
         </div>
@@ -321,7 +320,7 @@
 </template>
 
 <script>
-import { useSettingsStore } from "../stores/settings";
+import formServices from "../services/settings.services";
 import { useAuthUserStore } from "../stores/users";
 import { ref } from "vue";
 import { storeToRefs } from "pinia";
@@ -330,21 +329,20 @@ import PageHeader from "../components/common/PageHeader.vue";
 export default {
   setup() {
     const userStore = useAuthUserStore();
-    const settings = useSettingsStore();
     const { users } = storeToRefs(useAuthUserStore());
     const isAdmin = userStore.isAdmin;
     const isSuperAdmin = userStore.isSuperAdmin;
     const dt = ref();
-    const roles = ref(settings.lookup("roles") || []);
+    const roles = ref(formServices.get("roles") || []);
     const rolesFilter = ref(
-      (settings.lookup("roles") || []).map((each) => each.value)
+      (formServices.get("roles") || []).map((each) => each.value)
     );
-    const dropdownRoles = settings
-      .lookup("roles")
-      .filter((item) => item.key !== "nominator");
-    const adminRoles = (settings.lookup("roles") || [])
-      .filter((item) => item.key !== "super-administrator")
-      .filter((item) => item.key !== "nominator");
+    const dropdownRoles = (formServices.get("roles") || []).filter(
+      (item) => item.value !== "nominator"
+    );
+    const adminRoles = (formServices.get("roles") || [])
+      .filter((item) => item.value !== "super-administrator")
+      .filter((item) => item.value !== "nominator");
 
     const selfAssignment = (guid) => {
       const user = userStore.getUser;
@@ -369,7 +367,7 @@ export default {
       }
     };
     const lookup = function (key, value) {
-      return settings.lookup(key, value);
+      return formServices.lookup(key, value);
     };
     const formatDate = (value) => {
       const date = new Date(value);
@@ -389,12 +387,12 @@ export default {
     };
 
     //User Filters
-    const filters = ref(settings.lookup("userFilters") || {});
+    const filters = ref(formServices.get("userFilters") || {});
     const clearFilters = () => {
       initFilters();
     };
     const initFilters = () => {
-      filters.value = settings.lookup("userFilters") || {};
+      filters.value = formServices.get("userFilters") || {};
     };
 
     const exportCSV = () => {

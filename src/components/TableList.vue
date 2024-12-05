@@ -49,16 +49,14 @@
               class="p-button-outlined"
               @click="clearFilters()"
             />
-            <span class="p-input-icon-left">
+             <span class="p-input-icon-left">
               <FloatLabel>
-                <InputText
-                  id="keyword-search-tables"
-                  v-model="filters['global'].value"
-                />
-                <label for="keyword-search-tables"
-                  ><i class="pi pi-search" />{{ "  " }}Keyword Search</label
-                >
-              </FloatLabel>
+              <InputText
+              id="keyword-search-tables"
+                v-model="filters['global'].value"
+              />
+              <label for="keyword-search-tables"><i class="pi pi-search" />{{"  "}}Keyword Search</label>
+            </FloatLabel>
             </span>
           </div>
         </template>
@@ -207,19 +205,15 @@
           filterField="orgList"
         >
           <template #body="{ data }">
-            {{
-              data.organizations
-                ? [
-                    ...new Set(
-                      data.organizations.map(
-                        (each) =>
-                          (each = lookup("organizations", each.organization))
-                      )
-                    ),
-                  ]
-                    .filter(Boolean)
-                    .join("\r\n")
-                : null
+            {{ data.organizations ? 
+              [
+                ...new Set(
+                  data.organizations.map(
+                    (each) =>
+                      (each = lookup("organizations", each.organization))
+                  )
+                ),
+              ].filter(Boolean).join("\r\n") : null
             }}
           </template>
           <template #filter="{ filterModel }">
@@ -288,30 +282,30 @@
         <PrimeColumn :exportable="false" style="min-width: 8rem">
           <template #body="slotProps">
             <div class="p-buttonset">
-              <PrimeButton
-                label=""
-                v-tooltip.top="'Edit'"
-                icon="pi pi-pencil"
-                class="p-button-rounded p-button-success m-0 p-0 edit-button"
-                @click="editTable(slotProps.data)"
-              />
-              <ConfirmDialog></ConfirmDialog>
-              <PrimeButton
-                v-if="detailsView"
-                label=""
-                v-tooltip.top="'Reset Table'"
-                icon="pi pi-replay"
-                class="p-button-rounded p-button-warning m-0 p-0 reset-button"
-                @click="resetTable(slotProps.data)"
-              />
-              <PrimeButton
-                icon="pi pi-trash"
-                label=""
-                v-tooltip.top="'Delete Table'"
-                class="p-button-rounded p-button-danger m-0 p-0 delete-button"
-                @click="confirmDeleteTable(slotProps.data)"
-              />
-            </div>
+            <PrimeButton
+              label=""
+              v-tooltip.top="'Edit'"
+              icon="pi pi-pencil"
+              class="p-button-rounded p-button-success m-0 p-0 edit-button"
+              @click="editTable(slotProps.data)"
+            />
+            <ConfirmDialog></ConfirmDialog>
+            <PrimeButton
+              v-if="detailsView"
+              label=""
+              v-tooltip.top="'Reset Table'"
+              icon="pi pi-replay"
+              class="p-button-rounded p-button-warning m-0 p-0 reset-button"
+              @click="resetTable(slotProps.data)"
+            />
+            <PrimeButton
+              icon="pi pi-trash"
+              label=""
+              v-tooltip.top="'Delete Table'"
+              class="p-button-rounded p-button-danger m-0 p-0 delete-button"
+              @click="confirmDeleteTable(slotProps.data)"
+            />
+          </div>
           </template>
         </PrimeColumn>
       </DataTable>
@@ -362,9 +356,9 @@
 </template>
 
 <script>
-import { useSettingsStore } from "../stores/settings";
+import formServices from "../services/settings.services";
 import InputTable from "./inputs/InputTable.vue";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useFinancialStore } from "../stores/financial";
 import { useTablesStore } from "../stores/tables";
@@ -378,20 +372,18 @@ export default {
     detailsView: Boolean,
     tableID: String,
   },
-  async setup(props) {
-    const loading = ref(false);
+  setup(props) {
     const confirm = useConfirm();
     const financialStore = useFinancialStore();
     const guestStore = useGuestsStore();
-    const settingsStore = useSettingsStore();
-    await settingsStore.getAll();
 
     const tableStore = useTablesStore();
     const { tables } = storeToRefs(useTablesStore());
 
-    const columns = await settingsStore.get("tableSelection");
-
-    const organizations = await settingsStore.get("organizations");
+    const columns = ref(formServices.get("tableSelection") || []);
+    const organizations = ref(
+      (formServices.get("organizations") || []).map((each) => each.value)
+    );
     const dataTableRender = ref(0);
     const dt = ref();
 
@@ -399,17 +391,17 @@ export default {
     const messageText = ref({ severity: null, text: "" });
 
     //Define filters for table sorting and searching
-    const getFilters = await settingsStore.get("tableFilters");
-    const filters = ref(getFilters || {});
+    const filters = ref(formServices.get("tableFilters") || {});
     const clearFilters = () => {
       initFilters();
     };
-    const initFilters = async () => {
-      const getFilters = await settingsStore.get("tableFilters");
-      filters.value = getFilters || {};
+    const initFilters = () => {
+      filters.value = formServices.get("tableFilters") || {};
     };
 
-    const organizationsFilter = organizations.map((each) => each.key);
+    const organizationsFilter = ref(
+      (formServices.get("organizations") || []).map((each) => each.value)
+    );
     const filteredOrganizations = ref();
     //filters organizations on drop-down
     const searchOrganization = (event) => {
@@ -428,10 +420,12 @@ export default {
       }, 100);
     };
 
+    const loading = ref(false);
+
     //Fill tables datatables with appropriate data based on props
     const fillList = async function () {
       financialStore.$reset;
-
+      loading.value = true;
       try {
         if (props.tableID) return await tableStore.fillTable(props.tableID);
         else return await tableStore.fillTables();
@@ -444,15 +438,12 @@ export default {
           text: "Could not fetch tables.",
         };
       } finally {
-        // Ensure that loading is set to false only if it hasn't been triggered again
-        setTimeout(() => {
-          setTimeout(() => (message.value = false), 1500);
-        }, 0);
+        loading.value = false;
+        setTimeout(() => (message.value = false), 1500);
       }
-      //loading.value = false;
     };
 
-    const loadLazyData = async () => {
+    const loadLazyData = () => {
       fillList().then(() => {
         tables.value.forEach((table) => {
           table.createdAt = new Date(table.createdAt);
@@ -467,42 +458,44 @@ export default {
         });
       });
     };
-    await loadLazyData();
-    // onMounted(() => {
-    //   loadLazyData();
-    // });
+
+    onMounted(() => {
+      loadLazyData();
+    });
 
     //Helper Functions
 
     const lookup = function (key, value) {
-      return settingsStore.lookupOrg(key, value);
+      return formServices.lookup(key, value);
     };
 
-    const exportCSV = async () => {
+    const exportCSV = () => {
       dt.value.value.map((each) => {
         const organizations = {
-          organizations: each.organizations
-            ? [
+          
+          organizations: each.organizations ?
+          [
                 ...new Set(
                   each.organizations.map(
                     (each) =>
                       (each = lookup("organizations", each.organization))
                   )
                 ),
-              ]
-                .filter(Boolean)
-                .join("\r\n")
-            : null,
+              ].filter(Boolean).join("\r\n") : null
         };
 
         const tableStatus = {
-          tableStatus: each.tableStatus ? "Space Available" : "Full Table",
-        };
+          tableStatus: each.tableStatus ? "Space Available" : "Full Table"
+        }
 
-        each = Object.assign(each, organizations, tableStatus);
+        each = Object.assign(
+          each,
+          organizations,
+          tableStatus
+        );
       });
-      dt.value.exportCSV();
-      await loadLazyData();
+      dt.value.exportCSV()
+      loadLazyData();
     };
 
     const formatDate = (value) => {
@@ -547,14 +540,14 @@ export default {
     const resetTable = (event) => {
       confirm.require({
         target: event.currentTarget,
-        message:
-          "Are you sure you want to reset the guest list for this table?",
-        icon: "pi pi-exclamation-triangle",
-        rejectClass: "p-button-secondary p-button-outlined p-button-sm",
-        acceptClass: "p-button-sm",
-        rejectLabel: "Cancel",
-        acceptLabel: "Save",
+        message: 'Are you sure you want to reset the guest list for this table?',
+        icon: 'pi pi-exclamation-triangle',
+        rejectClass: 'p-button-secondary p-button-outlined p-button-sm',
+        acceptClass: 'p-button-sm',
+        rejectLabel: 'Cancel',
+        acceptLabel: 'Save',
         accept: async () => {
+
           const guestLoop = new Promise(async (resolve) => {
             for (const guest of event.guests) {
               await guestStore.updateGuest(guest, { table: null, seat: "" });
@@ -566,10 +559,7 @@ export default {
           if (event._id && event.guestCount > 0) {
             guestLoop
               .then(async () => {
-                await tableStore.updateTable(event._id, {
-                  guests: [],
-                  organizations: [],
-                });
+                await tableStore.updateTable(event._id, { guests: [], organizations: [] })
               })
               .catch((error) => {
                 loading.value = false;
@@ -579,8 +569,7 @@ export default {
                   severity: "error",
                   text: "Guests and table could not be updated.",
                 };
-              })
-              .finally(() => {
+              }).finally(() => {
                 new Promise((resolve) => setTimeout(resolve, 1500))
                   .then(() => {
                     message.value = false;
@@ -589,18 +578,20 @@ export default {
                     loading.value = false;
                     location.reload();
                   });
-              });
+              })
           } else {
-            await tableStore
-              .updateTable(event._id, { guests: [], organizations: [] })
-              .then(() => {
-                loading.value = false;
-                location.reload();
-              });
+            await tableStore.updateTable(event._id, { guests: [], organizations: [] }).then(() => {
+              loading.value = false;
+              location.reload();
+            })
+            
+
           }
         },
-        reject: () => {},
+        reject: () => {
+        }
       });
+
     };
 
     const deleteTable = async function () {
@@ -638,19 +629,19 @@ export default {
 
     const exportNameFunction = () => {
       const date = new Date();
-      const currentDay = String(date.getDate()).padStart(2, "0");
-      const currentMonth = String(date.getMonth() + 1).padStart(2, "0");
+      const currentDay = String(date.getDate()).padStart(2, '0');
+      const currentMonth = String(date.getMonth()+1).padStart(2,"0");
       const currentYear = date.getFullYear();
-      const exportName = `Tables - ${currentDay}-${currentMonth}-${currentYear}`;
+      const exportName = `Tables - ${currentDay}-${currentMonth}-${currentYear}`
       return exportName;
-    };
+    }
 
     const currentUrl = window.location.href;
-    //Manage row reordering function
-    const onRowReorder = (event) => {
+       //Manage row reordering function
+       const onRowReorder = (event) => {
       // Check if the URL contains the tables page
 
-      const tableSeating = currentUrl.includes("/admin/tables");
+      const tableSeating = currentUrl.includes('/admin/tables');
       if (tableSeating) {
         tables.value = event.value;
         event.value.forEach((item, index) => {
@@ -661,22 +652,11 @@ export default {
 
         tables.value.forEach((data) => {
           const newTableIndex = data.tableindex;
-          console.log(
-            newTableIndex,
-            "this is table index and id",
-            data._id,
-            data.tableindex,
-            "this is data"
-          );
-          tableStore.updateTable(data._id, {
-            ...data,
-            tableindex: newTableIndex,
-          });
-        });
+          console.log(newTableIndex, 'this is table index and id', data._id, data.tableindex, 'this is data')
+          tableStore.updateTable(data._id, { ...data, tableindex: newTableIndex })
+        })
       }
     };
-
-    loading.value = false;
 
     return {
       columns,
@@ -707,7 +687,7 @@ export default {
       resetTable,
       exportNameFunction,
       currentUrl,
-      onRowReorder,
+      onRowReorder
     };
   },
   components: { InputTable },

@@ -12,7 +12,7 @@
     <div>
       <PrimeCard v-if="!userStore.isRegistrar">
         <template #content>
-          <div v-if="settings.getIsSalesOpen">
+          <div v-if="settingsStore.getIsSalesOpen">
             <p>
               This event registration tool is restricted to authorized
               registrars.
@@ -61,7 +61,7 @@ import PageHeader from "../components/common/PageHeader.vue";
 import { storeToRefs } from "pinia";
 
 const userStore = useAuthUserStore();
-const settings = useSettingsStore();
+const settingsStore = useSettingsStore();
 
 const userGreeting = computed(() =>
   userStore.isRegistrar
@@ -69,5 +69,5 @@ const userGreeting = computed(() =>
     : ""
 );
 
-const { selected } = storeToRefs(useSettingsStore());
+const { settings } = storeToRefs(useSettingsStore());
 </script>

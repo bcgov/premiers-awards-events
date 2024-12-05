@@ -24,8 +24,8 @@
             id="organization"
             v-model="registration.organization"
             :options="organizations"
-            optionLabel="label"
-            optionValue="key"
+            optionLabel="text"
+            optionValue="value"
             placeholder="Select an Organization"
             title="organization"
           />
@@ -210,7 +210,7 @@
 
 <script>
 import { ref, onMounted } from "vue";
-import { useSettingsStore } from "@/stores/settings";
+import formServices from "@/services/settings.services";
 import useVuelidate from "@vuelidate/core";
 import {
   required,
@@ -234,10 +234,9 @@ export default {
     detailsView: Boolean,
   },
   setup(props) {
-    const settingsStore = useSettingsStore();
     const register = useFinancialStore();
     const userStore = useAuthUserStore();
-    const organizations = ref(settingsStore.lookup("organizations") || []);
+    const organizations = ref(formServices.get("organizations") || []);
     const { registration } = storeToRefs(useFinancialStore());
 
     //Vuelidate Form Rules
