@@ -1,7 +1,7 @@
 <template>
   <main>
     <PageHeader
-      :subtitle="`Welcome to the registration system for the ${settings.year} Premier's Awards.`"
+      :subtitle="`Welcome to the registration system for the ${year} Premier's Awards.`"
       :content="userGreeting"
     />
     <div v-if="userStore.isRegistrar">
@@ -62,6 +62,9 @@ import { storeToRefs } from "pinia";
 
 const userStore = useAuthUserStore();
 const settings = useSettingsStore();
+
+// PA-191 Year in heading was "undefined"
+const year = settings.lookup("year");
 
 const userGreeting = computed(() =>
   userStore.isRegistrar
