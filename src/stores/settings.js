@@ -118,9 +118,12 @@ export const useSettingsStore = defineStore({
           if (fullValue) return jsonSetting;
           try {
             const sorted = jsonSetting.sort((a, b) => {
-              if (a.label < b.label) {
+              /*if (a.label < b.label) {
                 return -1;
-              }
+              }*/
+             
+              // PA-173 Changed to localeCompare due for Firefox not sorting correctly
+              return a.label.localeCompare(b.label);
             });
             return sorted;
           } catch (e) {
