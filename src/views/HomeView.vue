@@ -64,7 +64,8 @@ const userStore = useAuthUserStore();
 const settings = useSettingsStore();
 
 // PA-191 Year in heading was "undefined"
-const year = settings.lookup("year");
+const globalSettings = settings.lookup("globalSettings"),
+  year = globalSettings['year'] || new Date().getFullYear();
 
 const userGreeting = computed(() =>
   userStore.isRegistrar
