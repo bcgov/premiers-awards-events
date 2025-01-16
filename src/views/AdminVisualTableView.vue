@@ -5,16 +5,18 @@ import { ref } from "vue";
 import PageHeader from "../components/common/PageHeader.vue";
 import NavMenu from "../components/common/NavMenu.vue";
 import TableVisual from "../components/TableVisual.vue";
-import formServices from "../services/settings.services";
+import { useSettingsStore } from "../stores/settings";
 import RegistrationVisual from "../components/RegistrationVisual.vue";
 
 const userStore = useAuthUserStore();
-const loading = ref(false)
+const settingsStore = useSettingsStore();
+const loading = ref(false);
 
 const tableVisualLoaded = ref(false);
 const tableVisualLoad = () => (tableVisualLoaded.value = true);
 
-const navItems = ref(formServices.get("navItems") || []);
+const getNavItems = await settingsStore.get("navItems");
+const navItems = ref(getNavItems || []);
 
 const tableCountAll = () => {
   return String(useTablesStore().getTablesCount);
@@ -46,92 +48,147 @@ userStore.login();
     <ProgressSpinner v-if="loading" />
     <div v-else>
       <span class="flex gap-3 justify-content-between">
-        <PrimeButton label="Table Count: " type="button" icon="pi pi-ticket" class="p-button-info"
-          :badge="tableCountAll()" @click="tableInfo()" badgeClass="p-badge-danger" />
-        <PrimeButton label="Help" type="button" icon="pi pi-question-circle" class="p-button-info"
-          @click="pageInfo()" />
+        <PrimeButton
+          label="Table Count: "
+          type="button"
+          icon="pi pi-ticket"
+          class="p-button-info"
+          :badge="tableCountAll()"
+          @click="tableInfo()"
+          badgeClass="p-badge-danger"
+        />
+        <PrimeButton
+          label="Help"
+          type="button"
+          icon="pi pi-question-circle"
+          class="p-button-info"
+          @click="pageInfo()"
+        />
       </span>
-      <NavMenu :title="''" :menuitems="navItems" />
-
+      <div v-if="navItems">
+        <NavMenu :title="''" :menuitems="navItems" />
+      </div>
       <TableVisual v-on:loadedTables="tableVisualLoad" :key="keyCount" />
-      <h4>Registration Management - Bulk Seating: </h4>
-      <RegistrationVisual v-if="tableVisualLoaded" v-on:addGuest="keyAdd" class="registrations-visual-box" />
-      <PrimeDialog v-model:visible="helpDialog" :style="{ width: '900px' }" header="About Event Planner" :modal="true">
+      <h4>Registration Management - Bulk Seating:</h4>
+      <RegistrationVisual
+        v-if="tableVisualLoaded"
+        v-on:addGuest="keyAdd"
+        class="registrations-visual-box"
+      />
+      <PrimeDialog
+        v-model:visible="helpDialog"
+        :style="{ width: '900px' }"
+        header="About Event Planner"
+        :modal="true"
+      >
         <div class="help-content">
-          <p> This page is intended to assist event admin with visual event-planning. Admin can use this page to get a
-            visual overview of the event, view tables and guests, and assign guests from registrations to tables using
-            bulk seat registration tools. For a complete list of guests and their assigned tables and seats, review the
-            <router-link :to="`/admin/guests`" class="guests-link">All Guests</router-link> admin management page.
+          <p>
+            This page is intended to assist event admin with visual
+            event-planning. Admin can use this page to get a visual overview of
+            the event, view tables and guests, and assign guests from
+            registrations to tables using bulk seat registration tools. For a
+            complete list of guests and their assigned tables and seats, review
+            the
+            <router-link :to="`/admin/guests`" class="guests-link"
+              >All Guests</router-link
+            >
+            admin management page.
           </p>
           <h4>Visual Key:</h4>
           <div>
             <ul class="list-none table-icon-guide flex flex-column gap-2">
               <li class="flex align-items-center gap-3">
-                <span><i class="pi pi-circle-fill full-table" /></span><span>{{ " " }}Full Table</span>
+                <span><i class="pi pi-circle-fill full-table" /></span
+                ><span>{{ " " }}Full Table</span>
               </li>
               <li class="flex align-items-center gap-3">
-                <span><i class="pi pi-circle-fill half-table" /></span><span>{{ " " }}Partially Filled Table</span>
+                <span><i class="pi pi-circle-fill half-table" /></span
+                ><span>{{ " " }}Partially Filled Table</span>
               </li>
               <li class="flex align-items-center gap-3">
-                <span><i class="pi pi-circle empty-table" /></span><span>{{ " " }}Empty Table</span>
+                <span><i class="pi pi-circle empty-table" /></span
+                ><span>{{ " " }}Empty Table</span>
               </li>
               <li class="flex align-items-center gap-3">
-                <span><i class="pi pi-circle-fill full-table reserved-table" /></span><span><i
-                    class="pi pi-circle-fill half-table reserved-table" /></span><span><i
-                    class="pi pi-circle reserved-table" /></span><span>{{ " " }}Reserved Tables - A coloured
-                  border indicates a table is categorized with a type of 'Reserved' rather than 'Standard'.</span>
+                <span
+                  ><i
+                    class="pi pi-circle-fill full-table reserved-table" /></span
+                ><span
+                  ><i
+                    class="pi pi-circle-fill half-table reserved-table" /></span
+                ><span><i class="pi pi-circle reserved-table" /></span
+                ><span
+                  >{{ " " }}Reserved Tables - A coloured border indicates a
+                  table is categorized with a type of 'Reserved' rather than
+                  'Standard'.</span
+                >
               </li>
             </ul>
-            <h4>Table Guide: </h4>
+            <h4>Table Guide:</h4>
             <div class="line-height-4">
-              <h5>Tables: </h5>
-              <p> Hover over the table name to preview the organizations represented by guests currently seated at the
-                table.<br />
-                Click on the table name to be directed to the editing page for the table.</p>
-              <h5>Table Arrangement: </h5>
-              <p>Use the
-                <PrimeButton :icon="`pi pi-table`" label="Arrange Tables" class="min-w-min w-auto" />
-                button to toggle the ability to rearrange the layout of tables. Changes to the layout are saved between
-                sessions and the current layout is visible to all admin (may require page refresh to note changes).
+              <h5>Tables:</h5>
+              <p>
+                Hover over the table name to preview the organizations
+                represented by guests currently seated at the table.<br />
+                Click on the table name to be directed to the editing page for
+                the table.
+              </p>
+              <h5>Table Arrangement:</h5>
+              <p>
+                Use the
+                <PrimeButton
+                  :icon="`pi pi-table`"
+                  label="Arrange Tables"
+                  class="min-w-min w-auto"
+                />
+                button to toggle the ability to rearrange the layout of tables.
+                Changes to the layout are saved between sessions and the current
+                layout is visible to all admin (may require page refresh to note
+                changes).
               </p>
               <p>
-                The Table Columns number modifier allows admin to modify how many columns the tables appear in. This can
-                help with visualizing various table layouts.</p>
+                The Table Columns number modifier allows admin to modify how
+                many columns the tables appear in. This can help with
+                visualizing various table layouts.
+              </p>
               <h5>Guests:</h5>
-              <p> Click on the users icon{{ " " }}<i class="pi pi-users" />{{ " " }}within a table to see a visual
-                overview
-                of
-                the current guests seated at that table.<br />
+              <p>
+                Click on the users icon{{ " " }}<i class="pi pi-users" />{{
+                  " "
+                }}within a table to see a visual overview of the current guests
+                seated at that table.<br />
                 Hover over a guest to view their name.<br />
-                Click on the user icon {{ " " }}<i class="pi pi-user" />{{ " " }}of any guest to be directed to their
-                registration.</p>
+                Click on the user icon {{ " " }}<i class="pi pi-user" />{{
+                  " "
+                }}of any guest to be directed to their registration.
+              </p>
             </div>
-            <h4>Registration Management - Bulk Seating: </h4>
+            <h4>Registration Management - Bulk Seating:</h4>
             <div class="line-height-4">
               <p>
-                This section allows users to assign guests from registrations to tables in bulk.<br />
-                Guests can be viewed on the registration by clicking on the arrow icon <i class="pi pi-chevron-right" />
-                beside
-                the registration.<br />
-                Guests are displayed in the order they are requested to be seated within the registration. (Guests 1-10
-                for table one, 11-20 for table 2, etc.)
+                This section allows users to assign guests from registrations to
+                tables in bulk.<br />
+                Guests can be viewed on the registration by clicking on the
+                arrow icon <i class="pi pi-chevron-right" /> beside the
+                registration.<br />
+                Guests are displayed in the order they are requested to be
+                seated within the registration. (Guests 1-10 for table one,
+                11-20 for table 2, etc.)
               </p>
               <p>
                 The
-                <PrimeButton icon="pi pi-pencil" label="Bulk Seat Registration"
-                  class="p-button-rounded p-button-success mr-2 edit-button" /> button will assign guests from a
-                registration to a table, in the order they
-                are entered in the registration.<br />
+                <PrimeButton
+                  icon="pi pi-pencil"
+                  label="Bulk Seat Registration"
+                  class="p-button-rounded p-button-success mr-2 edit-button"
+                />
+                button will assign guests from a registration to a table, in the
+                order they are entered in the registration.<br />
                 Guests can be reassigned to other tables once assigned.<br />
                 Seating order can be modified directly on the table edit page.
               </p>
-
             </div>
-
-
           </div>
-
-
         </div>
       </PrimeDialog>
     </div>

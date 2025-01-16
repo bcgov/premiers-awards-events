@@ -1,7 +1,7 @@
 <template>
   <main>
     <PageHeader
-      :subtitle="`Welcome to the registration system for the ${settings.year} Premier's Awards.`"
+      :subtitle="`Welcome to the registration system for the ${year} Premier's Awards.`"
       :content="userGreeting"
     />
     <div v-if="userStore.isRegistrar">
@@ -12,7 +12,7 @@
     <div>
       <PrimeCard v-if="!userStore.isRegistrar">
         <template #content>
-          <div v-if="settingsStore.getIsSalesOpen">
+          <div v-if="settings.getIsSalesOpen">
             <p>
               This event registration tool is restricted to authorized
               registrars.
@@ -61,7 +61,11 @@ import PageHeader from "../components/common/PageHeader.vue";
 import { storeToRefs } from "pinia";
 
 const userStore = useAuthUserStore();
-const settingsStore = useSettingsStore();
+const settings = useSettingsStore();
+
+// PA-191 Year in heading was "undefined"
+const globalSettings = settings.lookup("globalSettings"),
+  year = globalSettings['year'] || new Date().getFullYear();
 
 const userGreeting = computed(() =>
   userStore.isRegistrar
@@ -69,5 +73,5 @@ const userGreeting = computed(() =>
     : ""
 );
 
-const { settings } = storeToRefs(useSettingsStore());
+const { selected } = storeToRefs(useSettingsStore());
 </script>
