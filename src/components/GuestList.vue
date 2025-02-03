@@ -627,7 +627,16 @@
             name="attendancetype"
             title="Attendance Type"
             placeholder="Select the type of attendance for this guest"
-          />
+          >
+            <template #option="slotProps">
+              <div class="col-4">{{ slotProps.option.label }}</div>
+              <div>
+                <small style="clear: both; display: block">{{
+                  slotProps.option.description
+                }}</small>
+              </div>
+            </template>
+          </DropDown>
           <small
             v-if="v$.attendancetype.$error"
             class="p-error"
