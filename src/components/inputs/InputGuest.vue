@@ -247,6 +247,7 @@ import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useGuestsStore } from "../../stores/guests";
 import { useFinancialStore } from "../../stores/financial";
+import { useAuthUserStore } from "../../stores/users";
 
 export default {
   props: {
@@ -257,6 +258,7 @@ export default {
     const guestData = useGuestsStore();
     const registrationData = useFinancialStore();
     const { guest } = storeToRefs(useGuestsStore());
+    const userStore = useAuthUserStore();
     const rules = {
       organization: { required },
       firstname: { required },
@@ -274,11 +276,11 @@ export default {
     const trimmedAttendancetypes = attendancetypes.value.map((opt) => ({
       ...opt,
       disabled:
-        !props.isAdmin ||
-        (opt.value !== "judge" &&
-          opt.value !== "adjudicator" &&
-          opt.value !== "volunteer" &&
-          opt.value !== "guest")
+        userStore.isAdmin ||
+        (opt.key !== "judge" &&
+          opt.key !== "adjudicator" &&
+          opt.key !== "volunteer" &&
+          opt.key !== "guest")
           ? false
           : true,
     }));

@@ -624,6 +624,7 @@
             :options="attendancetypes"
             optionLabel="label"
             optionValue="key"
+            optionDisabled="disabled"
             name="attendancetype"
             title="Attendance Type"
             placeholder="Select the type of attendance for this guest"
@@ -830,6 +831,7 @@ export default {
   async setup(props) {
     const guestStore = useGuestsStore();
     const settingsStore = useSettingsStore();
+    const userStore = useAuthUserStore();
     await settingsStore.getAll();
     const { guests } = storeToRefs(useGuestsStore());
     const tables = ref();
@@ -861,7 +863,22 @@ export default {
 
     const organizations = ref(organizationsData || {});
 
-    const attendancetypes = await settingsStore.get("attendancetypes");
+    const attendancetypes = ref(settingsStore.lookup("attendancetypes") || []);
+
+    const trimmedAttendancetypes = attendancetypes.value.map((opt) => ({
+      ...opt,
+      disabled:
+        userStore.isAdmin ||
+        (opt.key !== "judge" &&
+          opt.key !== "adjudicator" &&
+          opt.key !== "volunteer" &&
+          opt.key !== "guest")
+          ? false
+          : true,
+    }));
+
+    attendancetypes.value = trimmedAttendancetypes;
+
     const supportingfinalist = await settingsStore.get(
       "supportingfinalistoptions"
     );
@@ -871,7 +888,6 @@ export default {
     const dietary = await settingsStore.get("dietaryoptions");
     const filteredOrganizations = ref();
 
-    const userStore = useAuthUserStore();
     const dt = ref();
     const loading = ref(false);
     let message = ref(false);
