@@ -1,5 +1,4 @@
 import { defineStore, storeToRefs } from "pinia";
-import { ref } from "vue";
 import tableRoutes from "../services/api-routes.tables.js";
 import { useFinancialStore } from "./financial";
 import { useGuestsStore } from "./guests";
@@ -65,17 +64,12 @@ export const useTablesStore = defineStore({
 
     async fillEventTables() {
       const settingsStore = useSettingsStore();
+      await settingsStore.getAll();
       await useFinancialStore().fillAllRegistrations();
       await useGuestsStore().fillGuests();
       const { registrations } = storeToRefs(useFinancialStore());
       const { guests } = storeToRefs(useGuestsStore());
       //const tableList = {};
-
-      const roles = ref(
-        (settingsStore.lookup("attendancetypes") || []).map(
-          (each) => each.value
-        )
-      );
 
       //sort registrations alphabetically by organization
 
@@ -104,8 +98,8 @@ export const useTablesStore = defineStore({
         return 0;
       });
 
-      registrations.value.forEach((registration) => {
-        if (!registration.submitted) return;
+      for (const registration of registrations.value) {
+        if (!registration.submitted) continue;
         registration.details = [];
         registration.seated = 0;
         registration.guests.forEach((guest) => {
@@ -113,6 +107,10 @@ export const useTablesStore = defineStore({
             guests.value.filter((each) => each._id === guest)[0]
           );
         });
+
+        const expandedTableCount = settingsStore.getExpandedTableCount(
+          registration.organization
+        );
 
         registration.details.forEach((guest) => {
           this.tables.forEach((table) => {
@@ -127,9 +125,23 @@ export const useTablesStore = defineStore({
             }
             if (table.full !== true) {
               if (!guest.seated) {
+                const organizationExpandedTables = this.tables.filter(
+                  (currentTable) =>
+                    currentTable.tablecapacity === 11 &&
+                    currentTable.organizations.some(
+                      (each) => each.organization === registration.organization
+                    )
+                ).length;
+                if (
+                  table.tablecapacity === 10 &&
+                  organizationExpandedTables < expandedTableCount
+                ) {
+                  table.tablecapacity = 11;
+                }
+
                 table.guests.push(guest);
                 table.organizations.push({
-                  organization: guest.organization,
+                  organization: registration.organization,
                   guestID: guest._id,
                 });
                 guest.seated = true;
@@ -145,19 +157,21 @@ export const useTablesStore = defineStore({
             }
           });
         });
-      });
+      }
 
-      this.tables.forEach(async (table) => {
-        table.guests.forEach(async (guest) => {
-          await useGuestsStore()
-            .addGuestToTable(guest._id, { table: table }, table)
-            .then(async () => {
-              this.updateTable(table._id, {
-                organizations: table.organizations,
-              });
-            });
+      for (const table of this.tables) {
+        for (const guest of table.guests) {
+          await useGuestsStore().addGuestToTable(
+            guest._id,
+            { table },
+            table
+          );
+        }
+        await this.updateTable(table._id, {
+          organizations: table.organizations,
+          tablecapacity: table.tablecapacity,
         });
-      });
+      }
     },
 
     async addTable() {

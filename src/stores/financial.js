@@ -1,6 +1,20 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
 import apiRoutes from "../services/api-routes.services";
+import { useSettingsStore } from "./settings";
+
+const getRequiredTableCount = (guestCount, expandedTableCount) => {
+  const expandedGuests = Math.min(guestCount, expandedTableCount * 11);
+  const standardGuests = guestCount - expandedGuests;
+  const expandedRemainder = expandedGuests % 11;
+  const standardRemainder = standardGuests % 10;
+  const remainder = expandedRemainder || standardRemainder;
+
+  return (
+    Math.floor(expandedGuests / 11) +
+    Math.floor(standardGuests / 10) +
+    (remainder === 0 ? 0 : remainder <= 5 ? 0.5 : 1)
+  );
+};
 
 export const useFinancialStore = defineStore({
   id: "financialStore",
@@ -64,21 +78,21 @@ export const useFinancialStore = defineStore({
       return this.registration.guests.length;
     },
     getTableCount() {
-      const guestCount = this.registration.guests.length;
-      let tableCount = 0;
-      if (guestCount % 10 <= 5 && guestCount % 10 != 0) tableCount += 0.5;
-      if (guestCount % 10 > 5) tableCount += 1;
-      if (guestCount / 10 >= 1) tableCount += Math.floor(guestCount / 10);
-      return tableCount;
+      const settingsStore = useSettingsStore();
+      return getRequiredTableCount(
+        this.registration.guests.length,
+        settingsStore.getExpandedTableCount(this.registration.organization)
+      );
     },
 
     getTotalTableCount() {
+      const settingsStore = useSettingsStore();
       let totalTables = 0;
       this.registrations.forEach((element) => {
-        const guestCount = element.guests.length;
-        if (guestCount % 10 <= 5 && guestCount % 10 != 0) totalTables += 0.5;
-        if (guestCount % 10 > 5) totalTables += 1;
-        if (guestCount / 10 >= 1) totalTables += Math.floor(guestCount / 10);
+        totalTables += getRequiredTableCount(
+          element.guests.length,
+          settingsStore.getExpandedTableCount(element.organization)
+        );
       });
       return totalTables;
     },

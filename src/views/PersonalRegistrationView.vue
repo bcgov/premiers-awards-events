@@ -36,6 +36,11 @@ export default {
       return String(financialStore.getTableCount);
     };
 
+    const expandedTableCount = () =>
+      settingsStore.getExpandedTableCount(
+        financialStore.getRegistration.organization
+      );
+
     const guestCount = () => {
       return String(financialStore.getGuestCount);
     };
@@ -148,6 +153,7 @@ export default {
       registration,
       ministerApproval,
       tableCount,
+      expandedTableCount,
       guestCount,
       getRegistrar,
       isSubmitted,
@@ -309,7 +315,16 @@ export default {
         >The current number of tables required based on your guest list is:
         {{ tableCount() }}.
         <ul>
-          <li>The cost per table is $500, and each table seats 10 people.</li>
+          <li>
+            The cost per table is $500. Each standard table seats 10.
+            <span v-if="expandedTableCount()">
+              Your organization has {{ expandedTableCount() }} table{{
+                expandedTableCount() === 1 ? "" : "s"
+              }}
+              configured to seat 11.
+            </span>
+            <span v-else>No tables of 11 are configured for your organization.</span>
+          </li>
           <li>
             Payment for tables is conducted through a Journal Voucher process
             with each ministry using the financial coding submitted in the

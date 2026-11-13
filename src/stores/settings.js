@@ -183,6 +183,17 @@ export const useSettingsStore = defineStore({
         return "NOT FOUND";
       }
     },
+    getExpandedTableCount(organizationKey) {
+      const organizations = this.lookup("organizations");
+      const expandedTables = Array.isArray(organizations)
+        ? organizations.find((organization) => organization.key === organizationKey)
+            ?.expandedTables
+        : 0;
+
+      return Number.isInteger(expandedTables) && expandedTables > 0
+        ? expandedTables
+        : 0;
+    },
     // Add new user
     async insert() {
       this.loading = true;

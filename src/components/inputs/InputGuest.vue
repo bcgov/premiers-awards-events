@@ -329,7 +329,7 @@ export default {
       this.guest.organization =
         typeof this.guest.organization === "string"
           ? this.guest.organization
-          : this.guest.organization.value;
+          : this.guest.organization.key;
 
       try {
         loading.value = true;

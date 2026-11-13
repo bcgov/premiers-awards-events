@@ -107,10 +107,11 @@
           class="seats"
         >
           <template #body="{ data }">
-            {{
-              !tableID && data.index ? `${Math.ceil(data.index / 10)} -` : null
-            }}
-            {{ data.index ? data.index % 10 || 10 : `N/A` }}
+            <template v-if="!tableID && getRequestedSeat(data.index)">
+              {{ getRequestedSeat(data.index).table }} -
+              {{ getRequestedSeat(data.index).seat }}
+            </template>
+            <template v-else>N/A</template>
           </template>
         </PrimeColumn>
 
@@ -1001,10 +1002,13 @@ export default {
         currentUrl.includes("/admin/edit/") ||
         currentUrl.includes("/registration/");
       dt.value.value.map((each) => {
+        const requestedSeatAssignment = requestedSeat
+          ? getRequestedSeat(each.index)
+          : null;
         const seat = {
           seat: requestedSeat
-            ? each.index
-              ? `${Math.ceil(each.index / 10)} - ${each.index % 10 || 10}`
+            ? requestedSeatAssignment
+              ? `${requestedSeatAssignment.table} - ${requestedSeatAssignment.seat}`
               : null
             : each.seat
             ? `${each.seat % 10 || 10}`
@@ -1012,8 +1016,8 @@ export default {
         };
         const index = {
           index: requestedSeat
-            ? each.index
-              ? `Table ${Math.ceil(each.index / 10)} - ${each.index % 10 || 10}`
+            ? requestedSeatAssignment
+              ? `Table ${requestedSeatAssignment.table} - ${requestedSeatAssignment.seat}`
               : null
             : each.seat
             ? `${each.seat % 10 || 10}`
@@ -1053,6 +1057,28 @@ export default {
 
     const lookup = function (key, value) {
       return settingsStore.lookup(key, value);
+    };
+
+    const getRequestedSeat = (index) => {
+      const seatIndex = Number(index);
+      if (!Number.isInteger(seatIndex) || seatIndex < 1) return null;
+
+      const expandedTableCount = settingsStore.getExpandedTableCount(
+        financialStore.getRegistration.organization
+      );
+      const expandedSeats = expandedTableCount * 11;
+      if (seatIndex <= expandedSeats) {
+        return {
+          table: Math.ceil(seatIndex / 11),
+          seat: ((seatIndex - 1) % 11) + 1,
+        };
+      }
+
+      const standardSeatIndex = seatIndex - expandedSeats;
+      return {
+        table: expandedTableCount + Math.ceil(standardSeatIndex / 10),
+        seat: ((standardSeatIndex - 1) % 10) + 1,
+      };
     };
 
     const formatDate = (value) => {
@@ -1304,6 +1330,7 @@ export default {
       formatTime,
       lookup,
       lookupLoop,
+      getRequestedSeat,
       editGuest,
       confirmDeleteGuest,
       deleteGuest,
