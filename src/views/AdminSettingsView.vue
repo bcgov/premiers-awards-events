@@ -371,8 +371,7 @@ const saveExpandedTableOrganizations = async () => {
           <p>
             Choose organizations that may select tables of 11 during
             registration. Their remaining tables will use the standard size of
-            10. These settings affect registration seat requests but do not
-            change table creation.
+            10.
           </p>
           <div class="expanded-table-form">
             <div class="expanded-table-add-row">
