@@ -220,7 +220,6 @@
             v-model.trim="guest.notes"
             name="guestnotes"
             title="Notes"
-            autofocus
           />
         </div>
       </div>
