@@ -214,7 +214,7 @@
         </div>
 
         <div class="field-text">
-          <label for="guest-notes">Notes:</label>
+          <label for="guest-notes">Notes (use this section to expand on any accessibility, dietary requirements or pronoun requirements):</label>
           <InputText
             id="guestnotes"
             v-model.trim="guest.notes"
