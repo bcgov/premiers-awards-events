@@ -123,14 +123,13 @@ export const useGuestsStore = defineStore({
       await tableStore.fillOnlyTable(table._id);
       const seat = (await tableStore.getGuestCount) + 1;
       const updatedGuest = { ...guestData, seat: seat };
-      await apiRoutes.updateGuest(id, updatedGuest).then(() => {
-        tableStore.pushTableDetails(table._id, {
-          guests: id,
-          organizations: {
-            organization: updatedGuest.organization,
-            guestID: id,
-          },
-        });
+      await apiRoutes.updateGuest(id, updatedGuest);
+      await tableStore.pushTableDetails(table._id, {
+        guests: id,
+        organizations: {
+          organization: updatedGuest.organization,
+          guestID: id,
+        },
       });
     },
 

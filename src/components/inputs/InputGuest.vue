@@ -107,7 +107,16 @@
             optionValue="key"
             optionDisabled="disabled"
             placeholder="Select the type of attendance for this guest"
-          />
+          >
+            <template #option="slotProps">
+              <div class="col-4">{{ slotProps.option.label }}</div>
+              <div>
+                <small style="clear: both; display: block">{{
+                  slotProps.option.description
+                }}</small>
+              </div>
+            </template>
+          </DropDown>
           <small
             v-if="v$.attendancetype.$error"
             class="p-error"
@@ -205,13 +214,12 @@
         </div>
 
         <div class="field-text">
-          <label for="guest-notes">Notes:</label>
+          <label for="guest-notes">Notes (use this section to expand on any accessibility, dietary requirements or pronoun requirements):</label>
           <InputText
             id="guestnotes"
             v-model.trim="guest.notes"
             name="guestnotes"
             title="Notes"
-            autofocus
           />
         </div>
       </div>
@@ -238,6 +246,7 @@ import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useGuestsStore } from "../../stores/guests";
 import { useFinancialStore } from "../../stores/financial";
+import { useAuthUserStore } from "../../stores/users";
 
 export default {
   props: {
@@ -248,6 +257,7 @@ export default {
     const guestData = useGuestsStore();
     const registrationData = useFinancialStore();
     const { guest } = storeToRefs(useGuestsStore());
+    const userStore = useAuthUserStore();
     const rules = {
       organization: { required },
       firstname: { required },
@@ -265,11 +275,11 @@ export default {
     const trimmedAttendancetypes = attendancetypes.value.map((opt) => ({
       ...opt,
       disabled:
-        !props.isAdmin ||
-        (opt.value !== "judge" &&
-          opt.value !== "adjudicator" &&
-          opt.value !== "volunteer" &&
-          opt.value !== "guest")
+        userStore.isAdmin ||
+        (opt.key !== "judge" &&
+          opt.key !== "adjudicator" &&
+          opt.key !== "volunteer" &&
+          opt.key !== "guest")
           ? false
           : true,
     }));
@@ -318,7 +328,7 @@ export default {
       this.guest.organization =
         typeof this.guest.organization === "string"
           ? this.guest.organization
-          : this.guest.organization.value;
+          : this.guest.organization.key;
 
       try {
         loading.value = true;

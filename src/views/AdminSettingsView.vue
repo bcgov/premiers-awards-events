@@ -5,7 +5,7 @@ import { useTablesStore } from "../stores/tables";
 import { useGuestsStore } from "../stores/guests";
 import { useMessageStore } from "../stores/messages";
 import { useSettingsStore } from "../stores/settings";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
@@ -180,13 +180,42 @@ const fillConfirmation = () => {
 const resetDatabaseConfirmation = () => {
   databaseResetDialog.value = true;
 };
-const selected = ref(settingsStore.selected);
 const year = ref();
 const salesopen = ref();
 const salesclose = ref();
+const organizations = ref([]);
+const expandedTableOrganizations = ref([]);
+const newExpandedOrganization = ref(null);
+const newExpandedTableCount = ref(1);
+const isSavingExpandedTables = ref(false);
+
+const availableExpandedOrganizations = computed(() =>
+  organizations.value.filter(
+    (organization) =>
+      !expandedTableOrganizations.value.some(
+        (expandedOrganization) => expandedOrganization.key === organization.key
+      )
+  )
+);
 
 userStore.login();
 settingsStore.getAll().then(() => {
+  const configuredOrganizations = settingsStore.lookup("organizations");
+  organizations.value = Array.isArray(configuredOrganizations)
+    ? configuredOrganizations
+    : [];
+  expandedTableOrganizations.value = organizations.value
+    .filter(
+      (organization) =>
+        Number.isInteger(organization.expandedTables) &&
+        organization.expandedTables > 0
+    )
+    .map((organization) => ({
+      key: organization.key,
+      label: organization.label,
+      count: organization.expandedTables,
+    }));
+
   const globalSettings = settingsStore.lookup(
     "globalSettings",
     undefined,
@@ -197,6 +226,85 @@ settingsStore.getAll().then(() => {
   salesopen.value = new Date(globalSettings.salesopen);
   salesclose.value = new Date(globalSettings.salesclose);
 });
+
+const addExpandedTableOrganization = () => {
+  if (
+    !newExpandedOrganization.value ||
+    !Number.isInteger(newExpandedTableCount.value) ||
+    newExpandedTableCount.value < 1
+  ) {
+    return;
+  }
+
+  const organization = organizations.value.find(
+    (item) => item.key === newExpandedOrganization.value
+  );
+  if (!organization) return;
+
+  expandedTableOrganizations.value.push({
+    key: organization.key,
+    label: organization.label,
+    count: newExpandedTableCount.value,
+  });
+  newExpandedOrganization.value = null;
+  newExpandedTableCount.value = 1;
+};
+
+const saveExpandedTableOrganizations = async () => {
+  try {
+    isSavingExpandedTables.value = true;
+    activeMessage.value = true;
+    messageStore.setMessage({
+      text: "Saving expanded table settings...",
+      type: "info",
+      spinner: true,
+    });
+
+    if (!(await settingsStore.select("organizations"))) {
+      throw (
+        settingsStore.error ||
+        new Error("Organization settings could not be loaded.")
+      );
+    }
+
+    if (
+      expandedTableOrganizations.value.some(
+        ({ count }) => !Number.isInteger(count) || count < 1
+      )
+    ) {
+      throw new Error("Each organization must have a positive whole number of tables.");
+    }
+
+    const expandedCounts = new Map(
+      expandedTableOrganizations.value.map(({ key, count }) => [key, count])
+    );
+    settingsStore.selected.value = organizations.value.map((organization) => {
+      const count = expandedCounts.get(organization.key);
+      if (count !== undefined) return { ...organization, expandedTables: count };
+      const unchangedOrganization = { ...organization };
+      delete unchangedOrganization.expandedTables;
+      return unchangedOrganization;
+    });
+
+    await settingsStore.update();
+    if (settingsStore.error) throw settingsStore.error;
+
+    organizations.value = settingsStore.selected.value;
+    messageStore.setMessage({
+      text: "Expanded table settings were saved.",
+      type: "success",
+    });
+  } catch (error) {
+    console.error(error);
+    messageStore.setMessage({
+      text: "Expanded table settings could not be saved.",
+      type: "error",
+    });
+  } finally {
+    isSavingExpandedTables.value = false;
+    setTimeout(() => (activeMessage.value = false), 1500);
+  }
+};
 </script>
 
 <template>
@@ -223,7 +331,7 @@ settingsStore.getAll().then(() => {
             Use these settings to:<br />
             (1) Reset and generate a new table layout.
             <br />
-            (2) Fill tables based on a sorting algorithim.
+            (2) Fill tables based on a sorting algorithm.
           </h3>
           <ol>
             <li>
@@ -253,6 +361,85 @@ settingsStore.getAll().then(() => {
               >
             </li>
           </ol>
+        </template>
+      </PrimeCard>
+      <PrimeCard id="expandedTableSettings" v-if="userStore.isAdmin">
+        <template #subtitle>
+          <h1>Expanded Table Settings</h1>
+        </template>
+        <template #content>
+          <p>
+            Choose organizations that may select tables of 11 during
+            registration. Their remaining tables will use the standard size of
+            10.
+          </p>
+          <div class="expanded-table-form">
+            <div class="expanded-table-add-row">
+              <label for="expanded-table-organization">Organization:</label>
+              <DropDown
+                id="expanded-table-organization"
+                v-model="newExpandedOrganization"
+                :options="availableExpandedOrganizations"
+                optionLabel="label"
+                optionValue="key"
+                placeholder="Select an organization"
+              />
+              <label for="expanded-table-count">Number of tables of 11:</label>
+              <InputNumber
+                id="expanded-table-count"
+                v-model="newExpandedTableCount"
+                :min="1"
+                :maxFractionDigits="0"
+                :useGrouping="false"
+                :allowEmpty="false"
+              />
+              <PrimeButton
+                type="button"
+                label="Add Organization"
+                icon="pi pi-plus"
+                :disabled="
+                  !newExpandedOrganization || availableExpandedOrganizations.length === 0
+                "
+                @click="addExpandedTableOrganization"
+              />
+            </div>
+            <p v-if="expandedTableOrganizations.length === 0">
+              No organizations have been added.
+            </p>
+            <div
+              v-for="(organization, index) in expandedTableOrganizations"
+              :key="organization.key"
+              class="expanded-table-organization-row"
+            >
+              <span>{{ organization.label }}</span>
+              <label :for="`expanded-table-count-${index}`">
+                Number of tables of 11:
+              </label>
+              <InputNumber
+                :id="`expanded-table-count-${index}`"
+                v-model="organization.count"
+                :min="1"
+                :maxFractionDigits="0"
+                :useGrouping="false"
+                :allowEmpty="false"
+              />
+              <PrimeButton
+                type="button"
+                label="Remove"
+                icon="pi pi-trash"
+                class="p-button-danger"
+                :aria-label="`Remove ${organization.label}`"
+                @click="expandedTableOrganizations.splice(index, 1)"
+              />
+            </div>
+            <PrimeButton
+              type="button"
+              label="Save Expanded Table Settings"
+              icon="pi pi-save"
+              :disabled="isSavingExpandedTables"
+              @click="saveExpandedTableOrganizations"
+            />
+          </div>
         </template>
       </PrimeCard>
       <PrimeCard id="eventDateSettings" v-if="userStore.isAdmin">
@@ -531,6 +718,18 @@ settingsStore.getAll().then(() => {
     button {
       width: fit-content;
     }
+  }
+  .expanded-table-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .expanded-table-add-row,
+  .expanded-table-organization-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
   }
 }
 </style>
